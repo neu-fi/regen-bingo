@@ -151,50 +151,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@create-web3/backend@workspace:packages/backend":
-  version: 0.0.0-use.local
-  resolution: "@create-web3/backend@workspace:packages/backend"
-  dependencies:
-    "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@^0.3.0-beta.10"
-    "@nomiclabs/hardhat-etherscan": ^3.0.3
-    "@nomiclabs/hardhat-waffle": ^2.0.3
-    "@openzeppelin/contracts": ^4.6.0
-    "@types/chai": ^4.3.1
-    "@types/mocha": ^9.1.1
-    "@types/node": ^18.0.0
-    chai: ^4.3.6
-    dotenv: ^16.0.0
-    ethereum-waffle: ^3.4.4
-    ethers: ^5.7.2
-    hardhat: ^2.9.9
-    hardhat-deploy: ^0.11.10
-    ts-node: ^10.8.1
-    typescript: ^4.8.4
-  languageName: unknown
-  linkType: soft
-
-"@create-web3/frontend@workspace:packages/frontend":
-  version: 0.0.0-use.local
-  resolution: "@create-web3/frontend@workspace:packages/frontend"
-  dependencies:
-    "@rainbow-me/rainbowkit": ^0.7.4
-    "@types/node": ^18.7.6
-    "@types/react": ^18.0.15
-    "@types/react-dom": ^18.0.6
-    autoprefixer: ^10.4.13
-    eslint: ^8.27.0
-    eslint-config-next: ^13.0.2
-    ethers: ^5.7.2
-    next: ^13.0.2
-    postcss: ^8.4.18
-    react: ^18.2.0
-    react-dom: ^18.2.0
-    tailwindcss: ^3.2.2
-    typescript: ^4.8.4
-    wagmi: ^0.7.13
-  languageName: unknown
-  linkType: soft
-
 "@cspotcode/source-map-support@npm:^0.8.0":
   version: 0.8.1
   resolution: "@cspotcode/source-map-support@npm:0.8.1"
@@ -1382,6 +1338,50 @@ __metadata:
   checksum: 969bbef8729eecc7ad26c4a90c5438feac1e0a7d37cd809075487bf95efb4a7dcaab0ae6720d60fff6c82caa23f7235a8756bbedeeaee47c54f0dec579311d9d
   languageName: node
   linkType: hard
+
+"@regen-bingo/backend@workspace:packages/backend":
+  version: 0.0.0-use.local
+  resolution: "@regen-bingo/backend@workspace:packages/backend"
+  dependencies:
+    "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@^0.3.0-beta.10"
+    "@nomiclabs/hardhat-etherscan": ^3.0.3
+    "@nomiclabs/hardhat-waffle": ^2.0.3
+    "@openzeppelin/contracts": ^4.6.0
+    "@types/chai": ^4.3.1
+    "@types/mocha": ^9.1.1
+    "@types/node": ^18.0.0
+    chai: ^4.3.6
+    dotenv: ^16.0.0
+    ethereum-waffle: ^3.4.4
+    ethers: ^5.7.2
+    hardhat: ^2.9.9
+    hardhat-deploy: ^0.11.10
+    ts-node: ^10.8.1
+    typescript: ^4.8.4
+  languageName: unknown
+  linkType: soft
+
+"@regen-bingo/frontend@workspace:packages/frontend":
+  version: 0.0.0-use.local
+  resolution: "@regen-bingo/frontend@workspace:packages/frontend"
+  dependencies:
+    "@rainbow-me/rainbowkit": ^0.7.4
+    "@types/node": ^18.7.6
+    "@types/react": ^18.0.15
+    "@types/react-dom": ^18.0.6
+    autoprefixer: ^10.4.13
+    eslint: ^8.27.0
+    eslint-config-next: ^13.0.2
+    ethers: ^5.7.2
+    next: ^13.0.2
+    postcss: ^8.4.18
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    tailwindcss: ^3.2.2
+    typescript: ^4.8.4
+    wagmi: ^0.7.13
+  languageName: unknown
+  linkType: soft
 
 "@resolver-engine/core@npm:^0.3.3":
   version: 0.3.3

@@ -1,19 +1,19 @@
 {
   "name": "regen-bingo",
   "version": "0.0.1",
-  "description": "create-web3 monorepo quickstart with next and hardhat",
+  "description": "A global trustless Bingo game where half of the proceeds go to public good funding",
   "main": "index.js",
   "private": true,
   "scripts": {
-    "dev": "yarn workspace @create-web3/frontend dev",
-    "build": "yarn workspace @create-web3/frontend build",
-    "start": "yarn workspace @create-web3/frontend start",
-    "lint": "yarn workspace @create-web3/frontend lint",
-    "chain": "yarn workspace @create-web3/backend chain",
-    "compile": "yarn workspace @create-web3/backend compile",
-    "test": "yarn workspace @create-web3/backend test",
-    "clean": "yarn workspace @create-web3/backend clean",
-    "deploy": "yarn workspace @create-web3/backend deploy"
+    "dev": "yarn workspace @regen-bingo/frontend dev",
+    "build": "yarn workspace @regen-bingo/frontend build",
+    "start": "yarn workspace @regen-bingo/frontend start",
+    "lint": "yarn workspace @regen-bingo/frontend lint",
+    "chain": "yarn workspace @regen-bingo/backend chain",
+    "compile": "yarn workspace @regen-bingo/backend compile",
+    "test": "yarn workspace @regen-bingo/backend test",
+    "clean": "yarn workspace @regen-bingo/backend clean",
+    "deploy": "yarn workspace @regen-bingo/backend deploy"
   },
   "workspaces": {
     "packages": [

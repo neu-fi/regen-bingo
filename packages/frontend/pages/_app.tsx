@@ -42,7 +42,7 @@ const { chains, provider } = configureChains(
 );
 
 const { connectors } = getDefaultWallets({
-  appName: 'create-web3',
+  appName: 'regen-bingo',
   chains,
 });
 
@@ -60,7 +60,7 @@ const App = ({ Component, pageProps }: AppProps) => {
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider coolMode chains={chains}>
         <NextHead>
-          <title>create-web3</title>
+          <title>Regen Bingo</title>
         </NextHead>
         <Component {...pageProps} />
       </RainbowKitProvider>
