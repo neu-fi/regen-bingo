@@ -1,4 +1,5 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import Link from "next/link";
 import router, { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { ConnectOrSwitchNetworkButton } from "./web3/ConnectOrSwitchNetworkButton";
@@ -6,7 +7,7 @@ import { ConnectOrSwitchNetworkButton } from "./web3/ConnectOrSwitchNetworkButto
 type HeaderProps = {};
 
 export const tabs = [
-  { name: "Mint", href: "/", current: false },
+  { name: "Mint", href: "/", current: true },
   { name: "My Cards", href: "/my-cards", current: false },
 ];
 
@@ -23,10 +24,6 @@ function redirectToTab($event: any): void {
 
 export default function Header(props: HeaderProps) {
   const router = useRouter();
-  const tab = tabs.find((tab) => tab.href === router.pathname);
-  if (tab) {
-    tab.current = true;
-  }
 
   return (
     <div className="px-6 pt-6 lg:px-8">
@@ -69,11 +66,11 @@ export default function Header(props: HeaderProps) {
             <div className="hidden sm:block">
               <nav className="lg:space-x-8 xl:space-x-16" aria-label="Tabs">
                 {tabs.map((tab) => (
-                  <a
+                  <Link
                     key={tab.name}
                     href={tab.href}
                     className={classNames(
-                      tab.current
+                      router.asPath === tab.href
                         ? "bg-violet-200 text-indigo-700 hover:text-indigo-900 hover:bg-violet-100"
                         : "text-gray-700 hover:text-gray-900 hover:bg-violet-100",
                       "px-4 py-3 rounded-xl "
@@ -81,7 +78,7 @@ export default function Header(props: HeaderProps) {
                     aria-current={tab.current ? "page" : undefined}
                   >
                     {tab.name}
-                  </a>
+                  </Link>
                 ))}
               </nav>
             </div>

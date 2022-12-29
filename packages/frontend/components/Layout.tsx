@@ -8,9 +8,9 @@ type LayoutProps = {};
 function Layout(props: PropsWithChildren<LayoutProps>) {
   return (
     <>
-      <BGBlur></BGBlur>
+      <BGBlur type={"header"} colors={["#ffcc01", "#00e2ab"]}></BGBlur>
       <Header></Header>
-      {props.children}
+      <main>{props.children}</main>
     </>
   );
 }

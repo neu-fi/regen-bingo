@@ -16,6 +16,7 @@ import {
 } from "@rainbow-me/rainbowkit";
 
 import { useIsMounted } from "../hooks";
+import Layout from "@/components/Layout";
 
 // Get environment variables
 const alchemyId = process.env.NEXT_PUBLIC_ALCHEMY_ID as string;
@@ -62,7 +63,9 @@ const App = ({ Component, pageProps }: AppProps) => {
         <NextHead>
           <title>Regen Bingo</title>
         </NextHead>
-        <Component {...pageProps} />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </RainbowKitProvider>
     </WagmiConfig>
   );

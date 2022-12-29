@@ -1,12 +1,55 @@
 import { PropsWithChildren } from "react";
 
-type BGBlurProps = {};
+type BGBlurProps = {
+  type: "header" | "section" | "footer" | null;
+  colors: string[];
+};
+
+interface IOptions {
+  top: string;
+  topSM: string;
+  left: string;
+  rotate?: "0" | string;
+  leftSM: string;
+}
 
 export default function BGBlur(props: PropsWithChildren<BGBlurProps>) {
+  const { type } = props;
+  let options: IOptions | null = null;
+
+  switch (type) {
+    case "header":
+      options = {
+        top: "-10rem",
+        topSM: "-20rem",
+        left: "calc(50%-11rem)",
+        rotate: "30deg",
+        leftSM: "calc(50%-30rem)",
+      };
+    case "section":
+      options = {
+        top: "calc(100%-13rem)",
+        topSM: "calc(100%-30rem)",
+        left: "calc(50%+3rem)",
+        rotate: "30deg",
+        leftSM: "calc(50%+36rem)",
+      };
+
+    default:
+      options = {
+        top: "-10rem",
+        topSM: "-20rem",
+        left: "calc(50%-11rem)",
+        rotate: "30deg",
+        leftSM: "calc(50%-30rem)",
+      };
+  }
   return (
-    <div className="absolute inset-x-0 top-[-10rem] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[-20rem]">
+    <div
+      className={`absolute inset-x-0 top-[${options.top}] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[${options.topSM}]`}
+    >
       <svg
-        className="relative left-[calc(50%-11rem)] -z-10 h-[21.1875rem] max-w-none -translate-x-1/2 rotate-[30deg] sm:left-[calc(50%-30rem)] sm:h-[42.375rem]"
+        className={`relative left-[${options.left}] -z-10 h-[21.1875rem] max-w-none -translate-x-1/2 rotate-[${options.rotate}] sm:left-[${options.leftSM}] sm:h-[42.375rem]`}
         viewBox="0 0 1155 678"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -25,8 +68,8 @@ export default function BGBlur(props: PropsWithChildren<BGBlurProps>) {
             y2="474.645"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor="#9089FC" />
-            <stop offset={1} stopColor="#FF80B5" />
+            <stop stopColor={props.colors[0]} />
+            <stop offset={1} stopColor={props.colors[1]} />
           </linearGradient>
         </defs>
       </svg>
