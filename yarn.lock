@@ -8979,14 +8979,14 @@ __metadata:
   linkType: hard
 
 "keccak@npm:^3.0.0, keccak@npm:^3.0.1, keccak@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "keccak@npm:3.0.2"
+  version: 3.0.3
+  resolution: "keccak@npm:3.0.3"
   dependencies:
     node-addon-api: ^2.0.0
     node-gyp: latest
     node-gyp-build: ^4.2.0
     readable-stream: ^3.6.0
-  checksum: 39a7d6128b8ee4cb7dcd186fc7e20c6087cc39f573a0f81b147c323f688f1f7c2b34f62c4ae189fe9b81c6730b2d1228d8a399cdc1f3d8a4c8f030cdc4f20272
+  checksum: f08f04f5cc87013a3fc9e87262f761daff38945c86dd09c01a7f7930a15ae3e14f93b310ef821dcc83675a7b814eb1c983222399a2f263ad980251201d1b9a99
   languageName: node
   linkType: hard
 

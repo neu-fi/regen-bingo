@@ -1,17 +1,16 @@
-import Head from "next/head";
+import Header from "@/components/Header";
+import { PropsWithChildren } from "react";
+import BGBlur from "../components/BGBlur";
 import Layout from "@/components/Layout";
-// import { GetGreeter, SetGreeter } from "@/components";
+import Head from "next/head";
 
-export default function Home() {
+type MyCardsProps = {};
+
+export default function MyCards(props: PropsWithChildren<MyCardsProps>) {
   return (
     <>
       <Head>
-        <title>Regen Bingo</title>
-        <meta
-          name="description"
-          content="A global trustless Bingo game where half of the proceeds go to public good funding"
-        />
-        <link rel="icon" href="/favicon.ico" />
+        <title>My Cards</title>
       </Head>
       <div className="relative px-6 lg:px-8">
         <div className="mx-auto max-w-3xl pt-20 pb-32 sm:pt-48 sm:pb-40">
@@ -29,7 +28,7 @@ export default function Home() {
             </div>
             <div>
               <h1 className="text-4xl font-bold tracking-tight sm:text-center sm:text-6xl">
-                Data to enrich your online business
+                My Cards
               </h1>
               <p className="mt-6 text-lg leading-8 text-gray-600 sm:text-center">
                 Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui
@@ -58,7 +57,7 @@ export default function Home() {
               </div>
               <div className="mt-8">
                 {/* <GetGreeter />
-                    <SetGreeter /> */}
+              <SetGreeter /> */}
               </div>
             </div>
             <div className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]">
