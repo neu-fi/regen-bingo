@@ -1,7 +1,5 @@
 import Head from 'next/head';
-import { useState } from 'react'
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { GetGreeter, SetGreeter } from '../components/contract';
+import { ConnectOrSwitchNetworkButton, GetGreeter, SetGreeter } from '../components';
 
 const tabs = [
   { name: 'Mint', href: 'mint', current: true },
@@ -59,7 +57,7 @@ export default function Home() {
               </a>
             </div>
             <div className="flex lg:min-w-0 lg:flex-1 lg:justify-end">
-              <ConnectButton chainStatus="none" />
+              <ConnectOrSwitchNetworkButton />
             </div>
           </nav>
           <div className='-mt-7 mr-28 lg:mr-0 flex justify-center font-semibold'>
