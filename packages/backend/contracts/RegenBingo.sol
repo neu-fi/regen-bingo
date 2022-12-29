@@ -48,9 +48,11 @@ contract RegenBingo is ERC721 {
         //TODO: return URI
     }
 
-    function claimWinningTicket(uint256 id) external {
-        //TODO: check if card has winning combination
+    function claimPrize(uint256 id) external {
+        require(_isWinningTicket(id), "not winning ticket");
         charityAddress.call{value: address(this).balance / 2}("");
         payable(ownerOf(id)).call{value: address(this).balance}("");
     }
+
+    function _isWinningTicket(uint256 id) internal returns (bool) {}
 }
