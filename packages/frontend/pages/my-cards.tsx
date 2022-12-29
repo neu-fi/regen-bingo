@@ -1,18 +1,16 @@
-
-import Head from "next/head";
+import Header from "@/components/Header";
+import { PropsWithChildren } from "react";
+import BGBlur from "../components/BGBlur";
 import Layout from "@/components/Layout";
-import { ConnectOrSwitchNetworkButton, GetGreeter, SetGreeter } from '../components';
+import Head from "next/head";
 
-export default function Home() {
+type MyCardsProps = {};
+
+export default function MyCards(props: PropsWithChildren<MyCardsProps>) {
   return (
-    <div className="isolate bg-white">
+    <>
       <Head>
-        <title>Regen Bingo</title>
-        <meta
-          name="description"
-          content="A global trustless Bingo game where half of the proceeds go to public good funding"
-        />
-        <link rel="icon" href="/favicon.ico" />
+        <title>My Cards</title>
       </Head>
       <Layout>
         <main>
@@ -32,7 +30,7 @@ export default function Home() {
                 </div>
                 <div>
                   <h1 className="text-4xl font-bold tracking-tight sm:text-center sm:text-6xl">
-                    Data to enrich your online business
+                    My Cards
                   </h1>
                   <p className="mt-6 text-lg leading-8 text-gray-600 sm:text-center">
                     Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure
@@ -96,6 +94,6 @@ export default function Home() {
           </div>
         </main>
       </Layout>
-    </div>
+    </>
   );
 }
