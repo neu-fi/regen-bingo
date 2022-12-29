@@ -1,6 +1,7 @@
+
 import Head from "next/head";
-import { GetGreeter, SetGreeter } from "../components/contract";
 import Layout from "@/components/Layout";
+import { ConnectOrSwitchNetworkButton, GetGreeter, SetGreeter } from '../components';
 
 export default function Home() {
   return (
