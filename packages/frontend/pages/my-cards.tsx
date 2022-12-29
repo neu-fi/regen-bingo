@@ -1,19 +1,14 @@
-import Head from "next/head";
-import { GetGreeter, SetGreeter } from "../components/contract";
-import Layout from "@/components/Layout";
+import Header from "@/components/Header";
+import React from "react";
+import BGBlur from "../components/BGBlur";
 
-export default function Home() {
+type MyCardsProps = {};
+
+export default function MyCards(props: MyCardsProps) {
   return (
-    <div className="isolate bg-white">
-      <Head>
-        <title>Regen Bingo</title>
-        <meta
-          name="description"
-          content="A global trustless Bingo game where half of the proceeds go to public good funding"
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Layout />
+    <>
+      <BGBlur></BGBlur>
+      <Header></Header>
       <main>
         <div className="relative px-6 lg:px-8">
           <div className="mx-auto max-w-3xl pt-20 pb-32 sm:pt-48 sm:pb-40">
@@ -31,7 +26,7 @@ export default function Home() {
               </div>
               <div>
                 <h1 className="text-4xl font-bold tracking-tight sm:text-center sm:text-6xl">
-                  Data to enrich your online business
+                  My Cards
                 </h1>
                 <p className="mt-6 text-lg leading-8 text-gray-600 sm:text-center">
                   Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure
@@ -94,6 +89,6 @@ export default function Home() {
           </div>
         </div>
       </main>
-    </div>
+    </>
   );
 }
