@@ -10,7 +10,7 @@ function Layout(props: PropsWithChildren<LayoutProps>) {
     <>
       <BGBlur></BGBlur>
       <Header></Header>
-      {props.children}
+      <main>{props.children}</main>
     </>
   );
 }

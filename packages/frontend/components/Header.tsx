@@ -1,4 +1,5 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import Link from "next/link";
 import router, { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { ConnectOrSwitchNetworkButton } from "./web3/ConnectOrSwitchNetworkButton";
@@ -6,9 +7,9 @@ import { ConnectOrSwitchNetworkButton } from "./web3/ConnectOrSwitchNetworkButto
 type HeaderProps = {};
 
 export const tabs = [
-  { name: "Home", href: "/", current: false },
-  { name: "Mint", href: "/mint", current: false },
-  { name: "My Cards", href: "/my-cards", current: false },
+  { name: "Home", href: "/" },
+  { name: "Mint", href: "/mint" },
+  { name: "My Cards", href: "/my-cards" },
 ];
 
 function classNames(...classes: any[]) {
@@ -24,10 +25,6 @@ function redirectToTab($event: any): void {
 
 export default function Header(props: HeaderProps) {
   const router = useRouter();
-  const tab = tabs.find((tab) => tab.href === router.pathname);
-  if (tab) {
-    tab.current = true;
-  }
 
   return (
     <div className="px-6 pt-6 lg:px-8">
@@ -59,7 +56,9 @@ export default function Header(props: HeaderProps) {
                 id="tabs"
                 name="tabs"
                 className="text-lg -mt-2 p-2 rounded-xl shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 "
-                defaultValue={tabs.find((tab) => tab.current)?.name}
+                defaultValue={
+                  tabs.find((tab) => router.asPath === tab.href)?.name
+                }
                 onChange={(event) => redirectToTab(event)}
               >
                 {tabs.map((tab) => (
@@ -70,19 +69,21 @@ export default function Header(props: HeaderProps) {
             <div className="hidden sm:block">
               <nav className="lg:space-x-8 xl:space-x-16" aria-label="Tabs">
                 {tabs.map((tab) => (
-                  <a
+                  <Link
                     key={tab.name}
                     href={tab.href}
                     className={classNames(
-                      tab.current
+                      router.asPath === tab.href
                         ? "bg-indigo-100 text-indigo-700"
                         : "text-gray-700 hover:text-gray-900",
                       "px-4 py-3 rounded-xl "
                     )}
-                    aria-current={tab.current ? "page" : undefined}
+                    aria-current={
+                      router.asPath === tab.href ? "page" : undefined
+                    }
                   >
                     {tab.name}
-                  </a>
+                  </Link>
                 ))}
               </nav>
             </div>
