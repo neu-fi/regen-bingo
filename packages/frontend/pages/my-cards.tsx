@@ -46,8 +46,8 @@ export default function MyCards(props: PropsWithChildren<MyCardsProps>) {
               </div>
             </div>
             <div className="row-span-full">
-              <div className="flex flex-wrap justify-center items-center">
-                <CardList></CardList>
+              <div className="flex flex-wrap flex-col justify-center items-center">
+                <CardList drawnNumbers={drawnNumbersList}></CardList>
               </div>
             </div>
           </div>

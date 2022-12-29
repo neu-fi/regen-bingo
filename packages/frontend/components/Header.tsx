@@ -45,7 +45,7 @@ export default function Header(props: HeaderProps) {
               />
             </a>
           </div>
-          <div className="mr-28 lg:mr-0 flex justify-center font-semibold">
+          <div className="mr-4 sm:max-2xl:mr-0 lg:mr-0 flex justify-center font-semibold">
             <div className="sm:hidden">
               <label htmlFor="tabs" className="sr-only">
                 Select a tab
@@ -54,7 +54,7 @@ export default function Header(props: HeaderProps) {
               <select
                 id="tabs"
                 name="tabs"
-                className="text-lg -mt-2 p-2 rounded-xl shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 "
+                className="text-lg ml-2 p-2 rounded-xl shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 "
                 defaultValue={tabs.find((tab) => tab.current)?.name}
                 onChange={(event) => redirectToTab(event)}
               >
