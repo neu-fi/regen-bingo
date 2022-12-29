@@ -1,33 +1,8 @@
 import Head from 'next/head';
-
 import { useState } from 'react'
-import { Dialog } from '@headlessui/react'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { GetGreeter, SetGreeter } from '../components/contract';
 
-const navigation = [
-  { name: 'Mint', href: '#' },
-  { name: 'My Cards', href: '#' },
-  { name: 'Gallery', href: '#' },
-  { name: 'About', href: '#' },
-]
-
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
 const tabs = [
   { name: 'Mint', href: 'mint', current: true },
   { name: 'My Cards', href: 'my-cards', current: false },
@@ -39,10 +14,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-
 export default function Home() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
   return (
     <div className="isolate bg-white">
       <Head>
