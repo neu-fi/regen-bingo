@@ -1,7 +1,6 @@
-
 import Head from "next/head";
 import Layout from "@/components/Layout";
-import { ConnectOrSwitchNetworkButton, GetGreeter, SetGreeter } from '../components';
+// import { GetGreeter, SetGreeter } from "@/components";
 
 export default function Home() {
   return (
@@ -61,7 +60,7 @@ export default function Home() {
                   </div>
                   <div className="mt-8">
                     {/* <GetGreeter />
-                  <SetGreeter /> */}
+                    <SetGreeter /> */}
                   </div>
                 </div>
                 <div className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]">

@@ -1,6 +1,7 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import router, { useRouter } from "next/router";
 import React, { useEffect } from "react";
+import { ConnectOrSwitchNetworkButton } from "./web3/ConnectOrSwitchNetworkButton";
 
 type HeaderProps = {};
 
@@ -87,7 +88,7 @@ export default function Header(props: HeaderProps) {
             </div>
           </div>
           <div className="flex lg:min-w-0 lg:flex-1 lg:justify-end">
-            <ConnectButton chainStatus="none" accountStatus="full" />
+            <ConnectOrSwitchNetworkButton />
           </div>
         </nav>
       </div>
