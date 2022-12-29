@@ -1,6 +1,8 @@
 import { PropsWithChildren } from "react";
 
-export default function BGBlur(props: PropsWithChildren) {
+type BGBlurProps = {};
+
+export default function BGBlur(props: PropsWithChildren<BGBlurProps>) {
   return (
     <div className="absolute inset-x-0 top-[-10rem] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[-20rem]">
       <svg
