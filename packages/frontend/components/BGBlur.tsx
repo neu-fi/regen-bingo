@@ -26,15 +26,16 @@ export default function BGBlur(props: PropsWithChildren<BGBlurProps>) {
         rotate: "30deg",
         leftSM: "calc(50%-30rem)",
       };
+      break;
     case "section":
       options = {
         top: "calc(100%-13rem)",
         topSM: "calc(100%-30rem)",
-        left: "calc(50%+3rem)",
-        rotate: "30deg",
+        left: "calc(50%+6rem)",
+        rotate: "0deg",
         leftSM: "calc(50%+36rem)",
       };
-
+      break;
     default:
       options = {
         top: "-10rem",

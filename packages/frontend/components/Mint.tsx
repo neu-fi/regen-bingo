@@ -11,16 +11,14 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
           <div className="mx-auto max-w-3xl md:max-2xl:max-w-xl pt-20 pb-32 sm:pt-48 sm:pb-40">
             <div>
               <div>
-                {/* TODO: Content of the minting page */}
                 <h1 className="text-4xl font-bold tracking-tight sm:text-center sm:text-6xl">
-                  Mint
+                  Regen Bingo
                 </h1>
                 <p className="mt-6 text-lg leading-8 text-gray-600 sm:text-center">
-                  Groundbreaking Web3 Bingo game, only designed to draw once in
-                  a year. Mint your bingo card NFT now to earn a chance to win
-                  the jackpot! The jackpot is 50% of the total sales. The rest
-                  will be fund for ReFi Revolution.
+                  Mint your Bingo card NFT to contribute to public goods funding
+                  while getting a chance to claim the prize pool!
                 </p>
+                {/* TODO: Time left until draw start countdown */}
                 <div className="mt-8 flex gap-x-4 sm:justify-center">
                   <a
                     href="#"
@@ -39,7 +37,7 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
                     href="#guide"
                     className="inline-block rounded-lg px-4 py-1.5 text-base font-semibold leading-7 text-gray-900 ring-1 ring-gray-900/10 hover:ring-gray-900/20"
                   >
-                    {"How to Play "}
+                    {"What the heck is this? "}
                     <span className="text-gray-400" aria-hidden="true">
                       &rarr;
                     </span>

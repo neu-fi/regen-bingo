@@ -39,7 +39,7 @@ export default function Guide() {
             />
           </svg>
           <svg
-            className="absolute top-1/2 right-full -translate-y-1/2 -translate-x-32 transform"
+            className="absolute top-2/3 right-full -translate-y-1/2 -translate-x-32 transform"
             width={404}
             height={384}
             fill="none"
@@ -70,90 +70,41 @@ export default function Guide() {
               fill="url(#f210dbf6-a58d-4871-961e-36d5016a0f49)"
             />
           </svg>
-          <svg
-            className="absolute bottom-12 left-full translate-x-32 transform"
-            width={404}
-            height={384}
-            fill="none"
-            viewBox="0 0 404 384"
-          >
-            <defs>
-              <pattern
-                id="d3eb07ae-5182-43e6-857d-35c643af9034"
-                x={0}
-                y={0}
-                width={20}
-                height={20}
-                patternUnits="userSpaceOnUse"
-              >
-                <rect
-                  x={0}
-                  y={0}
-                  width={4}
-                  height={4}
-                  className="text-gray-200"
-                  fill="currentColor"
-                />
-              </pattern>
-            </defs>
-            <rect
-              width={404}
-              height={384}
-              fill="url(#d3eb07ae-5182-43e6-857d-35c643af9034)"
-            />
-          </svg>
         </div>
       </div>
       <div className="relative px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-prose text-lg">
           <h1>
-            <span className="block text-center text-lg font-semibold text-indigo-600">
-              Introducing
-            </span>
             <span className="mt-2 block text-center text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">
-              JavaScript for Beginners
+              What the Heck is RegenBingo?
             </span>
           </h1>
           <p className="mt-8 text-xl leading-8 text-gray-500">
-            Aliquet nec orci mattis amet quisque ullamcorper neque, nibh sem. At
-            arcu, sit dui mi, nibh dui, diam eget aliquam. Quisque id at vitae
-            feugiat egestas ac. Diam nulla orci at in viverra scelerisque eget.
-            Eleifend egestas fringilla sapien.
+            Hey fellow Regens, how about a game of New Years Bingo to have fun
+            and raise some ETH for public goods funding at the same time?
           </p>
         </div>
         <div className="prose prose-lg prose-indigo mx-auto mt-6 text-gray-500">
           <p>
-            Faucibus commodo massa rhoncus, volutpat. <strong>Dignissim</strong>{" "}
-            sed <strong>eget risus enim</strong>. Mattis mauris semper sed amet
-            vitae sed turpis id. Id dolor praesent donec est. Odio penatibus
-            risus viverra tellus varius sit neque erat velit. Faucibus commodo
-            massa rhoncus, volutpat. Dignissim sed eget risus enim.{" "}
-            <a href="#">Mattis mauris semper</a> sed amet vitae sed turpis id.
+            The game is simple:
+            <ol role="list">
+              <li>Mint your bingo card</li>
+              <li>Wait for winning numbers to be drawn</li>
+              <li>
+                Be the first card owner to have matching numbers with the
+                randomly drawn numbers and claim the prize pool!
+              </li>
+            </ol>
           </p>
-          <ul role="list">
-            <li>Quis elit egestas venenatis mattis dignissim.</li>
-            <li>
-              Cras cras lobortis vitae vivamus ultricies facilisis tempus.
-            </li>
-            <li>Orci in sit morbi dignissim metus diam arcu pretium.</li>
-          </ul>
+
           <p>
-            Quis semper vulputate aliquam venenatis egestas sagittis quisque
-            orci. Donec commodo sit viverra aliquam porttitor ultrices gravida
-            eu. Tincidunt leo, elementum mattis elementum ut nisl, justo, amet,
-            mattis. Nunc purus, diam commodo tincidunt turpis. Amet, duis sed
-            elit interdum dignissim.
+            All card sale proceeds make up the prize and the public goods
+            funding pool. The total pool is divided into half and sent to
+            winning address and pre-determined charity address (Gitcoin Matching
+            Fund) when the winner claims their prize from the smart contract.
           </p>
-          <h2>From beginner to expert in 30 days</h2>
-          <p>
-            Id orci tellus laoreet id ac. Dolor, aenean leo, ac etiam consequat
-            in. Convallis arcu ipsum urna nibh. Pharetra, euismod vitae interdum
-            mauris enim, consequat vulputate nibh. Maecenas pellentesque id sed
-            tellus mauris, ultrices mauris. Tincidunt enim cursus ridiculus mi.
-            Pellentesque nam sed nullam sed diam turpis ipsum eu a sed convallis
-            diam.
-          </p>
-          <blockquote>
+
+          {/* <blockquote>
             <p>
               Sagittis scelerisque nulla cursus in enim consectetur quam. Dictum
               urna sed consectetur neque tristique pellentesque. Blandit amet,
@@ -177,21 +128,20 @@ export default function Guide() {
             <figcaption>
               Sagittis scelerisque nulla cursus in enim consectetur quam.
             </figcaption>
-          </figure>
-          <h2>Everything you need to get up and running</h2>
+          </figure> */}
+          <h2>So is this gambling?</h2>
           <p>
-            Purus morbi dignissim senectus mattis <a href="#">adipiscing</a>.
-            Amet, massa quam varius orci dapibus volutpat cras. In amet eu
-            ridiculus leo sodales cursus tristique. Tincidunt sed tempus ut
-            viverra ridiculus non molestie. Gravida quis fringilla amet eget dui
-            tempor dignissim. Facilisis auctor venenatis varius nunc, congue
-            erat ac. Cras fermentum convallis quam.
-          </p>
-          <p>
-            Faucibus commodo massa rhoncus, volutpat. Dignissim sed eget risus
-            enim. Mattis mauris semper sed amet vitae sed turpis id. Id dolor
-            praesent donec est. Odio penatibus risus viverra tellus varius sit
-            neque erat velit.
+            All card sale proceeds make up the prize and the public goods
+            funding pool. The total pool is divided into half and sent to
+            winning address and pre-determined charity address,{" "}
+            <a className="no-underline" href="https://gitcoin.co/grants/">
+              Gitcoin Matching Fund
+            </a>{" "}
+            when the winner claims their prize from the smart contract.
+            <ul>
+              <li>50% - Prize pool</li>
+              <li>50% - Gitcoin Matching Fund</li>
+            </ul>
           </p>
         </div>
       </div>
