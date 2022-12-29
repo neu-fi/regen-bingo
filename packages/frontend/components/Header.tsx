@@ -5,6 +5,7 @@ import React, { useEffect } from "react";
 type HeaderProps = {};
 
 export const tabs = [
+  { name: "Home", href: "/", current: false },
   { name: "Mint", href: "/mint", current: false },
   { name: "My Cards", href: "/my-cards", current: false },
 ];
