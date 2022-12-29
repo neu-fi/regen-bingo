@@ -6,8 +6,7 @@ import { ConnectOrSwitchNetworkButton } from "./web3/ConnectOrSwitchNetworkButto
 type HeaderProps = {};
 
 export const tabs = [
-  { name: "Home", href: "/", current: false },
-  { name: "Mint", href: "/mint", current: false },
+  { name: "Mint", href: "/", current: false },
   { name: "My Cards", href: "/my-cards", current: false },
 ];
 
@@ -75,8 +74,8 @@ export default function Header(props: HeaderProps) {
                     href={tab.href}
                     className={classNames(
                       tab.current
-                        ? "bg-indigo-100 text-indigo-700"
-                        : "text-gray-700 hover:text-gray-900",
+                        ? "bg-violet-200 text-indigo-700 hover:text-indigo-900 hover:bg-violet-100"
+                        : "text-gray-700 hover:text-gray-900 hover:bg-violet-100",
                       "px-4 py-3 rounded-xl "
                     )}
                     aria-current={tab.current ? "page" : undefined}

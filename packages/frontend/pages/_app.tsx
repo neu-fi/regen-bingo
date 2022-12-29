@@ -1,21 +1,21 @@
-import * as React from 'react';
-import type { AppProps } from 'next/app';
-import NextHead from 'next/head';
-import '../styles/globals.css';
+import * as React from "react";
+import type { AppProps } from "next/app";
+import NextHead from "next/head";
+import "../styles/globals.css";
 
 // Imports
-import { chain, createClient, WagmiConfig, configureChains } from 'wagmi';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
-import { publicProvider } from 'wagmi/providers/public';
+import { chain, createClient, WagmiConfig, configureChains } from "wagmi";
+import { alchemyProvider } from "wagmi/providers/alchemy";
+import { publicProvider } from "wagmi/providers/public";
 
-import '@rainbow-me/rainbowkit/styles.css';
+import "@rainbow-me/rainbowkit/styles.css";
 import {
   getDefaultWallets,
   RainbowKitProvider,
   Chain,
-} from '@rainbow-me/rainbowkit';
+} from "@rainbow-me/rainbowkit";
 
-import { useIsMounted } from '../hooks';
+import { useIsMounted } from "../hooks";
 
 // Get environment variables
 const alchemyId = process.env.NEXT_PUBLIC_ALCHEMY_ID as string;
@@ -23,15 +23,15 @@ const alchemyId = process.env.NEXT_PUBLIC_ALCHEMY_ID as string;
 
 const hardhatChain: Chain = {
   id: 31337,
-  name: 'Hardhat',
+  name: "Hardhat",
   nativeCurrency: {
     decimals: 18,
-    name: 'Hardhat',
-    symbol: 'HARD',
+    name: "Hardhat",
+    symbol: "HARD",
   },
-  network: 'hardhat',
+  network: "hardhat",
   rpcUrls: {
-    default: 'http://127.0.0.1:8545',
+    default: "http://127.0.0.1:8545",
   },
   testnet: true,
 };
@@ -42,7 +42,7 @@ const { chains, provider } = configureChains(
 );
 
 const { connectors } = getDefaultWallets({
-  appName: 'regen-bingo',
+  appName: "regen-bingo",
   chains,
 });
 
