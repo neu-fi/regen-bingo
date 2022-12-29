@@ -49,6 +49,8 @@ contract RegenBingo is ERC721 {
 
     function mint() external payable {
         require(msg.value == mintPrice, "INVALID_PRICE");
+        uint256 seed = uint256(keccak256(abi.encodePacked(msg.sender, blockhash.timestamp)));
+        _seeds[totalSupply] = seed;
         _mint(msg.sender, totalSupply);
         totalSupply++;
     }
@@ -72,5 +74,25 @@ contract RegenBingo is ERC721 {
         payable(ownerOf(id)).call{value: address(this).balance}("");
     }
 
-    function _isWinningTicket(uint256 id) internal returns (bool) {}
+    function _isWinningTicket(uint256 id) internal returns (bool) {
+        uint256 seed = _seeds[id];
+        uint256[9][3] layout = layouts[seed % 3];
+        for (uint256 i = 0; i < 3; i++) {
+            for (uint256 j = 0; j < 9; j++) {
+                if (layout[i][j] != 0 && !_inDrawnNumbers(j * 10 + (seed % layout[i][j]) / 10)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    function _inDrawnNumbers(uint256 number) internal view returns (bool) {
+        for (uint256 i = 0; i < drawnNumbers.length; i++) {
+            if (drawnNumbers[i] == number) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
