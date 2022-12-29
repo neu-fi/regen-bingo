@@ -76,7 +76,7 @@ export default function Guide() {
         <div className="mx-auto max-w-prose text-lg">
           <h1>
             <span className="mt-2 block text-center text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">
-              What the Heck is RegenBingo?
+              What the heck is RegenBingo?
             </span>
           </h1>
           <p className="mt-8 text-xl leading-8 text-gray-500">
@@ -95,13 +95,6 @@ export default function Guide() {
                 randomly drawn numbers and claim the prize pool!
               </li>
             </ol>
-          </p>
-
-          <p>
-            All card sale proceeds make up the prize and the public goods
-            funding pool. The total pool is divided into half and sent to
-            winning address and pre-determined charity address (Gitcoin Matching
-            Fund) when the winner claims their prize from the smart contract.
           </p>
 
           {/* <blockquote>
@@ -129,7 +122,7 @@ export default function Guide() {
               Sagittis scelerisque nulla cursus in enim consectetur quam.
             </figcaption>
           </figure> */}
-          <h2>So is this gambling?</h2>
+          <h2>How much would I earn?</h2>
           <p>
             All card sale proceeds make up the prize and the public goods
             funding pool. The total pool is divided into half and sent to
