@@ -5,10 +5,16 @@ const main: DeployFunction = async function ({getNamedAccounts, deployments}: Ha
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
 
-  const args = ['Hello!!!!!!!!'];
+  const greeterArgs = ['Hello!!!!!!!!'];
   await deploy('Greeter', {
-    // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
-    args: args,
+    args: greeterArgs,
+    from: deployer,
+    log: true,
+  });
+
+  const regenBingoArgs = ['REGENBINGO', 'Regen Bingo — The OG Collection'];
+  await deploy('RegenBingo', {
+    args: regenBingoArgs,
     from: deployer,
     log: true,
   });
@@ -16,4 +22,4 @@ const main: DeployFunction = async function ({getNamedAccounts, deployments}: Ha
 
 export default main;
  
-export const tags = ['all', 'greeter'];
+export const tags = ['all', 'greeter', 'regen-bingo'];
