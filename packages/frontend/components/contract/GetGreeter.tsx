@@ -29,6 +29,11 @@ export const GetGreeter = () => {
       setError('');
     } catch (error) {
       setError("Contract couldn't be fetched.  Please check your network.");
+      // The code should not repeadetely try to fetch contracts.
+      // This means there is an error in the network. Cannot be fixed by fetching again and again.
+      // But this makes the frontends and API keys get rate limited.
+      // Therefore, instead of removing the alert below, fix the behaviour.
+      alert("Contract couldn't be fetched.  Please check your network.");
     }
     setLoading(false);
   }, [greeterContract]);
