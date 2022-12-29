@@ -4,6 +4,24 @@ pragma solidity ^0.8.13;
 import "packages/backend/node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract RegenBingo is ERC721 {
+    uint256[9][3][3] constant layouts = [
+        [
+            [1009, 0, 1013, 1019, 0, 1021, 0, 0, 1031],
+            [1033, 0, 0, 1039, 1049, 0, 0, 1051, 1061],
+            [0, 1063, 0, 1069, 0, 1087, 1091, 0, 1093]
+        ],
+        [
+            [0, 1097, 1103, 0, 0, 0, 1109, 1117, 1123],
+            [1129, 0, 1151, 0, 1153, 0, 0, 1163, 1171],
+            [0, 0, 1181, 1187, 0, 1193, 0, 1201, 1213]
+        ],
+        [
+            [1217, 0, 0, 1223, 1229, 0, 1231, 0, 1237],
+            [0, 1249, 1259, 0, 1277, 1279, 1283, 0, 0],
+            [0, 1289, 1291, 0, 0, 1297, 1301, 1303, 0]
+        ]
+    ];
+
     uint256 public mintPrice;
     uint256 public drawTimestamp;
     uint256 public drawNumberCooldownSeconds;
