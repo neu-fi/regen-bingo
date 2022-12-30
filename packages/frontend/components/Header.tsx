@@ -37,9 +37,7 @@ export default function Header(props: HeaderProps) {
   return (
     <div className="px-6 pt-6 lg:px-8">
       <div>
-        <nav
-          className="flex h-9 items-center justify-between"
-        >
+        <nav className="flex h-9 items-center justify-between">
           <div>
             <a href="/#" className="-m-1.5 p-1.5">
               <span className="sr-only">Regen Bingo</span>
@@ -71,7 +69,10 @@ export default function Header(props: HeaderProps) {
               </select>
             </div>
             <div className="hidden sm:block">
-              <nav className="ml-28 md:ml-44 space-x-8 lg:space-x-12 xl:space-x-16" aria-label="Tabs">
+              <nav
+                className="ml-28 md:ml-44 space-x-8 lg:space-x-12 xl:space-x-16"
+                aria-label="Tabs"
+              >
                 {tabs.map((tab) => (
                   <Link
                     key={tab.name}
