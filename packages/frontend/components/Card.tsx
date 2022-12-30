@@ -24,7 +24,11 @@ const ClaimButton = (props: {
       <div className="flex justify-center">
         <button
           type="button"
-          className="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-4 py-2 text-base font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          className="
+          inline-flex items-center rounded-md border border-transparent 
+          bg-green-2 px-4 py-2 text-base font-medium 
+          hover:bg-green-1 focus:outline-none text-white
+          "
         >
           Claim Prize
         </button>
@@ -88,7 +92,7 @@ export default function Card(props: CardProps) {
           <div className="space-y-2 text-lg font-medium leading-6">
             <h3>
               Regen Bingo NFT{" "}
-              <span className="text-lg text-indigo-600">#{props.card.id}</span>
+              <span className="text-lg text-green-2">#{props.card.id}</span>
             </h3>
           </div>
 

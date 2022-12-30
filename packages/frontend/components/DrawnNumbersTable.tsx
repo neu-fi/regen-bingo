@@ -55,7 +55,7 @@ export function DrawnNumbersTable(props: DrawnNumbersTableProps) {
         <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
           <div className="overflow-auto rounded-lg shadow hidden sm:block ">
             <table className="table-auto min-w-full ">
-              <thead className="border-b bg-indigo-50">
+              <thead className="border-b bg-yellow-2">
                 <tr>
                   <th
                     scope="col"
@@ -87,7 +87,7 @@ export function DrawnNumbersTable(props: DrawnNumbersTableProps) {
                 {drawnNumbers.map((drawnNumber) => (
                   <tr className=" border-b transition duration-300 ease-in-out hover:bg-indigo-100">
                     <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                      <span className="bg-violet-200 text-indigo-700 hover:text-indigo-900 hover:bg-violet-100 px-4 py-3 mx-1 text-center rounded-full">
+                      <span className="bg-green-1 hover:bg-yellow-2 w-10 leading-10 mx-1 text-center rounded-full inline-block ">
                         {drawnNumber.drawnNumber}
                       </span>
                     </td>
@@ -108,7 +108,7 @@ export function DrawnNumbersTable(props: DrawnNumbersTableProps) {
                       <a
                         href={`https://etherscan.io/tx/${drawnNumber.txHash}`}
                         target="_blank"
-                        className="font-bold no-underline text-blue-500 hover:underline"
+                        className="font-bold no-underline text-dark-1 hover:underline"
                       >
                         {drawnNumber.txHash}
                       </a>

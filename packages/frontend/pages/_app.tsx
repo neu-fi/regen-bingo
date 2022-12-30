@@ -13,6 +13,8 @@ import {
   getDefaultWallets,
   RainbowKitProvider,
   Chain,
+  Theme,
+  lightTheme,
 } from "@rainbow-me/rainbowkit";
 
 import { useIsMounted } from "../hooks";
@@ -59,7 +61,14 @@ const App = ({ Component, pageProps }: AppProps) => {
   if (!isMounted) return null;
   return (
     <WagmiConfig client={wagmiClient}>
-      <RainbowKitProvider chains={chains}>
+      <RainbowKitProvider
+        theme={lightTheme({
+          accentColor: "#02e2aead",
+          accentColorForeground: "#000",
+          borderRadius: "large",
+        })}
+        chains={chains}
+      >
         <NextHead>
           <title>Regen Bingo</title>
         </NextHead>

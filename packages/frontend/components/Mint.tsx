@@ -25,11 +25,11 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
                     onClick={() => {
                       //TODO: Mint with wallet
                     }}
-                    className="inline-block rounded-lg bg-indigo-600 px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-indigo-600 hover:bg-indigo-700 hover:ring-indigo-700"
+                    className="inline-block rounded-lg bg-green-2 px-4 py-1.5 text-base text-white  font-semibold leading-7 shadow-sm hover:bg-green-1"
                   >
                     <img src=""></img>
                     {"Mint with Wallet "}
-                    <span className="text-indigo-200" aria-hidden="true">
+                    <span className="text-white" aria-hidden="true">
                       &rarr;
                     </span>
                   </a>
@@ -38,7 +38,7 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
                     className="inline-block rounded-lg px-4 py-1.5 text-base font-semibold leading-7 text-gray-900 ring-1 ring-gray-900/10 hover:ring-gray-900/20"
                   >
                     {"What the heck is this? "}
-                    <span className="text-gray-400" aria-hidden="true">
+                    <span className="text-yellow-1" aria-hidden="true">
                       &rarr;
                     </span>
                   </a>

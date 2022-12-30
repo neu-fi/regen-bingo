@@ -46,7 +46,7 @@ function LuckyNumbers(props: {
 }) {
   return (
     <div className="flex flex-wrap justify-center items-center flex-col ">
-      <h3 className="text-xl font-bold text-violet-800 tracking-tight sm:text-center sm:text-xl">
+      <h3 className="text-xl font-bold text-green-4 tracking-tight sm:text-center sm:text-xl">
         Lucky Numbers
       </h3>
       <DrawnNumbersTable

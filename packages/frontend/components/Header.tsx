@@ -28,7 +28,7 @@ function redirectToTab($event: React.ChangeEvent<HTMLSelectElement>): void {
 }
 
 function isCurrent(tab: ITab, router: NextRouter): boolean {
-  return router.asPath === tab.href;
+  return router.pathname === tab.href;
 }
 
 export default function Header(props: HeaderProps) {
@@ -43,7 +43,7 @@ export default function Header(props: HeaderProps) {
               <span className="sr-only">Regen Bingo</span>
               <img
                 className="h-8 sm:h-4 md:h-6"
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                src="https://tailwindui.com/img/logos/mark.svg?color=green&shade=600"
                 alt=""
               />
             </a>
@@ -79,8 +79,8 @@ export default function Header(props: HeaderProps) {
                     href={tab.href}
                     className={classNames(
                       isCurrent(tab, router)
-                        ? "bg-violet-200 text-indigo-700 hover:text-indigo-900 hover:bg-violet-100"
-                        : "text-gray-700 hover:text-gray-900 hover:bg-violet-100",
+                        ? "hover:bg-yellow-2 hover:text-black bg-green-2 text-white"
+                        : "hover:bg-green-3",
                       "px-4 py-3 rounded-xl "
                     )}
                     aria-current={isCurrent(tab, router) ? "page" : undefined}
