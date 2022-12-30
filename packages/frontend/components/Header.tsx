@@ -70,7 +70,7 @@ export default function Header(props: HeaderProps) {
             </div>
             <div className="hidden sm:block">
               <nav
-                className="ml-28 md:ml-44 space-x-8 lg:space-x-12 xl:space-x-16"
+                className="ml-28 md:ml-52 space-x-8 lg:space-x-12 xl:space-x-16"
                 aria-label="Tabs"
               >
                 {tabs.map((tab) => (
