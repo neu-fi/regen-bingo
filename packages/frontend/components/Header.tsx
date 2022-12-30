@@ -1,25 +1,34 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
-import router, { useRouter } from "next/router";
+import router, { NextRouter, useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { ConnectOrSwitchNetworkButton } from "./web3/ConnectOrSwitchNetworkButton";
 
 type HeaderProps = {};
 
-export const tabs = [
-  { name: "Mint", href: "/", current: true },
-  { name: "My Cards", href: "/my-cards", current: false },
+interface ITab {
+  name: string;
+  href: string;
+}
+
+export const tabs: ITab[] = [
+  { name: "Mint", href: "/" },
+  { name: "My Cards", href: "/my-cards" },
 ];
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-function redirectToTab($event: any): void {
-  const tab = tabs.find((tab) => tab.name === $event.target.value);
+function redirectToTab($event: React.ChangeEvent<HTMLSelectElement>): void {
+  const tab = tabs.find((tab: ITab) => tab.name === $event.target.value);
   if (tab) {
     router.push(tab.href);
   }
+}
+
+function isCurrent(tab: ITab, router: NextRouter): boolean {
+  return router.asPath === tab.href;
 }
 
 export default function Header(props: HeaderProps) {
@@ -45,7 +54,7 @@ export default function Header(props: HeaderProps) {
               />
             </a>
           </div>
-          <div className="mr-4 sm:max-2xl:mr-0 lg:mr-0 flex justify-center font-semibold">
+          <div className="mr-8 lg:mr-0 flex justify-center font-semibold">
             <div className="sm:hidden">
               <label htmlFor="tabs" className="sr-only">
                 Select a tab
@@ -55,8 +64,10 @@ export default function Header(props: HeaderProps) {
                 id="tabs"
                 name="tabs"
                 className="text-lg ml-2 p-2 rounded-xl shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 "
-                defaultValue={tabs.find((tab) => tab.current)?.name}
-                onChange={(event) => redirectToTab(event)}
+                defaultValue={tabs.find((tab) => isCurrent(tab, router))?.name}
+                onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+                  redirectToTab(event)
+                }
               >
                 {tabs.map((tab) => (
                   <option key={tab.name}>{tab.name}</option>
@@ -70,12 +81,12 @@ export default function Header(props: HeaderProps) {
                     key={tab.name}
                     href={tab.href}
                     className={classNames(
-                      router.asPath === tab.href
+                      isCurrent(tab, router)
                         ? "bg-violet-200 text-indigo-700 hover:text-indigo-900 hover:bg-violet-100"
                         : "text-gray-700 hover:text-gray-900 hover:bg-violet-100",
                       "px-4 py-3 rounded-xl "
                     )}
-                    aria-current={tab.current ? "page" : undefined}
+                    aria-current={isCurrent(tab, router) ? "page" : undefined}
                   >
                     {tab.name}
                   </Link>
