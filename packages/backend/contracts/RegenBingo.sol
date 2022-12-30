@@ -36,8 +36,8 @@ contract RegenBingo is ERC721 {
 
     function mint() external payable {
         require(msg.value == mintPrice, "INVALID_PRICE");
-        // Using msg.sig so that one can mint multiple different cards in a block
-        uint256 seed = uint256(keccak256(abi.encodePacked(msg.sig, block.timestamp)));
+        // Using totalSupply so that one can mint multiple different cards in a block
+        uint256 seed = uint256(keccak256(abi.encodePacked(totalSupply, msg.sender, block.timestamp)));
         _seeds[totalSupply] = seed;
         _mint(msg.sender, totalSupply);
         totalSupply++;
@@ -56,7 +56,8 @@ contract RegenBingo is ERC721 {
         require(ownerOf(tokenId) != address(0), "INVALID_TOKEN_ID");
 
         string[55] memory parts;
-        parts[0] = '<svg viewBox="0 0 395 150" xmlns="http://www.w3.org/2000/svg"><style>text{fill:yellow;font-family:serif;font-size:30px;}</style><rect width="100%" height="100%" fill="darkgreen"/><text x="20" y="40">';
+        parts[0] =
+            '<svg viewBox="0 0 395 150" xmlns="http://www.w3.org/2000/svg"><style>text{fill:yellow;font-family:serif;font-size:30px;}</style><rect width="100%" height="100%" fill="darkgreen"/><text x="20" y="40">';
         parts[1] = _toNonZeroString(getNumberByCoordinates(tokenId, 0, 0));
         parts[2] = '</text><text x="60" y="40">';
         parts[3] = _toNonZeroString(getNumberByCoordinates(tokenId, 0, 1));
@@ -110,25 +111,61 @@ contract RegenBingo is ERC721 {
         parts[51] = _toNonZeroString(getNumberByCoordinates(tokenId, 2, 7));
         parts[52] = '</text><text x="340" y="130">';
         parts[53] = _toNonZeroString(getNumberByCoordinates(tokenId, 2, 8));
-        parts[54] = '</text></svg>';
+        parts[54] = "</text></svg>";
 
-        string memory output = string(abi.encodePacked(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6], parts[7], parts[8]));
-        output = string(abi.encodePacked(output, parts[9], parts[10], parts[11], parts[12], parts[13], parts[14], parts[15], parts[16]));
-        output = string(abi.encodePacked(output, parts[17], parts[18], parts[19], parts[20], parts[21], parts[22], parts[23], parts[24]));
-        output = string(abi.encodePacked(output, parts[25], parts[26], parts[27], parts[28], parts[29], parts[30], parts[31], parts[32]));
-        output = string(abi.encodePacked(output, parts[33], parts[34], parts[35], parts[36], parts[37], parts[38], parts[39], parts[40]));
-        output = string(abi.encodePacked(output, parts[41], parts[42], parts[43], parts[44], parts[45], parts[46], parts[47], parts[48]));
+        string memory output = string(
+            abi.encodePacked(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6], parts[7], parts[8])
+        );
+        output = string(
+            abi.encodePacked(
+                output, parts[9], parts[10], parts[11], parts[12], parts[13], parts[14], parts[15], parts[16]
+            )
+        );
+        output = string(
+            abi.encodePacked(
+                output, parts[17], parts[18], parts[19], parts[20], parts[21], parts[22], parts[23], parts[24]
+            )
+        );
+        output = string(
+            abi.encodePacked(
+                output, parts[25], parts[26], parts[27], parts[28], parts[29], parts[30], parts[31], parts[32]
+            )
+        );
+        output = string(
+            abi.encodePacked(
+                output, parts[33], parts[34], parts[35], parts[36], parts[37], parts[38], parts[39], parts[40]
+            )
+        );
+        output = string(
+            abi.encodePacked(
+                output, parts[41], parts[42], parts[43], parts[44], parts[45], parts[46], parts[47], parts[48]
+            )
+        );
         output = string(abi.encodePacked(output, parts[49], parts[50], parts[51], parts[52], parts[53], parts[54]));
 
         return string(abi.encodePacked("data:image/svg+xml;base64,", Base64.encode(bytes(output))));
     }
 
-    function tokenURI(uint256 tokenId) override public view returns (string memory) {
+    function tokenURI(uint256 tokenId) public view override returns (string memory) {
         require(ownerOf(tokenId) != address(0), "INVALID_TOKEN_ID");
 
         string memory image = tokenImage(tokenId);
-        string memory json = Base64.encode(bytes(string(abi.encodePacked('{"name": "', name(), ' #', tokenId.toString(), '", "description": "...", "image": "', image, '"}'))));
-        return string(abi.encodePacked('data:application/json;base64,', json));
+        string memory json = Base64.encode(
+            bytes(
+                string(
+                    abi.encodePacked(
+                        '{"name": "',
+                        name(),
+                        " #",
+                        tokenId.toString(),
+                        '", "description": "...", "image": "',
+                        image,
+                        '"}'
+                    )
+                )
+            )
+        );
+        return string(abi.encodePacked("data:application/json;base64,", json));
     }
 
     function claimPrize(uint256 id) external {
@@ -146,6 +183,7 @@ contract RegenBingo is ERC721 {
             }
         }
     }
+
     function getNumberByCoordinates(uint256 id, uint256 row, uint256 column) public view returns (uint256) {
         uint256 seed = _seeds[id];
         uint16[9][3] memory layout = _getLayout(seed % LAYOUTS_COUNT);
