@@ -42,7 +42,7 @@ export default function Header(props: HeaderProps) {
             <a href="/#" className="-m-1.5 p-1.5">
               <span className="sr-only">Regen Bingo</span>
               <img
-                className="h-8 sm:h-4 md:h-6"
+                className="h-6 sm:h-8 md:h-8"
                 src="https://tailwindui.com/img/logos/mark.svg?color=green&shade=600"
                 alt=""
               />
