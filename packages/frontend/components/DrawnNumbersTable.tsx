@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect } from "react";
 
 // TODO: import contract from the contract package
-const contract: any = {};
+// const contract: any = {};
 
 type DrawnNumbersTableProps = {
   onDrawnNumbersUpdate: (drawnNumbers: ITableElement[]) => void;
@@ -13,6 +13,7 @@ export interface ITableElement {
   timestamp: string;
   seed: string;
   txHash: string;
+  id?: number;
 }
 
 export function DrawnNumbersTable(props: DrawnNumbersTableProps) {
