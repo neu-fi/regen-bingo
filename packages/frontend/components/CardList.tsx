@@ -1,6 +1,6 @@
 import React from "react";
 import { ICard, Card } from "@/components/Card";
-import { ITableElement } from "./DrawnNumbersTable";
+import { ITableElement } from "@/components/DrawnNumbersTable";
 
 type CardListProps = {
   drawnNumbers: ITableElement[];
@@ -46,9 +46,10 @@ function CardList(props: CardListProps) {
     },
   ];
 
-  const drawnNumbersInt = props.drawnNumbers.map(
+  const drawnNumbersInt: number[] = props.drawnNumbers.map(
     (number) => number.drawnNumber
   );
+
   return (
     <div className="flex justify-center items-center flex-col">
       {cards.map((card) => (

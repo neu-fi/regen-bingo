@@ -1,7 +1,11 @@
 import React from "react";
+import { useEffect } from "react";
+
+// TODO: import contract from the contract package
+const contract: any = {};
 
 type DrawnNumbersTableProps = {
-  drawnNumbers: ITableElement[];
+  onDrawnNumbersUpdate: (drawnNumbers: ITableElement[]) => void;
 };
 
 export interface ITableElement {
@@ -12,7 +16,33 @@ export interface ITableElement {
 }
 
 export function DrawnNumbersTable(props: DrawnNumbersTableProps) {
-  const { drawnNumbers } = props;
+  const { onDrawnNumbersUpdate } = props;
+  // use useEffect to fetch drawnNumbers from the contract on each contract update
+  const [drawnNumbers, setDrawnNumbers] = React.useState<ITableElement[]>([
+    // TODO: Remove Dummy Data
+    {
+      drawnNumber: 1,
+      timestamp: "2021-05-01T12:00:00Z",
+      seed: "seedseedseedseedseedseedseedseed",
+      txHash: "0x1234567890",
+    },
+    {
+      drawnNumber: 2,
+      timestamp: "2021-05-01T12:00:00Z",
+      seed: "seed",
+      txHash: "0x1234567890",
+    },
+  ]);
+  useEffect(() => {
+    const fetchDrawnNumbers = async () => {
+      // TODO: Fetch drawnNumbers from the contract
+      // const drawnNumbers = await contract.getDrawnNumbers();
+      setDrawnNumbers(drawnNumbers);
+      onDrawnNumbersUpdate(drawnNumbers);
+    };
+    fetchDrawnNumbers();
+  }, []);
+
   return (
     <div className="flex flex-col">
       <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
