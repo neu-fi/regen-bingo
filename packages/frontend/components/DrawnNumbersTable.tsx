@@ -85,7 +85,10 @@ export function DrawnNumbersTable(props: DrawnNumbersTableProps) {
               </thead>
               <tbody className="divide-y divide-gray-100 ">
                 {drawnNumbers.map((drawnNumber) => (
-                  <tr className=" border-b transition duration-300 ease-in-out hover:bg-indigo-100">
+                  <tr
+                    key={drawnNumber.drawnNumber}
+                    className=" border-b transition duration-300 ease-in-out hover:bg-indigo-100"
+                  >
                     <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                       <span className="bg-green-1 hover:bg-yellow-2 w-10 leading-10 mx-1 text-center rounded-full inline-block">
                         {drawnNumber.drawnNumber}
