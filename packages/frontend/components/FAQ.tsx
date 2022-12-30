@@ -1,4 +1,4 @@
-import { Disclosure } from "@headlessui/react";
+import { Disclosure, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 const faqs = [
@@ -58,11 +58,20 @@ export default function FAQ() {
                         </span>
                       </Disclosure.Button>
                     </dt>
-                    <Disclosure.Panel as="dd" className="mt-2 pr-12">
-                      <p className="text-base text-gray-500 whitespace-pre-line max-w-content">
-                        {faq.answer}
-                      </p>
-                    </Disclosure.Panel>
+                    <Transition
+                      enter="transition duration-300 ease-out"
+                      enterFrom="transform scale-95 opacity-0"
+                      enterTo="transform scale-100 opacity-100"
+                      leave="transition duration-100 ease-out"
+                      leaveFrom="transform scale-100 opacity-100"
+                      leaveTo="transform scale-95 opacity-0"
+                    >
+                      <Disclosure.Panel as="dd" className="mt-2 pr-12" static>
+                        <p className="text-base text-gray-500 whitespace-pre-line max-w-content ">
+                          {faq.answer}
+                        </p>
+                      </Disclosure.Panel>
+                    </Transition>
                   </>
                 )}
               </Disclosure>

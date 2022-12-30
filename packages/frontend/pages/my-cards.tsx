@@ -12,14 +12,14 @@ export default function MyCards(props: PropsWithChildren<MyCardsProps>) {
     {
       drawnNumber: 1,
       timestamp: "2021-05-01T12:00:00Z",
-      seed: "seed",
-      txhash: "0x1234567890",
+      seed: "seedseedseedseedseedseedseedseed",
+      txHash: "0x1234567890",
     },
     {
       drawnNumber: 2,
       timestamp: "2021-05-01T12:00:00Z",
       seed: "seed",
-      txhash: "0x1234567890",
+      txHash: "0x1234567890",
     },
   ];
   return (
@@ -38,8 +38,11 @@ export default function MyCards(props: PropsWithChildren<MyCardsProps>) {
                 You can see your cards here and see if you win any of them!
               </p>
             </div>
-            <div className="row-span-full">
-              <div className="flex flex-wrap justify-center items-center">
+            <div className="row-span-full mt-8">
+              <div className="flex flex-wrap justify-center items-center flex-col ">
+                <h3 className="text-xl font-bold text-violet-800 tracking-tight sm:text-center sm:text-xl">
+                  Lucky Numbers
+                </h3>
                 <DrawnNumbersTable
                   drawnNumbers={drawnNumbersList}
                 ></DrawnNumbersTable>
