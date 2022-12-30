@@ -7,9 +7,8 @@ import { ConnectOrSwitchNetworkButton } from "./web3/ConnectOrSwitchNetworkButto
 type HeaderProps = {};
 
 export const tabs = [
-  { name: "Home", href: "/" },
-  { name: "Mint", href: "/mint" },
-  { name: "My Cards", href: "/my-cards" },
+  { name: "Mint", href: "/", current: true },
+  { name: "My Cards", href: "/my-cards", current: false },
 ];
 
 function classNames(...classes: any[]) {
@@ -31,12 +30,8 @@ export default function Header(props: HeaderProps) {
       <div>
         <nav
           className="flex h-9 items-center justify-between"
-          aria-label="Global"
         >
-          <div
-            className="flex sm:min-w-0 sm:flex-1 lg:min-w-0 lg:flex-1"
-            aria-label="Global"
-          >
+          <div>
             <a href="/#" className="-m-1.5 p-1.5">
               <span className="sr-only">Regen Bingo</span>
               <img
@@ -46,7 +41,7 @@ export default function Header(props: HeaderProps) {
               />
             </a>
           </div>
-          <div className="mr-28 lg:mr-0 flex justify-center font-semibold">
+          <div className="mr-4 sm:max-2xl:mr-0 lg:mr-0 flex justify-center font-semibold">
             <div className="sm:hidden">
               <label htmlFor="tabs" className="sr-only">
                 Select a tab
@@ -55,7 +50,7 @@ export default function Header(props: HeaderProps) {
               <select
                 id="tabs"
                 name="tabs"
-                className="text-lg -mt-2 p-2 rounded-xl shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 "
+                className="text-lg ml-2 p-2 rounded-xl shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 "
                 defaultValue={
                   tabs.find((tab) => router.asPath === tab.href)?.name
                 }
@@ -67,7 +62,7 @@ export default function Header(props: HeaderProps) {
               </select>
             </div>
             <div className="hidden sm:block">
-              <nav className="lg:space-x-8 xl:space-x-16" aria-label="Tabs">
+              <nav className="ml-28 md:ml-44 space-x-8 lg:space-x-12 xl:space-x-16" aria-label="Tabs">
                 {tabs.map((tab) => (
                   <Link
                     key={tab.name}
@@ -88,9 +83,7 @@ export default function Header(props: HeaderProps) {
               </nav>
             </div>
           </div>
-          <div className="flex lg:min-w-0 lg:flex-1 lg:justify-end">
-            <ConnectOrSwitchNetworkButton />
-          </div>
+          <ConnectOrSwitchNetworkButton />
         </nav>
       </div>
     </div>

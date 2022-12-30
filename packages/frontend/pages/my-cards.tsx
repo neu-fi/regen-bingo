@@ -1,29 +1,53 @@
-import Header from "@/components/Header";
 import { PropsWithChildren } from "react";
-import BGBlur from "../components/BGBlur";
-import Layout from "@/components/Layout";
 import Head from "next/head";
+import CardList from "@/components/CardList";
+import DrawnNumbersTable, {
+  ITableElement,
+} from "@/components/DrawnNumbersTable";
 
 type MyCardsProps = {};
 
 export default function MyCards(props: PropsWithChildren<MyCardsProps>) {
+  const drawnNumbersList: ITableElement[] = [
+    {
+      drawnNumber: 1,
+      timestamp: "2021-05-01T12:00:00Z",
+      seed: "seed",
+      txhash: "0x1234567890",
+    },
+    {
+      drawnNumber: 2,
+      timestamp: "2021-05-01T12:00:00Z",
+      seed: "seed",
+      txhash: "0x1234567890",
+    },
+  ];
   return (
     <>
       <Head>
         <title>My Cards</title>
       </Head>
-      <div className="relative px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl pt-20 pb-32 sm:pt-48 sm:pb-40">
+      <div className="relative flex px-6 lg:px-8 justify-center">
+        <div className="mx-auto max-w-max mt-10 pb-0">
           <div>
-            <div className="hidden sm:mb-8 sm:flex sm:justify-center">
-              <div className="relative overflow-hidden rounded-full py-1.5 px-4 text-sm leading-6 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
-                <span className="text-gray-600">
-                  Announcing our next round of funding.{" "}
-                  <a href="#" className="font-semibold text-indigo-600">
-                    <span className="absolute inset-0" aria-hidden="true" />
-                    Read more <span aria-hidden="true">&rarr;</span>
-                  </a>
-                </span>
+            <div className="row-span-full">
+              <h1 className="text-4xl font-bold tracking-tight sm:text-center sm:text-6xl">
+                Your Cards
+              </h1>
+              <p className="mt-6 text-lg leading-8 text-gray-600 sm:text-center">
+                You can see your cards here and see if you win any of them!
+              </p>
+            </div>
+            <div className="row-span-full">
+              <div className="flex flex-wrap justify-center items-center">
+                <DrawnNumbersTable
+                  drawnNumbers={drawnNumbersList}
+                ></DrawnNumbersTable>
+              </div>
+            </div>
+            <div className="row-span-full">
+              <div className="flex flex-wrap flex-col justify-center items-center">
+                <CardList drawnNumbers={drawnNumbersList}></CardList>
               </div>
             </div>
             <div>

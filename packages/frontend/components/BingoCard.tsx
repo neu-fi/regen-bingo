@@ -1,6 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
+import Image from "next/image";
 
-type BingoCardProps = {};
+// import ReactLogo from "../public/bingo-card.svg";
+
+type BingoCardProps = {
+  bingoCardId?: number;
+};
+
+interface ICard {
+  id: number;
+  numbers: ICardNumber[];
+}
+
+interface ICardNumber {
+  id: number;
+  value: number;
+  visible: boolean;
+}
 
 /* 
   TODO: BingoCard component
@@ -10,7 +26,19 @@ type BingoCardProps = {};
   hidden or visible, the bingo card itself. 
 */
 function BingoCard(props: BingoCardProps) {
-  return <div>BingoCard</div>;
+  const { bingoCardId } = props;
+  const [bingoCard, setBingoCard] = useState<ICard | null>(null);
+  return (
+    <>
+      <Image
+        className="backdrop-blur-lg"
+        src="bingo-card.svg"
+        height={"400"}
+        width={"400"}
+        alt=""
+      />
+    </>
+  );
 }
 
 export default BingoCard;
