@@ -23,25 +23,25 @@ export function DrawnNumbersTable(props: DrawnNumbersTableProps) {
                 <tr>
                   <th
                     scope="col"
-                    className="text-sm w-4 font-medium text-gray-900 px-6 py-4 text-left"
+                    className="text-sm w-4 font-medium text-gray-900 px-6 py-4 text-center"
                   >
                     Drawn Number
                   </th>
                   <th
                     scope="col"
-                    className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                    className="text-sm font-medium text-gray-900 px-6 py-4 text-center"
                   >
                     Timestamp
                   </th>
                   <th
                     scope="col"
-                    className="text-sm w-8 font-medium text-gray-900 px-6 py-4 text-left"
+                    className="text-sm w-8 font-medium text-gray-900 px-6 py-4 text-center"
                   >
                     Seed
                   </th>
                   <th
                     scope="col"
-                    className="text-sm w-8 font-medium text-gray-900 px-6 py-4 text-left"
+                    className="text-sm w-8 font-medium text-gray-900 px-6 py-4 text-center"
                   >
                     Tx Hash
                   </th>
