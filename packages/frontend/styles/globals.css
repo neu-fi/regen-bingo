@@ -25,3 +25,83 @@ a {
 button {
   cursor: pointer;
 }
+
+@layer base {
+  .text-green-1 {
+    color: #02e2ac;
+  }
+  .text-green-2 {
+    color: #12bc92;
+  }
+  .text-green-3 {
+    color: #b3fded;
+  }
+  .text-green-4 {
+    color: #11bc92;
+  }
+  .text-yellow-1 {
+    color: #f2b705;
+  }
+  .text-yellow-2 {
+    color: #ffeea8;
+  }
+  .text-yellow-3 {
+    color: #ffe686;
+  }
+  .text-dark-1 {
+    color: #1f0b9c;
+  }
+}
+@layer components {
+  .border-green-1 {
+    border-color: #02e2ac;
+  }
+  .border-green-2 {
+    border-color: #12bc92;
+  }
+  .border-green-3 {
+    border-color: #b3fded;
+  }
+  .border-green-4 {
+    border-color: #11bc92;
+  }
+  .border-yellow-1 {
+    border-color: #f2b705;
+  }
+  .border-yellow-2 {
+    border-color: #ffeea8;
+  }
+  .border-yellow-3 {
+    border-color: #ffe686;
+  }
+}
+@layer utilities {
+  .bg-green-1 {
+    background-color: #02e2ac;
+  }
+  .bg-green-2 {
+    background-color: #12bc92;
+  }
+  .bg-green-3 {
+    background-color: #b3fded;
+  }
+  .bg-green-4 {
+    background-color: #11bc92;
+  }
+  .bg-green-5 {
+    backgroud-color: #02e2aead;
+  }
+  .bg-yellow-1 {
+    background-color: #f2b705;
+  }
+  .bg-yellow-2 {
+    background-color: #ffeea8;
+  }
+  .bg-yellow-3 {
+    background-color: #ffe686;
+  }
+}
+
+connect-button > button {
+  background-color: #02e2ac;
+}

@@ -1,5 +1,5 @@
-import BingoCard from "@/components/BingoCard";
 import { PropsWithChildren } from "react";
+import Image from "next/image";
 
 type MintProps = {};
 
@@ -7,8 +7,8 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
   return (
     <div className="relative px-6 lg:px-8">
       <section id="">
-        <div className="flex lg:flex-1 justify-between lg:flex-nowrap flex-wrap">
-          <div className="mx-auto max-w-3xl md:max-2xl:max-w-xl pt-20 pb-32 sm:pt-48 sm:pb-40">
+        <div className="mt-4 flex space-x-1 lg:flex-1 justify-between lg:flex-nowrap flex-wrap">
+          <div className="mx-auto ml-5 max-w-3xl md:max-2xl:max-w-xl pt-20 pb-32 sm:pt-48 sm:pb-40">
             <div>
               <div>
                 <h1 className="text-4xl font-bold tracking-tight sm:text-center sm:text-6xl">
@@ -25,20 +25,24 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
                     onClick={() => {
                       //TODO: Mint with wallet
                     }}
-                    className="inline-block rounded-lg bg-indigo-600 px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-indigo-600 hover:bg-indigo-700 hover:ring-indigo-700"
+                    className="inline-flex items-center  w-auto rounded-lg bg-green-2 px-4 py-1.5 text-base text-white font-semibold leading-7 shadow-sm hover:bg-green-1"
                   >
-                    <img src=""></img>
-                    {"Mint with Wallet "}
-                    <span className="text-indigo-200" aria-hidden="true">
-                      &rarr;
-                    </span>
+                    {"Mint with Wallet"}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      className="ml-2 w-5 h-5"
+                    >
+                      <path d="M1 4.25a3.733 3.733 0 012.25-.75h13.5c.844 0 1.623.279 2.25.75A2.25 2.25 0 0016.75 2H3.25A2.25 2.25 0 001 4.25zM1 7.25a3.733 3.733 0 012.25-.75h13.5c.844 0 1.623.279 2.25.75A2.25 2.25 0 0016.75 5H3.25A2.25 2.25 0 001 7.25zM7 8a1 1 0 011 1 2 2 0 104 0 1 1 0 011-1h3.75A2.25 2.25 0 0119 10.25v5.5A2.25 2.25 0 0116.75 18H3.25A2.25 2.25 0 011 15.75v-5.5A2.25 2.25 0 013.25 8H7z" />
+                    </svg>
                   </a>
                   <a
                     href="#guide"
                     className="inline-block rounded-lg px-4 py-1.5 text-base font-semibold leading-7 text-gray-900 ring-1 ring-gray-900/10 hover:ring-gray-900/20"
                   >
                     {"What the heck is this? "}
-                    <span className="text-gray-400" aria-hidden="true">
+                    <span className="text-yellow-1" aria-hidden="true">
                       &rarr;
                     </span>
                   </a>
@@ -52,7 +56,12 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
           </div>
           <div className="flex lg:flex-1 mx-auto max-w-3xl pt-20 pb-32 sm:pt-48 sm:pb-40 items-center justify-center">
             <div className="flex">
-              <BingoCard />
+              <Image
+                src="/board-example.svg"
+                height={"400"}
+                width={"400"}
+                alt=""
+              />
             </div>
           </div>
         </div>
