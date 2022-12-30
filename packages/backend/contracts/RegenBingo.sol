@@ -4,6 +4,7 @@ pragma solidity ^0.8.13;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract RegenBingo is ERC721 {
+    uint256 constant LAYOUTS_COUNT = 3;
 
     uint256 public mintPrice;
     uint256 public drawTimestamp;
@@ -41,7 +42,7 @@ contract RegenBingo is ERC721 {
     function drawNumber() external returns (uint256) {
         require(block.timestamp > lastDrawTime + drawNumberCooldownSeconds, "DRAW_TOO_SOON");
         // TODO: Use VRF
-        uint256 number = uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty))) % 90;
+        uint256 number = 1 + uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty))) % 90;
         isDrawn[number] = true;
         lastDrawTime = block.timestamp;
         return number;
@@ -59,17 +60,21 @@ contract RegenBingo is ERC721 {
     }
 
     function coveredNumbers(uint256 id) public view returns (uint256 count) {
-        uint256 seed = _seeds[id];
-        uint16[9][3] memory layout = _getLayout(seed % 3);
-        for (uint256 i = 0; i < 3; i++) {
-            for (uint256 j = 0; j < 9; j++) {
-                if (layout[i][j] != 0) {
-                    uint256 n = 1 + (j * 10) + ((seed % layout[i][j]) / 10);
-                    if (isDrawn[n]) {
-                        count++;
-                    }
+        for (uint256 row = 0; row < 3; row++) {
+            for (uint256 column = 0; column < 9; column++) {
+                if (isDrawn[getNumberByCoordinates(id, row, column)]) {
+                    count++;
                 }
             }
+        }
+    }
+    function getNumberByCoordinates(uint256 id, uint256 row, uint256 column) public view returns (uint256) {
+        uint256 seed = _seeds[id];
+        uint16[9][3] memory layout = _getLayout(seed % LAYOUTS_COUNT);
+        if (layout[row][column] == 0) {
+            return 0;
+        } else {
+            return 1 + (column * 10) + ((seed % layout[row][column]) / 10);
         }
     }
 
