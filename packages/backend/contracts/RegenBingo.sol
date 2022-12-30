@@ -34,7 +34,8 @@ contract RegenBingo is ERC721 {
     }
 
     function mint() external payable {
-        require(msg.value == mintPrice, "INVALID_PRICE");
+        require(msg.value == mintPrice, "Incorrect payment amount");
+        require(block.timestamp < drawTimestamp, "Draw already started");
         // Using totalSupply so that one can mint multiple different cards in a block
         uint256 seed = uint256(keccak256(abi.encodePacked(totalSupply, msg.sender, block.timestamp)));
         _seeds[totalSupply] = seed;
