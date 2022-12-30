@@ -14,7 +14,6 @@ contract RegenBingo is ERC721 {
     uint256 public drawTimestamp;
     uint256 public drawNumberCooldownSeconds;
     address payable public charityAddress;
-    uint256[] public drawnNumbers;
     uint256 public lastDrawTime;
     uint256 public totalSupply;
     mapping(uint256 => bool) public isDrawn;
