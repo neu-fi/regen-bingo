@@ -1,5 +1,5 @@
-import BingoCard from "@/components/BingoCard";
 import { PropsWithChildren } from "react";
+import Image from "next/image";
 
 type MintProps = {};
 
@@ -52,7 +52,12 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
           </div>
           <div className="flex lg:flex-1 mx-auto max-w-3xl pt-20 pb-32 sm:pt-48 sm:pb-40 items-center justify-center">
             <div className="flex">
-              <BingoCard />
+              <Image
+                src="/board-example.svg"
+                height={"400"}
+                width={"400"}
+                alt=""
+              />
             </div>
           </div>
         </div>

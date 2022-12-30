@@ -32,6 +32,12 @@ export function DrawnNumbersTable(props: DrawnNumbersTableProps) {
       seed: "seed",
       txHash: "0x1234567890",
     },
+    {
+      drawnNumber: 21,
+      timestamp: "2021-05-01T12:00:00Z",
+      seed: "seed",
+      txHash: "0x1234567890",
+    },
   ]);
   useEffect(() => {
     const fetchDrawnNumbers = async () => {

@@ -4,6 +4,7 @@ import CardList from "@/components/CardList";
 import DrawnNumbersTable, {
   ITableElement,
 } from "@/components/DrawnNumbersTable";
+import CardListV2 from "@/components/CardList";
 
 type MyCardsProps = {};
 
@@ -16,7 +17,7 @@ export default function MyCards(props: PropsWithChildren<MyCardsProps>) {
         <title>My Cards</title>
       </Head>
       <div className="relative flex px-6 lg:px-8 justify-center">
-        <div className="max-w-full min-w-full mt-10 pb-0 flex justify-center">
+        <div className="max-w-full mt-10 pb-0 flex justify-center">
           <div>
             <div className="row-span-full">
               <MyCardsHeader></MyCardsHeader>
@@ -27,8 +28,8 @@ export default function MyCards(props: PropsWithChildren<MyCardsProps>) {
                 drawnNumbersList={drawnNumbersList}
               ></LuckyNumbers>
             </div>
-            <div className="row-span-full">
-              <div className="flex flex-wrap flex-col justify-center items-center">
+            <div className="row-span-full mt-4">
+              <div className="flex flex-col justify-center items-stretch flex-nowrap">
                 <CardList drawnNumbers={drawnNumbersList}></CardList>
               </div>
             </div>
