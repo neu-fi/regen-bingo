@@ -12,6 +12,7 @@ contract RegenBingo is ERC721 {
     uint256[] public drawnNumbers;
     uint256 public lastDrawTime;
     uint256 public totalSupply;
+    mapping(uint256 => bool) public isDrawn;
     mapping(uint256 => uint256) private _seeds;
 
     constructor(
@@ -41,7 +42,7 @@ contract RegenBingo is ERC721 {
         require(block.timestamp > lastDrawTime + drawNumberCooldownSeconds, "DRAW_TOO_SOON");
         // TODO: Use VRF
         uint256 number = uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty))) % 90;
-        drawnNumbers.push(number);
+        isDrawn[number] = true;
         lastDrawTime = block.timestamp;
         return number;
     }
@@ -52,31 +53,24 @@ contract RegenBingo is ERC721 {
     }
 
     function claimPrize(uint256 id) external {
-        require(isFullHouse(id), "not winning ticket");
+        require(15 <= coveredNumbers(id), "not winning ticket");
         charityAddress.call{value: address(this).balance / 2}("");
         payable(ownerOf(id)).call{value: address(this).balance}("");
     }
 
-    function isFullHouse(uint256 id) public returns (bool) {
+    function coveredNumbers(uint256 id) public view returns (int256 count) {
         uint256 seed = _seeds[id];
         uint16[9][3] memory layout = _getLayout(seed % 3);
         for (uint256 i = 0; i < 3; i++) {
             for (uint256 j = 0; j < 9; j++) {
-                if (layout[i][j] != 0 && !_isDrawn(j * 10 + (seed % layout[i][j]) / 10)) {
-                    return false;
+                if (layout[i][j] != 0) {
+                    uint256 n = 1 + (j * 10) + ((seed % layout[i][j]) / 10);
+                    if (isDrawn[n]) {
+                        count++;
+                    }
                 }
             }
         }
-        return true;
-    }
-
-    function _isDrawn(uint256 number) internal view returns (bool) {
-        for (uint256 i = 0; i < drawnNumbers.length; i++) {
-            if (drawnNumbers[i] == number) {
-                return true;
-            }
-        }
-        return false;
     }
 
     function _getLayout(uint256 index) internal view returns (uint16[9][3] memory) {
