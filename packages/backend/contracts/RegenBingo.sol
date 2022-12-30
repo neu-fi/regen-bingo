@@ -58,7 +58,7 @@ contract RegenBingo is ERC721 {
         payable(ownerOf(id)).call{value: address(this).balance}("");
     }
 
-    function coveredNumbers(uint256 id) public view returns (int256 count) {
+    function coveredNumbers(uint256 id) public view returns (uint256 count) {
         uint256 seed = _seeds[id];
         uint16[9][3] memory layout = _getLayout(seed % 3);
         for (uint256 i = 0; i < 3; i++) {
