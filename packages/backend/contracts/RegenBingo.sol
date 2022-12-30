@@ -2,8 +2,12 @@
 pragma solidity ^0.8.13;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/utils/Base64.sol";
 
 contract RegenBingo is ERC721 {
+    using Strings for uint256;
+
     uint256 constant LAYOUTS_COUNT = 3;
 
     uint256 public mintPrice;
@@ -48,9 +52,79 @@ contract RegenBingo is ERC721 {
         return number;
     }
 
-    function tokenURI(uint256 id) public view override returns (string memory) {
-        require(ownerOf(id) != address(0), "URI query for nonexistent token");
-        //TODO: return URI
+    function tokenImage(uint256 tokenId) public view returns (string memory) {
+        require(ownerOf(tokenId) != address(0), "INVALID_TOKEN_ID");
+
+        string[55] memory parts;
+        parts[0] = '<svg viewBox="0 0 390 150" xmlns="http://www.w3.org/2000/svg"><style>text{fill:yellow;font-family:serif;font-size:30px;}</style><rect width="100%" height="100%" fill="darkgreen"/><text x="20"y="40">';
+        parts[1] = getNumberByCoordinates(tokenId, 0, 0).toString();
+        parts[2] = '</text><text x="60"y="40">';
+        parts[3] = getNumberByCoordinates(tokenId, 0, 1).toString();
+        parts[4] = '</text><text x="100"y="40">';
+        parts[5] = getNumberByCoordinates(tokenId, 0, 2).toString();
+        parts[6] = '</text><text x="140"y="40">';
+        parts[7] = getNumberByCoordinates(tokenId, 0, 3).toString();
+        parts[8] = '</text><text x="180"y="40">';
+        parts[9] = getNumberByCoordinates(tokenId, 0, 4).toString();
+        parts[10] = '</text><text x="220"y="40">';
+        parts[11] = getNumberByCoordinates(tokenId, 0, 5).toString();
+        parts[12] = '</text><text x="260"y="40">';
+        parts[13] = getNumberByCoordinates(tokenId, 0, 6).toString();
+        parts[14] = '</text><text x="300"y="40">';
+        parts[15] = getNumberByCoordinates(tokenId, 0, 7).toString();
+        parts[16] = '</text><text x="340"y="40">';
+        parts[17] = getNumberByCoordinates(tokenId, 0, 8).toString();
+        parts[18] = '</text><text x="20"y="85">';
+        parts[19] = getNumberByCoordinates(tokenId, 1, 0).toString();
+        parts[20] = '</text><text x="60"y="85">';
+        parts[21] = getNumberByCoordinates(tokenId, 1, 1).toString();
+        parts[22] = '</text><text x="100"y="85">';
+        parts[23] = getNumberByCoordinates(tokenId, 1, 2).toString();
+        parts[24] = '</text><text x="140"y="85">';
+        parts[25] = getNumberByCoordinates(tokenId, 1, 3).toString();
+        parts[26] = '</text><text x="180"y="85">';
+        parts[27] = getNumberByCoordinates(tokenId, 1, 4).toString();
+        parts[28] = '</text><text x="220"y="85">';
+        parts[29] = getNumberByCoordinates(tokenId, 1, 5).toString();
+        parts[30] = '</text><text x="260"y="85">';
+        parts[31] = getNumberByCoordinates(tokenId, 1, 6).toString();
+        parts[32] = '</text><text x="300"y="85">';
+        parts[33] = getNumberByCoordinates(tokenId, 1, 7).toString();
+        parts[34] = '</text><text x="340"y="85">';
+        parts[35] = getNumberByCoordinates(tokenId, 1, 8).toString();
+        parts[36] = '</text><text x="20"y="130">';
+        parts[37] = getNumberByCoordinates(tokenId, 2, 0).toString();
+        parts[38] = '</text><text x="60"y="130">';
+        parts[39] = getNumberByCoordinates(tokenId, 2, 1).toString();
+        parts[40] = '</text><text x="100"y="130">';
+        parts[41] = getNumberByCoordinates(tokenId, 2, 2).toString();
+        parts[42] = '</text><text x="140"y="130">';
+        parts[43] = getNumberByCoordinates(tokenId, 2, 3).toString();
+        parts[44] = '</text><text x="180"y="130">';
+        parts[45] = getNumberByCoordinates(tokenId, 2, 4).toString();
+        parts[46] = '</text><text x="220"y="130">';
+        parts[47] = getNumberByCoordinates(tokenId, 2, 5).toString();
+        parts[48] = '</text><text x="260"y="130">';
+        parts[49] = getNumberByCoordinates(tokenId, 2, 6).toString();
+        parts[50] = '</text><text x="300"y="130">';
+        parts[51] = getNumberByCoordinates(tokenId, 2, 7).toString();
+        parts[52] = '</text><text x="340"y="130">';
+        parts[53] = getNumberByCoordinates(tokenId, 2, 8).toString();
+        parts[54] = '</text></svg>';
+
+        string memory output = string(abi.encodePacked(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6], parts[7], parts[8]));
+        output = string(abi.encodePacked(output, parts[9], parts[10], parts[11], parts[12], parts[13], parts[14], parts[15], parts[16]));
+        output = string(abi.encodePacked(output, parts[17], parts[18], parts[19], parts[20], parts[21], parts[22], parts[23], parts[54]));
+
+        return string(abi.encodePacked("data:image/svg+xml;base64,", Base64.encode(bytes(output))));
+    }
+
+    function tokenURI(uint256 tokenId) override public view returns (string memory) {
+        require(ownerOf(tokenId) != address(0), "INVALID_TOKEN_ID");
+
+        string memory image = tokenImage(tokenId);
+        string memory json = Base64.encode(bytes(string(abi.encodePacked('{"name": "', name(), ' #', tokenId.toString(), '", "description": "...", "image": "', image, '"}'))));
+        return string(abi.encodePacked('data:application/json;base64,', json));
     }
 
     function claimPrize(uint256 id) external {
