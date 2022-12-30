@@ -7,8 +7,8 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
   return (
     <div className="relative px-6 lg:px-8">
       <section id="">
-        <div className="flex lg:flex-1 justify-between lg:flex-nowrap flex-wrap">
-          <div className="mx-auto max-w-3xl md:max-2xl:max-w-xl pt-20 pb-32 sm:pt-48 sm:pb-40">
+        <div className="mt-4 flex space-x-1 lg:flex-1 justify-between lg:flex-nowrap flex-wrap">
+          <div className="mx-auto ml-5 max-w-3xl md:max-2xl:max-w-xl pt-20 pb-32 sm:pt-48 sm:pb-40">
             <div>
               <div>
                 <h1 className="text-4xl font-bold tracking-tight sm:text-center sm:text-6xl">
