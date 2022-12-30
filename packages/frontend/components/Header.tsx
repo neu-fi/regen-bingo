@@ -39,12 +39,8 @@ export default function Header(props: HeaderProps) {
       <div>
         <nav
           className="flex h-9 items-center justify-between"
-          aria-label="Global"
         >
-          <div
-            className="flex sm:min-w-0 sm:flex-1 lg:min-w-0 lg:flex-1"
-            aria-label="Global"
-          >
+          <div>
             <a href="/#" className="-m-1.5 p-1.5">
               <span className="sr-only">Regen Bingo</span>
               <img
@@ -75,7 +71,7 @@ export default function Header(props: HeaderProps) {
               </select>
             </div>
             <div className="hidden sm:block">
-              <nav className="lg:space-x-8 xl:space-x-16" aria-label="Tabs">
+              <nav className="ml-28 md:ml-44 space-x-8 lg:space-x-12 xl:space-x-16" aria-label="Tabs">
                 {tabs.map((tab) => (
                   <Link
                     key={tab.name}
@@ -94,9 +90,7 @@ export default function Header(props: HeaderProps) {
               </nav>
             </div>
           </div>
-          <div className="flex lg:min-w-0 lg:flex-1 lg:justify-end">
-            <ConnectOrSwitchNetworkButton />
-          </div>
+          <ConnectOrSwitchNetworkButton />
         </nav>
       </div>
     </div>

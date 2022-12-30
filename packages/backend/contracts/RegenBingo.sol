@@ -4,16 +4,33 @@ pragma solidity ^0.8.13;
 import "packages/backend/node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract RegenBingo is ERC721 {
+    uint256[9][3][3] constant layouts = [
+        [
+            [1009, 0, 1013, 1019, 0, 1021, 0, 0, 1031],
+            [1033, 0, 0, 1039, 1049, 0, 0, 1051, 1061],
+            [0, 1063, 0, 1069, 0, 1087, 1091, 0, 1093]
+        ],
+        [
+            [0, 1097, 1103, 0, 0, 0, 1109, 1117, 1123],
+            [1129, 0, 1151, 0, 1153, 0, 0, 1163, 1171],
+            [0, 0, 1181, 1187, 0, 1193, 0, 1201, 1213]
+        ],
+        [
+            [1217, 0, 0, 1223, 1229, 0, 1231, 0, 1237],
+            [0, 1249, 1259, 0, 1277, 1279, 1283, 0, 0],
+            [0, 1289, 1291, 0, 0, 1297, 1301, 1303, 0]
+        ]
+    ];
+
     uint256 public mintPrice;
     uint256 public drawTimestamp;
     uint256 public drawNumberCooldownSeconds;
-    address public charityAddress;
+    address payable public charityAddress;
 
     uint256[] public drawnNumbers;
-    uint256 lastDrawTime;
-    bool public won = false;
+    uint256 public lastDrawTime;
+    uint256 public totalSupply;
 
-    mapping(uint256 => uint256[25]) public cardNumbers;
     mapping(uint256 => uint256) private _seeds;
 
     constructor(
@@ -22,7 +39,7 @@ contract RegenBingo is ERC721 {
         uint256 _mintPrice,
         uint256 _drawTimestamp,
         uint256 _drawNumberCooldownSeconds,
-        address _charityAddress
+        address payable _charityAddress
     ) ERC721(_name, _symbol) {
         mintPrice = _mintPrice;
         drawTimestamp = _drawTimestamp;
@@ -30,13 +47,16 @@ contract RegenBingo is ERC721 {
         charityAddress = _charityAddress;
     }
 
-    function buyCard(uint256 id) external payable {
-        require(msg.value == CARD_PRICE, "INVALID_PRICE");
-        _mint(msg.sender, id);
+    function mint() external payable {
+        require(msg.value == mintPrice, "INVALID_PRICE");
+        uint256 seed = uint256(keccak256(abi.encodePacked(msg.sender, blockhash.timestamp)));
+        _seeds[totalSupply] = seed;
+        _mint(msg.sender, totalSupply);
+        totalSupply++;
     }
 
     function drawNumber() external returns (uint256) {
-        require(block.timestamp > lastDrawTime + 5 minutes, "DRAW_TOO_SOON");
+        require(block.timestamp > lastDrawTime + drawNumberCooldownSeconds, "DRAW_TOO_SOON");
         uint256 number = uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty))) % 99;
         drawnNumbers.push(number);
         lastDrawTime = block.timestamp;
@@ -48,11 +68,31 @@ contract RegenBingo is ERC721 {
         //TODO: return URI
     }
 
-    function claimWinningTicket(uint256 id) external {
-        require(ownerOf(id) == msg.sender, "NOT_OWNER");
-        require(!won, "ALREADY_WON");
-        //TODO: check if card has winning combination
-        won = true;
-        payable(msg.sender).transfer(address(this).balance / 2);
+    function claimPrize(uint256 id) external {
+        require(_isWinningTicket(id), "not winning ticket");
+        charityAddress.call{value: address(this).balance / 2}("");
+        payable(ownerOf(id)).call{value: address(this).balance}("");
+    }
+
+    function _isWinningTicket(uint256 id) internal returns (bool) {
+        uint256 seed = _seeds[id];
+        uint256[9][3] layout = layouts[seed % 3];
+        for (uint256 i = 0; i < 3; i++) {
+            for (uint256 j = 0; j < 9; j++) {
+                if (layout[i][j] != 0 && !_inDrawnNumbers(j * 10 + (seed % layout[i][j]) / 10)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    function _inDrawnNumbers(uint256 number) internal view returns (bool) {
+        for (uint256 i = 0; i < drawnNumbers.length; i++) {
+            if (drawnNumbers[i] == number) {
+                return true;
+            }
+        }
+        return false;
     }
 }
