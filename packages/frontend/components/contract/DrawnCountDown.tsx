@@ -10,6 +10,7 @@ import {
 
 export const DrawnCountDown = () => {
   const [remainingTime, setReamainingTime] = useState(0);
+  const [drawTimestamp, setTimeStamp] = useState("");
 
   const provider = useProvider();
   const contract = useContract({
@@ -20,29 +21,30 @@ export const DrawnCountDown = () => {
 
   const calcRemainigTime = async () => {
     try {
-      const drawTimestamp = await contract?.drawTimestamp();
-      const difference = calcTimeDifference(
-        secondStringToDate(drawTimestamp.toString()),
-        new Date()
-      );
-      setReamainingTime(difference);
+      const drawTime = await contract?.drawTimestamp();
+      setTimeStamp(drawTime.toString());
     } catch (err) {
       console.log(err);
     }
   };
-  async function changeRemaining(isMinus: boolean) {
-    if (!isMinus) {
-      setReamainingTime((prev) => prev - 1);
-    } else {
-      setReamainingTime(-1);
-    }
+
+  function changeRemaining() {
+    const difference = calcTimeDifference(
+      secondStringToDate(drawTimestamp),
+      new Date()
+    );
+    setReamainingTime(difference);
   }
+
   useEffect(() => {
-    calcRemainigTime();
-    let countDown = setInterval(() => {
-      changeRemaining(remainingTime < 0);
+    if (!drawTimestamp) {
+      calcRemainigTime();
+    }
+    const interval = setInterval(() => {
+      changeRemaining();
     }, 1000);
-    return;
-  }, []);
+    return () => clearInterval(interval);
+  });
+
   return <>{secondsToDate(remainingTime)}</>;
 };

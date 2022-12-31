@@ -14,9 +14,19 @@ export function calcTimeDifference(dateOfDraw: any, dateOfNow: any){
   return difference
 }
 
+export const addZero = (date: string) => {
+  if(date.length == 0){
+    return "00"
+  }
+  if(date.length <= 1){
+    return "0" + date
+  }
+  return date
+}
+
 export function secondsToDate(difference: number){
   if(difference  < 0){
-    return "Expired"
+    return "Regen Bingo countdown has been finished"
   }
   else{
     const seconsds = Math.floor(difference % 60)
@@ -25,7 +35,7 @@ export function secondsToDate(difference: number){
     difference /= 60
     const hours = Math.floor(difference % 24)
     const days = Math.floor(difference / 24)
-    return days.toString() + " Days, " + hours.toString() + " Hours, " + minutes.toString() + " Minutes, " + seconsds.toString() + " Seconds";
+    return addZero(days.toString()) + " Days, " + addZero(hours.toString()) + " Hours, " + addZero(minutes.toString()) + " Minutes, " + addZero(seconsds.toString()) + " Seconds";
 
   }
 }
