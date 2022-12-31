@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAccount, useContract, useSigner } from "wagmi";
 import { CONTRACT_ADDRESS, MINT_COST } from "@/config";
 import { regenBingoABI } from "@/contracts/regen_bingo_abi";
@@ -16,28 +16,42 @@ export const BingoCardMint = () => {
     signerOrProvider: signerData,
   });
 
-  async function mintBingoCard() {
-    try {
-      setLoading("Approval waiting");
-      const tx = await contract?.mint({
-        value: MINT_COST,
-      });
-      setLoading("Transaction waiting");
-      await tx.wait();
-      setLoading("");
+  useEffect(() => {
+    if (isConnected) {
       setError("");
-    } catch (err: any) {
-      setError("An error occured");
-      await window.setTimeout(() => {
-        setError("");
+    } else {
+      setError("Connect wallet to mint");
+    }
+    return;
+  }, [isConnected]);
+
+  async function mintBingoCard() {
+    if (isConnected) {
+      try {
+        setLoading("Approval waiting..");
+        const tx = await contract?.mint({
+          value: MINT_COST,
+        });
+        setLoading("Transaction waiting..");
+        await tx.wait();
         setLoading("");
-      }, 1000);
+        setError("");
+      } catch (err: any) {
+        console.log(err);
+        setError("An error occured");
+        await window.setTimeout(() => {
+          setError("");
+          setLoading("");
+        }, 1000);
+      }
+    } else {
+      setError("Please connect a wallet!");
     }
   }
 
   return (
     <button
-      disabled={!isConnected || loading.length > 0 || error.length > 0}
+      disabled={loading.length > 0 || error.length > 0}
       onClick={() => {
         mintBingoCard();
       }}

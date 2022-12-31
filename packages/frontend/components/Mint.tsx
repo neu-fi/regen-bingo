@@ -1,6 +1,7 @@
 import BingoCard from "@/components/BingoCard";
 import { PropsWithChildren } from "react";
 import { BingoCardMint } from "./contract/BingoCardMint";
+import { DrawnCountDown } from "./contract/DrawnCountDown";
 
 type MintProps = {};
 
@@ -19,7 +20,9 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
                   Mint your Bingo card NFT to contribute to public goods funding
                   while getting a chance to claim the prize pool!
                 </p>
-                {/* TODO: Time left until draw start countdown */}
+                <div className="mt-2 text-md text-gray-600 sm:text-center">
+                  <DrawnCountDown />
+                </div>
                 <div className="mt-8 flex gap-x-4 sm:justify-center">
                   <BingoCardMint />
                   <a
