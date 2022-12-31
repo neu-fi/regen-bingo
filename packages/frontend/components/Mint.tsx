@@ -2,7 +2,6 @@ import BingoCard from "@/components/BingoCard";
 import { PropsWithChildren } from "react";
 import { BingoCardMint } from "./contract/BingoCardMint";
 import { DrawnCountDown } from "./contract/DrawnCountDown";
-
 type MintProps = {};
 
 export default function Mint(props: PropsWithChildren<MintProps>) {

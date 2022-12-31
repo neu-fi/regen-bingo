@@ -1,9 +1,8 @@
 import { PropsWithChildren } from "react";
 import Head from "next/head";
 import CardList from "@/components/CardList";
-import DrawnNumbersTable, {
-  ITableElement,
-} from "@/components/DrawnNumbersTable";
+import { GetDrawnNumbers } from "@/components/contract/GetDrawnNumbers";
+import { ITableElement } from "@/components/DrawnNumbersTable";
 
 type MyCardsProps = {};
 
@@ -43,9 +42,7 @@ export default function MyCards(props: PropsWithChildren<MyCardsProps>) {
                 <h3 className="text-xl font-bold text-violet-800 tracking-tight sm:text-center sm:text-xl">
                   Lucky Numbers
                 </h3>
-                <DrawnNumbersTable
-                  drawnNumbers={drawnNumbersList}
-                ></DrawnNumbersTable>
+                <GetDrawnNumbers />
               </div>
             </div>
             <div className="row-span-full">
