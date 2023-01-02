@@ -9,20 +9,20 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
   return (
     <div className="relative px-6 lg:px-8">
       <section id="">
-        <div className="mt-4 flex space-x-1 lg:flex-1 justify-between lg:flex-nowrap flex-wrap">
-          <div className="mx-auto ml-5 max-w-3xl md:max-2xl:max-w-xl pt-20 pb-32 sm:pt-48 sm:pb-40">
+        <div className="mx-auto mt-4  max-w-5xl flex space-x-1 lg:flex-1 justify-between lg:flex-nowrap flex-wrap">
+          <div className="mx-auto max-w-xl ml-5 pt-20 pb-32 sm:pt-48 sm:pb-40">
             <div>
               <div>
                 <h1 className="text-4xl font-bold tracking-tight sm:text-center sm:text-6xl">
                   Regen Bingo
                 </h1>
                 <p className="mt-6 text-lg leading-8 text-gray-600 sm:text-center">
-                  Mint your Bingo card NFT to contribute to public goods funding
+                  Mint Regen Bingo Card NFTs to contribute to public goods funding
                   while getting a chance to claim the prize pool!
                 </p>
-                <div className="mt-2 text-md text-gray-600 sm:text-center">
+                {/* <div className="mt-2 text-md text-gray-600 sm:text-center">
                   <DrawnCountDown />
-                </div>
+                </div> */}
                 <div className="mt-8 flex gap-x-4 sm:justify-center">
                   <BingoCardMint />
                   <a

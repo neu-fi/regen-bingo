@@ -88,7 +88,7 @@ export default function Guide() {
           <p>
             The game is simple:
             <ol role="list">
-              <li>Mint your bingo card</li>
+              <li>Mint Regen Bingo Cards</li>
               <li>Wait for winning numbers to be drawn</li>
               <li>
                 Be the first card owner to have matching numbers with the

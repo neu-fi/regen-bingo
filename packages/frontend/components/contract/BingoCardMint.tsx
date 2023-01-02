@@ -61,7 +61,7 @@ export const BingoCardMint = () => {
         <span>
           {loading && !error && <span>{loading}</span>}
           {error && <span>{error}</span>}
-          {!error && !loading && <span>Mint with wallet</span>}
+          {!error && !loading && <span>Mint</span>}
         </span>
         <svg
           xmlns="http://www.w3.org/2000/svg"

@@ -58,10 +58,10 @@ function MyCardsHeader() {
   return (
     <div>
       <h1 className="text-4xl font-bold tracking-tight sm:text-center sm:text-6xl">
-        Your Cards
+        My Cards
       </h1>
       <p className="mt-6 text-lg leading-8 text-gray-600 sm:text-center">
-        You can see your cards here and see if you win any of them!
+        You can see your Regen Bingo Card NFTs here and watch them as the numbers are drawn!
       </p>
     </div>
   );
