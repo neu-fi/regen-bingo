@@ -1,6 +1,5 @@
 import { clipHash } from "@/utils/utils";
 import React from "react";
-import { useEffect } from "react";
 
 type DrawnNumbersTableProps = {
   drawnNumbers: ITableElement[];
@@ -69,13 +68,7 @@ export function DrawnNumbersTable(props: DrawnNumbersTableProps) {
                   </th>
                   <th
                     scope="col"
-                    className="text-sm w-80 font-medium text-gray-900 px-6 py-4 text-center"
-                  >
-                    Seed
-                  </th>
-                  <th
-                    scope="col"
-                    className="text-sm w-80 font-medium text-gray-900 px-6 py-4 text-center"
+                    className="text-sm w-40 font-medium text-gray-900 px-6 py-4 text-center"
                   >
                     Transaction
                   </th>
@@ -95,12 +88,7 @@ export function DrawnNumbersTable(props: DrawnNumbersTableProps) {
                     <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                       {getTime(drawnNumber.timestamp)}
                     </td>
-                    <td
-                      style={{ wordBreak: "break-word" }}
-                      className="text-sm text-gray-900 font-light px-6 py-4 w-80"
-                    >
-                      {drawnNumber.seed}
-                    </td>
+
                     <td
                       style={{ wordBreak: "break-word" }}
                       className="text-sm text-center text-gray-900 font-light px-6 py-4 "
@@ -118,40 +106,22 @@ export function DrawnNumbersTable(props: DrawnNumbersTableProps) {
               </tbody>
             </table>{" "}
           </div>
-          <div className="grid grid-cols-1 gap-4 sm:hidden">
-            <div className="space-y-3 py-4 overflow-auto">
+          <div className="flex gap-4 sm:hidden">
+            <div className="flex justify-center space-y-3 py-4 overflow-auto">
               {drawnNumbers.map((drawnNumber) => (
                 <div className="flex flex-col items-center space-x-2 space-y-4 px-2 py-4 mb-2 mx-2 text-sm rounded-lg shadow-md overflow-auto">
-                  <div className="flex flex-row row-auto">
+                  <div className="flex ">
                     <div className="col-auto">
-                      <span className="bg-green-1 hover:bg-yellow-2 w-10 leading-10 mx-1 text-center rounded-full inline-block">
-                        {drawnNumber.drawnNumber}
-                      </span>
-                    </div>
-                    <div className="col-auto text-sm font-medium leading-10">
                       <a
                         href={`https://etherscan.io/tx/${drawnNumber.txHash}`}
                         target="_blank"
-                        className="font-bold no-underline text-blue-500 hover:underline"
+                        className="bg-green-1 hover:bg-yellow-2 w-10 leading-10 mx-1 text-center rounded-full inline-block"
                       >
-                        {drawnNumber.txHash}
+                        {drawnNumber.drawnNumber}
                       </a>
                     </div>
                   </div>
-                  <div className="row-auto">
-                    <div className="text-sm max-w-xs flex flex-row items-center">
-                      <div className="flex col-1 space-x-1">
-                        <span className="bg-violet-500 text-violet-100 px-1 py-0.5 text-center rounded-full">
-                          Seed:
-                        </span>
-                      </div>
-                      <div className="flex ml-2 col-8 max-w-4/5">
-                        <span className="block break-all">
-                          {drawnNumber.seed}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
+
                   <div className="col-auto">
                     Time: {getTime(drawnNumber.timestamp)}
                   </div>

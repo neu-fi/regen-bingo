@@ -67,6 +67,18 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
           seed: "seed",
           txHash: "0x1234567890",
         },
+        {
+          drawnNumber: 33,
+          timestamp: "2023-01-01T12:00:00Z",
+          seed: "seed",
+          txHash: "0x1234567890",
+        },
+        {
+          drawnNumber: 31,
+          timestamp: "2023-01-01T12:00:00Z",
+          seed: "seed",
+          txHash: "0x1234567890",
+        },
       ];
     }
     setDrawnNumbers(updatedDrawnNumbers);
