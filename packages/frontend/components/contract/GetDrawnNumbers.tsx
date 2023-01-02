@@ -25,15 +25,15 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
     getDrawCooldownSeconds();
     getDrawnNumbers();
     const interval = setInterval(() => {
-      getDrawnNumbers();
+      getDrawnNumbers(interval);
     }, drawCooldownMilis);
     return () => clearInterval(interval);
-  }, [drawnNumbers]);
+  }, []);
 
-  const getDrawnNumbers = async () => {
+  const getDrawnNumbers = async (interval?: NodeJS.Timer) => {
     //A view function that returns drawnNumbers in an array can be added to contract
+    let updatedDrawnNumbers: ITableElement[] = [];
     try {
-      const updatedDrawnNumbers: ITableElement[] = [];
       for (var i = 1; i < 91; i++) {
         const drawn = await contract?.isDrawn(i);
         if (drawn) {
@@ -45,11 +45,32 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
           });
         }
       }
-      setDrawnNumbers(updatedDrawnNumbers);
-      props.onDrawnNumbersUpdate(updatedDrawnNumbers);
     } catch (err) {
       console.log(err);
+      // If there is an error, we will use a mock array
+      updatedDrawnNumbers = [
+        {
+          drawnNumber: 3,
+          timestamp: "2023-01-01T12:00:00Z",
+          seed: "847a3ccdfd0af697b14d3360c793bf3cfd36ce3c",
+          txHash: "0x1234567890",
+        },
+        {
+          drawnNumber: 2,
+          timestamp: "2023-01-01T12:00:00Z",
+          seed: "seed",
+          txHash: "0x1234567890",
+        },
+        {
+          drawnNumber: 21,
+          timestamp: "2023-01-01T12:00:00Z",
+          seed: "seed",
+          txHash: "0x1234567890",
+        },
+      ];
     }
+    setDrawnNumbers(updatedDrawnNumbers);
+    props.onDrawnNumbersUpdate(updatedDrawnNumbers);
   };
 
   const getDrawCooldownSeconds = async () => {
