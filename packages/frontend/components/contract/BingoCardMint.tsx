@@ -20,7 +20,7 @@ export const BingoCardMint = () => {
     if (isConnected) {
       setError("");
     } else {
-      setError("Connect wallet to mint");
+      setError("Please connect wallet to mint");
     }
     return;
   }, [isConnected]);
@@ -50,24 +50,28 @@ export const BingoCardMint = () => {
   }
 
   return (
-    // TODO: Use Button design on Mint Component
-    //  After finishing the Web3 Helpers, we can use the Button component design on Mint component here.
-    <button
-      disabled={loading.length > 0 || error.length > 0}
-      onClick={() => {
-        mintBingoCard();
-      }}
-      className="inline-block rounded-lg bg-indigo-600 px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-indigo-600 hover:bg-indigo-700 hover:ring-indigo-700"
-    >
-      <img src=""></img>
-      <span className="mr-4">
-        {loading && !error && <span>{loading}</span>}
-        {error && <span>{error}</span>}
-        {!error && !loading && <span>Mint with wallet</span>}
-      </span>
-      <span className="text-indigo-200" aria-hidden="true">
-        &rarr;
-      </span>
-    </button>
+    <>
+      <button
+        disabled={loading.length > 0 || error.length > 0}
+        onClick={() => {
+          mintBingoCard();
+        }}
+        className="disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center w-auto rounded-lg bg-green-2 px-4 py-1.5 text-base text-white font-semibold leading-7 shadow-sm hover:bg-green-1"
+      >
+        <span>
+          {loading && !error && <span>{loading}</span>}
+          {error && <span>{error}</span>}
+          {!error && !loading && <span>Mint with wallet</span>}
+        </span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          className="ml-2 w-10 h-10 sm:w-5 sm:h-5"
+        >
+          <path d="M1 4.25a3.733 3.733 0 012.25-.75h13.5c.844 0 1.623.279 2.25.75A2.25 2.25 0 0016.75 2H3.25A2.25 2.25 0 001 4.25zM1 7.25a3.733 3.733 0 012.25-.75h13.5c.844 0 1.623.279 2.25.75A2.25 2.25 0 0016.75 5H3.25A2.25 2.25 0 001 7.25zM7 8a1 1 0 011 1 2 2 0 104 0 1 1 0 011-1h3.75A2.25 2.25 0 0119 10.25v5.5A2.25 2.25 0 0116.75 18H3.25A2.25 2.25 0 011 15.75v-5.5A2.25 2.25 0 013.25 8H7z" />
+        </svg>
+      </button>
+    </>
   );
 };
