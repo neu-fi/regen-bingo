@@ -1,10 +1,10 @@
 import { PropsWithChildren, useState } from "react";
 import Head from "next/head";
 import CardList from "@/components/CardList";
+import { GetDrawnNumbers } from "@/components/contract/GetDrawnNumbers";
 import DrawnNumbersTable, {
   ITableElement,
 } from "@/components/DrawnNumbersTable";
-import CardListV2 from "@/components/CardList";
 
 type MyCardsProps = {};
 
@@ -25,7 +25,6 @@ export default function MyCards(props: PropsWithChildren<MyCardsProps>) {
             <div className="row-span-full mt-8">
               <LuckyNumbers
                 setDrawnNumbersList={setDrawnNumbersList}
-                drawnNumbersList={drawnNumbersList}
               ></LuckyNumbers>
             </div>
             <div className="row-span-full mt-4">
@@ -41,7 +40,6 @@ export default function MyCards(props: PropsWithChildren<MyCardsProps>) {
 }
 
 function LuckyNumbers(props: {
-  drawnNumbersList: ITableElement[];
   setDrawnNumbersList: (drawnNumbers: ITableElement[]) => void;
 }) {
   return (
@@ -49,9 +47,9 @@ function LuckyNumbers(props: {
       <h3 className="text-xl font-bold text-green-4 tracking-tight sm:text-center sm:text-xl">
         Lucky Numbers
       </h3>
-      <DrawnNumbersTable
+      <GetDrawnNumbers
         onDrawnNumbersUpdate={props.setDrawnNumbersList}
-      ></DrawnNumbersTable>
+      ></GetDrawnNumbers>
     </div>
   );
 }
