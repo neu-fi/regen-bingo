@@ -1,3 +1,4 @@
+import { clipHash } from "@/utils/utils";
 import React from "react";
 import { useEffect } from "react";
 
@@ -76,7 +77,7 @@ export function DrawnNumbersTable(props: DrawnNumbersTableProps) {
                     scope="col"
                     className="text-sm w-80 font-medium text-gray-900 px-6 py-4 text-center"
                   >
-                    Tx Hash
+                    Transaction
                   </th>
                 </tr>
               </thead>
@@ -109,7 +110,7 @@ export function DrawnNumbersTable(props: DrawnNumbersTableProps) {
                         target="_blank"
                         className="font-bold no-underline text-dark-1 hover:underline"
                       >
-                        {drawnNumber.txHash}
+                        {clipHash(drawnNumber.txHash)}
                       </a>
                     </td>
                   </tr>
@@ -152,14 +153,7 @@ export function DrawnNumbersTable(props: DrawnNumbersTableProps) {
                     </div>
                   </div>
                   <div className="col-auto">
-                    {new Intl.DateTimeFormat("en-US", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      second: "2-digit",
-                    }).format(new Date(drawnNumber.timestamp))}
+                    Time: {getTime(drawnNumber.timestamp)}
                   </div>
                 </div>
               ))}
