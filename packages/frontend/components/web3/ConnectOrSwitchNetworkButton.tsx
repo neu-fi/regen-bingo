@@ -7,8 +7,8 @@ export const ConnectOrSwitchNetworkButton = () => {
   watchNetwork((network) => setNetwork(network));
 
   return network.chain && !network.chain.unsupported ? (
-    <ConnectButton chainStatus="none" data-id="connect-button" />
+    <ConnectButton chainStatus="none" />
   ) : (
-    <ConnectButton chainStatus="name" data-id="connect-button" />
+    <ConnectButton chainStatus="name" />
   );
 };

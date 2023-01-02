@@ -30,7 +30,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "components/contract/BingoCardMint.tsx", "components/contract/BingoCardMint.tsx"  ],
   "exclude": [
     "node_modules"
   ]

@@ -40,7 +40,7 @@ const hardhatChain: Chain = {
 };
 
 const { chains, provider } = configureChains(
-  [chain.mainnet, hardhatChain],
+  [chain.mainnet, chain.goerli, hardhatChain],
   [publicProvider()]
 );
 
