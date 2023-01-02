@@ -1,11 +1,8 @@
 import React from "react";
 import { useEffect } from "react";
 
-// TODO: import contract from the contract package
-// const contract: any = {};
-
 type DrawnNumbersTableProps = {
-  onDrawnNumbersUpdate: (drawnNumbers: ITableElement[]) => void;
+  drawnNumbers: ITableElement[];
 };
 
 export interface ITableElement {
@@ -17,38 +14,7 @@ export interface ITableElement {
 }
 
 export function DrawnNumbersTable(props: DrawnNumbersTableProps) {
-  const { onDrawnNumbersUpdate } = props;
-  // use useEffect to fetch drawnNumbers from the contract on each contract update
-  const [drawnNumbers, setDrawnNumbers] = React.useState<ITableElement[]>([
-    // TODO: Remove Dummy Data
-    {
-      drawnNumber: 1,
-      timestamp: "2021-05-01T12:00:00Z",
-      seed: "847a3ccdfd0af697b14d3360c793bf3cfd36ce3c",
-      txHash: "0x1234567890",
-    },
-    {
-      drawnNumber: 2,
-      timestamp: "2021-05-01T12:00:00Z",
-      seed: "seed",
-      txHash: "0x1234567890",
-    },
-    {
-      drawnNumber: 21,
-      timestamp: "2021-05-01T12:00:00Z",
-      seed: "seed",
-      txHash: "0x1234567890",
-    },
-  ]);
-  useEffect(() => {
-    const fetchDrawnNumbers = async () => {
-      // TODO: Fetch drawnNumbers from the contract
-      // const drawnNumbers = await contract.getDrawnNumbers();
-      setDrawnNumbers(drawnNumbers);
-      onDrawnNumbersUpdate(drawnNumbers);
-    };
-    fetchDrawnNumbers();
-  }, []);
+  const { drawnNumbers } = props;
 
   return (
     <div className="flex flex-col">

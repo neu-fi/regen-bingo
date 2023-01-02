@@ -6,7 +6,11 @@ import DrawnNumbersTable, {
   ITableElement,
 } from "@/components/DrawnNumbersTable";
 
-export const GetDrawnNumbers = () => {
+type GetDrawnNumbersProps = {
+  onDrawnNumbersUpdate: (drawnNumbers: ITableElement[]) => void;
+};
+
+export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
   const [drawnNumbers, setDrawnNumbers] = useState<ITableElement[]>([]);
   let drawCooldownMilis = 100000;
 
@@ -16,6 +20,15 @@ export const GetDrawnNumbers = () => {
     abi: regenBingoABI,
     signerOrProvider: provider,
   });
+
+  useEffect(() => {
+    getDrawCooldownSeconds();
+    getDrawnNumbers();
+    const interval = setInterval(() => {
+      getDrawnNumbers();
+    }, drawCooldownMilis);
+    return () => clearInterval(interval);
+  }, [drawnNumbers]);
 
   const getDrawnNumbers = async () => {
     //A view function that returns drawnNumbers in an array can be added to contract
@@ -33,6 +46,7 @@ export const GetDrawnNumbers = () => {
         }
       }
       setDrawnNumbers(updatedDrawnNumbers);
+      props.onDrawnNumbersUpdate(updatedDrawnNumbers);
     } catch (err) {
       console.log(err);
     }
@@ -45,15 +59,6 @@ export const GetDrawnNumbers = () => {
       console.log("Failed to getting drawCooldown");
     }
   };
-
-  useEffect(() => {
-    getDrawCooldownSeconds();
-    getDrawnNumbers();
-    const interval = setInterval(() => {
-      getDrawnNumbers();
-    }, drawCooldownMilis);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <>
