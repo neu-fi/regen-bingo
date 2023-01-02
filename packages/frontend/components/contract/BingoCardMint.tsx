@@ -50,6 +50,8 @@ export const BingoCardMint = () => {
   }
 
   return (
+    // TODO: Use Button design on Mint Component
+    //  After finishing the Web3 Helpers, we can use the Button component design on Mint component here.
     <button
       disabled={loading.length > 0 || error.length > 0}
       onClick={() => {

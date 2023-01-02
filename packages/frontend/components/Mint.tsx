@@ -23,6 +23,9 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
                 <div className="mt-2 text-md text-gray-600 sm:text-center">
                   <DrawnCountDown />
                 </div>
+                {/* TODO: Finish BingoCardMint component according to the design below
+                 <BingoCardMint /> 
+                */}
                 <div className="mt-8 flex gap-x-4 sm:justify-center">
                   <a
                     href="#"
