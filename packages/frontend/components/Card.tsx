@@ -132,9 +132,9 @@ export default function Card(props: CardProps) {
                 <>
                   Unlucky, you have{" "}
                   {matchCount === 0
-                    ? "No matches"
+                    ? "no matches. "
                     : matchCount === 1
-                    ? "1 match"
+                    ? "1 match. "
                     : `${matchCount} matches. `}
                   Better luck next time!
                 </>
