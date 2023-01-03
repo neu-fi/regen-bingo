@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { AppProps } from "next/app";
 import NextHead from "next/head";
-import "../styles/globals.css";
+import "@/styles/globals.css";
 
 // Imports
 import { chain, createClient, WagmiConfig, configureChains } from "wagmi";
