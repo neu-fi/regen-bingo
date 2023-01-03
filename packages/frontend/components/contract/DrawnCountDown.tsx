@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { CUSTOM_REAMAINING_TIME, CONTRACT_ADDRESS } from "@/config";
+import { CONTRACT_ADDRESS } from "@/config";
 import { regenBingoABI } from "@/contracts/regen_bingo_abi";
 import { useContract, useProvider } from "wagmi";
-import {
-  secondStringToDate,
-  calcTimeDifference,
-  secondsToDate,
-} from "@/utils/utils";
+import { timestampToCountdown } from "@/utils/utils";
+import Link from "next/link";
 
 export const DrawnCountDown = () => {
-  const [remainingTime, setReamainingTime] = useState(0);
-  const [drawTimestamp, setTimeStamp] = useState("");
+  const [remainingTime, setRemainingTime] = useState<number>();
+  const [drawTimestamp, setTimeStamp] = useState<number>(0);
 
   const provider = useProvider();
   const contract = useContract({
@@ -19,26 +16,23 @@ export const DrawnCountDown = () => {
     signerOrProvider: provider,
   });
 
-  const calcRemainigTime = async () => {
+  const getDrawTime = async () => {
     try {
-      const drawTime = await contract?.drawTimestamp();
-      setTimeStamp(drawTime.toString());
+      const drawTime = Number(await contract?.drawTimestamp());
+      setTimeStamp(drawTime);
     } catch (err) {
       console.log(err);
     }
   };
 
   function changeRemaining() {
-    const difference = calcTimeDifference(
-      secondStringToDate(drawTimestamp),
-      new Date()
-    );
-    setReamainingTime(difference);
+    const diff = drawTimestamp - new Date().getTime();
+    setRemainingTime(diff);
   }
 
   useEffect(() => {
     if (!drawTimestamp) {
-      calcRemainigTime();
+      getDrawTime();
     }
     const interval = setInterval(() => {
       changeRemaining();
@@ -46,5 +40,29 @@ export const DrawnCountDown = () => {
     return () => clearInterval(interval);
   });
 
-  return <>{secondsToDate(remainingTime)}</>;
+  return (
+    <>
+      {remainingTime ? (
+        <>
+          {remainingTime > 0 ? (
+            <>
+              Numbers will be drawn in
+              <span className="text-green-4">
+                {timestampToCountdown(remainingTime / 1000)}
+              </span>
+            </>
+          ) : (
+            <span>
+              Lucky numbers have been drawn!{" "}
+              <Link href="my-cards" className="text-yellow-1">
+                <span>Check your card now.</span>
+              </Link>
+            </span>
+          )}
+        </>
+      ) : (
+        <></>
+      )}
+    </>
+  );
 };

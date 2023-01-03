@@ -1,0 +1,16 @@
+{
+  "version": "2.0.0",
+  "setupTasks": [
+    "yarn start"
+  ],
+  "tasks": [
+    {
+      "label": "yarn dev",
+      "type": "shell",
+      "command": "yarn dev",
+      "group": "build",
+      "problemMatcher": [],
+      "isBackground": true,
+    }
+  ]
+}
