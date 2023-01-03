@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAccount, useContract, useSigner } from "wagmi";
+import { useAccount, useSigner } from "wagmi";
 import { MINT_PRICE } from "@/config";
 import { useBingoContract } from "@/hooks/useBingoContract";
 
