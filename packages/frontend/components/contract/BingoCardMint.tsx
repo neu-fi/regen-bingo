@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAccount, useContract, useSigner } from "wagmi";
-import { CONTRACT_ADDRESS, MINT_COST } from "@/config";
+import { CONTRACT_ADDRESS, MINT_PRICE } from "@/config";
 import { regenBingoABI } from "@/contracts/regen_bingo_abi";
 
 export const BingoCardMint = () => {
@@ -30,7 +30,7 @@ export const BingoCardMint = () => {
       try {
         setLoading("Approval waiting..");
         const tx = await contract?.mint({
-          value: MINT_COST,
+          value: MINT_PRICE,
         });
         setLoading("Transaction waiting..");
         await tx.wait();
