@@ -44,7 +44,7 @@ contract RegenBingo is ERC721 {
     }
 
     function drawNumber() external returns (uint256) {
-        require(block.timestamp > lastDrawTime + drawNumberCooldownSeconds, "DRAW_TOO_SOON");
+        require(block.timestamp > lastDrawTime + drawNumberCooldownSeconds, "Draw too soon");
         // TODO: Use VRF
         uint256 number = 1 + uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty))) % 90;
         isDrawn[number] = true;
@@ -192,6 +192,10 @@ contract RegenBingo is ERC721 {
         } else {
             return 1 + (column * 10) + ((seed % layout[row][column]) % 10);
         }
+    }
+
+    function getSeed(uint256 id) public view returns (uint256) {
+        return _seeds[id];
     }
 
     function _getLayout(uint256 index) internal pure returns (uint16[9][3] memory) {

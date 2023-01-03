@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 import { loadFixture, time } from "@nomicfoundation/hardhat-network-helpers";
+import { network } from "hardhat";
 
 describe("RegenBingo", function () {
     async function deployBingoFixture() {
@@ -51,7 +52,7 @@ describe("RegenBingo", function () {
             expect(await bingo.ownerOf(0)).to.equal(addr1.address);
         });
 
-        it("does not allow minting with incorrect payment", async function () {
+        it("Does not allow minting with incorrect payment", async function () {
             const { bingo } = await loadFixture(deployBingoFixture);
 
             await expect(bingo.mint({ value: ethers.utils.parseEther("0.2") })).to.be.revertedWith(
@@ -63,7 +64,7 @@ describe("RegenBingo", function () {
             );
         });
 
-        it("does not allow minting after draw", async function () {
+        it("Does not allow minting after draw", async function () {
             const { bingo } = await loadFixture(deployBingoFixture);
 
             await time.increase(3600);
@@ -71,6 +72,40 @@ describe("RegenBingo", function () {
             await expect(bingo.mint({ value: ethers.utils.parseEther("0.1") })).to.be.revertedWith(
                 "Draw already started"
             );
+        });
+
+        it("Different users get different seeds in same block", async function () {
+            const { bingo, addr1, addr2 } = await loadFixture(deployBingoFixture);
+
+            await network.provider.send("evm_setAutomine", [false]);
+
+            await bingo.connect(addr1).mint({ value: ethers.utils.parseEther("0.1") });
+            await bingo.connect(addr2).mint({ value: ethers.utils.parseEther("0.1") });
+
+            await network.provider.send("evm_mine");
+
+            await network.provider.send("evm_setAutomine", [true]);
+
+            expect(await bingo.getSeed(0)).to.not.equal(0);
+            expect(await bingo.getSeed(1)).to.not.equal(0);
+            expect(await bingo.getSeed(0)).to.not.equal(await bingo.getSeed(1));
+        });
+
+        it("User gets different seeds in one block", async function () {
+            const { bingo, addr1 } = await loadFixture(deployBingoFixture);
+
+            await network.provider.send("evm_setAutomine", [false]);
+
+            await bingo.connect(addr1).mint({ value: ethers.utils.parseEther("0.1") });
+            await bingo.connect(addr1).mint({ value: ethers.utils.parseEther("0.1") });
+
+            await network.provider.send("evm_mine");
+
+            await network.provider.send("evm_setAutomine", [true]);
+
+            expect(await bingo.getSeed(0)).to.not.equal(0);
+            expect(await bingo.getSeed(1)).to.not.equal(0);
+            expect(await bingo.getSeed(0)).to.not.equal(await bingo.getSeed(1));
         });
     });
 });
