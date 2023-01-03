@@ -17,12 +17,12 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
                   Regen Bingo
                 </h1>
                 <p className="mt-6 text-lg leading-8 text-gray-600 sm:text-center">
-                  Mint Regen Bingo Card NFTs to contribute to public goods funding
-                  while getting a chance to claim the prize pool!
+                  Mint Regen Bingo Card NFTs to contribute to public goods
+                  funding while getting a chance to claim the prize pool!
                 </p>
-                {/* <div className="mt-2 text-md text-gray-600 sm:text-center">
+                <div className="mt-2 text-md text-gray-600 sm:text-center">
                   <DrawnCountDown />
-                </div> */}
+                </div>
                 <div className="mt-8 flex gap-x-4 sm:justify-center">
                   <BingoCardMint />
                   <a
