@@ -39,9 +39,7 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
         if (drawn) {
           updatedDrawnNumbers.push({
             drawnNumber: i,
-            timestamp: "2021-05-01T12:00:00Z",
-            seed: "seed",
-            txHash: "0x0000",
+            timestamp: "2023-01-01T12:00:00Z",
           });
         }
       }
@@ -52,32 +50,22 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
         {
           drawnNumber: 3,
           timestamp: "2023-01-01T12:00:00Z",
-          seed: "847a3ccdfd0af697b14d3360c793bf3cfd36ce3c",
-          txHash: "0x1234567890",
         },
         {
           drawnNumber: 2,
           timestamp: "2023-01-01T12:00:00Z",
-          seed: "seed",
-          txHash: "0x1234567890",
         },
         {
           drawnNumber: 21,
           timestamp: "2023-01-01T12:00:00Z",
-          seed: "seed",
-          txHash: "0x1234567890",
         },
         {
           drawnNumber: 33,
           timestamp: "2023-01-01T12:00:00Z",
-          seed: "seed",
-          txHash: "0x1234567890",
         },
         {
           drawnNumber: 31,
           timestamp: "2023-01-01T12:00:00Z",
-          seed: "seed",
-          txHash: "0x1234567890",
         },
       ];
     }

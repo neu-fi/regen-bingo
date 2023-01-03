@@ -9,8 +9,8 @@ type DrawnNumbersTableProps = {
 export interface ITableElement {
   drawnNumber: number;
   timestamp: string;
-  seed: string;
-  txHash: string;
+  seed?: string;
+  txHash?: string;
   id?: number;
 }
 
@@ -69,7 +69,11 @@ export function DrawnNumbersTable(props: DrawnNumbersTableProps) {
                         target="_blank"
                         className="font-bold no-underline text-dark-1 hover:underline"
                       >
-                        {clipHash(drawnNumber.txHash)}
+                        {drawnNumber.txHash ? (
+                          <>(clipHash(drawnNumber.txHash)</>
+                        ) : (
+                          <></>
+                        )}
                       </a>
                     </td>
                   </tr>
@@ -84,7 +88,11 @@ export function DrawnNumbersTable(props: DrawnNumbersTableProps) {
                   <div className="flex ">
                     <div className="col-auto">
                       <a
-                        href={`https://etherscan.io/tx/${drawnNumber.txHash}`}
+                        href={
+                          drawnNumber.txHash
+                            ? `https://etherscan.io/tx/${drawnNumber.txHash}`
+                            : "#"
+                        }
                         target="_blank"
                         className="bg-green-1 hover:bg-yellow-2 w-10 leading-10 mx-1 text-center rounded-full inline-block"
                       >

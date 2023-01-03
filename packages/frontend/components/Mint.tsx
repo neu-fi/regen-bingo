@@ -27,7 +27,7 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
                   <BingoCardMint />
                   <a
                     href="#guide"
-                    className="inline-block rounded-lg px-4 py-1.5 text-base font-semibold leading-7 text-gray-900 ring-1 ring-gray-900/10 hover:ring-gray-900/20"
+                    className="inline-block rounded-lg  px-2 sm:px-4 py-1.5 text-base font-semibold leading-7 text-gray-900 ring-1 ring-gray-900/10 hover:ring-gray-900/20"
                   >
                     {"What the heck is this? "}
                     <span className="text-yellow-1" aria-hidden="true">

@@ -76,7 +76,7 @@ export default function Card(props: CardProps) {
   }
 
   function didWinPrize(matchCount: number): boolean {
-    return matchCount === drawnNumbers.length;
+    return drawnNumbers.length != 0 && matchCount === drawnNumbers.length;
   }
 
   return (
