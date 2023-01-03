@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { CONTRACT_ADDRESS } from "@/config";
-import { regenBingoABI } from "@/contracts/regen_bingo_abi";
-import { useContract, useProvider } from "wagmi";
+import { useProvider } from "wagmi";
+import { useBingoContract } from "@/hooks/useBingoContract";
 import { timestampToCountdown } from "@/utils/utils";
 import Link from "next/link";
 
@@ -10,11 +9,7 @@ export const DrawnCountDown = () => {
   const [drawTimestamp, setTimeStamp] = useState<number>(0);
 
   const provider = useProvider();
-  const contract = useContract({
-    address: CONTRACT_ADDRESS,
-    abi: regenBingoABI,
-    signerOrProvider: provider,
-  });
+  const contract = useBingoContract(provider);
 
   const getDrawTime = async () => {
     try {

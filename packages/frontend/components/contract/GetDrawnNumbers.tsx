@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { CONTRACT_ADDRESS } from "@/config";
-import { regenBingoABI } from "@/contracts/regen_bingo_abi";
-import { useContract, useProvider } from "wagmi";
+import { useProvider } from "wagmi";
 import DrawnNumbersTable, {
   ITableElement,
 } from "@/components/DrawnNumbersTable";
+import { useBingoContract } from "@/hooks/useBingoContract";
 
 type GetDrawnNumbersProps = {
   onDrawnNumbersUpdate: (drawnNumbers: ITableElement[]) => void;
@@ -12,14 +11,11 @@ type GetDrawnNumbersProps = {
 
 export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
   const [drawnNumbers, setDrawnNumbers] = useState<ITableElement[]>([]);
+  const [loading, setLoading] = useState("");
   let drawCooldownMilis = 100000;
 
   const provider = useProvider();
-  const contract = useContract({
-    address: CONTRACT_ADDRESS,
-    abi: regenBingoABI,
-    signerOrProvider: provider,
-  });
+  const contract = useBingoContract(provider);
 
   useEffect(() => {
     getDrawCooldownSeconds();
@@ -31,6 +27,7 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
   }, []);
 
   const getDrawnNumbers = async (interval?: NodeJS.Timer) => {
+    setLoading("Loading...");
     //A view function that returns drawnNumbers in an array can be added to contract
     let updatedDrawnNumbers: ITableElement[] = [];
     try {
@@ -70,6 +67,11 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
       ];
     }
     setDrawnNumbers(updatedDrawnNumbers);
+    if (drawnNumbers.length === 0) {
+      setLoading("No numbers drawn yet.");
+    } else {
+      setLoading("");
+    }
     props.onDrawnNumbersUpdate(updatedDrawnNumbers);
   };
 
@@ -84,7 +86,7 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
   return (
     <>
       {drawnNumbers.length == 0 && (
-        <div className="text-xl m-20 font-semibold">Loading...</div>
+        <div className="text-xl m-20 font-semibold">{loading}</div>
       )}
       {drawnNumbers.length > 0 && (
         <DrawnNumbersTable drawnNumbers={drawnNumbers}></DrawnNumbersTable>
