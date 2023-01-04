@@ -22,11 +22,6 @@ export default function MyCards(props: PropsWithChildren<MyCardsProps>) {
             <div className="row-span-full">
               <MyCardsHeader></MyCardsHeader>
             </div>
-            <div className="row-span-full mt-8">
-              <LuckyNumbers
-                setDrawnNumbersList={setDrawnNumbersList}
-              ></LuckyNumbers>
-            </div>
             <div className="row-span-full mt-4">
               <div className="flex flex-col justify-center items-stretch flex-nowrap">
                 <CardList drawnNumbers={drawnNumbersList}></CardList>
@@ -39,21 +34,6 @@ export default function MyCards(props: PropsWithChildren<MyCardsProps>) {
   );
 }
 
-function LuckyNumbers(props: {
-  setDrawnNumbersList: (drawnNumbers: ITableElement[]) => void;
-}) {
-  return (
-    <div className="flex flex-wrap justify-center items-center flex-col ">
-      <h3 className="text-xl font-bold text-green-4 tracking-tight sm:text-center sm:text-xl">
-        Lucky Numbers
-      </h3>
-      <GetDrawnNumbers
-        onDrawnNumbersUpdate={props.setDrawnNumbersList}
-      ></GetDrawnNumbers>
-    </div>
-  );
-}
-
 function MyCardsHeader() {
   return (
     <div>
@@ -61,7 +41,8 @@ function MyCardsHeader() {
         My Cards
       </h1>
       <p className="mt-6 text-lg leading-8 text-gray-600 sm:text-center">
-        You can see your Regen Bingo Card NFTs here and watch them as the numbers are drawn!
+        You can see your Regen Bingo Card NFTs here and watch them as the
+        numbers are drawn!
       </p>
     </div>
   );
