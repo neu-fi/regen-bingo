@@ -4,6 +4,7 @@ import DrawnNumbersTable, {
   ITableElement,
 } from "@/components/DrawnNumbersTable";
 import { useBingoContract } from "@/hooks/useBingoContract";
+import { BigNumber, Event } from "ethers";
 
 type GetDrawnNumbersProps = {
   onDrawnNumbersUpdate: (drawnNumbers: ITableElement[]) => void;
@@ -23,7 +24,15 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
     const interval = setInterval(() => {
       getDrawnNumbers(interval);
     }, drawCooldownMilis);
-    return () => clearInterval(interval);
+    if (contract) {
+      contract.on("DrawNumber", eventHandler);
+    }
+    return () => {
+      if (contract) {
+        contract.off("DrawNumber", eventHandler);
+      }
+      clearInterval(interval);
+    };
   }, []);
 
   const getDrawnNumbers = async (interval?: NodeJS.Timer) => {
@@ -41,7 +50,6 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
         }
       }
     } catch (err) {
-      console.log(err);
       // If there is an error, we will use a mock array
       updatedDrawnNumbers = [
         {
@@ -81,6 +89,20 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
     } catch (err) {
       console.log("Failed to getting drawCooldown");
     }
+  };
+
+  const eventHandler = async (number: BigNumber, event: Event) => {
+    const tx = await event.getTransaction();
+    const block = await event.getBlock();
+    const blockTimestamp = block?.timestamp;
+    const timestamp = new Date(blockTimestamp * 1000).toString();
+    await tx.wait();
+    const newNumber: ITableElement = {
+      drawnNumber: number.toNumber(),
+      timestamp: timestamp,
+      txHash: tx?.hash,
+    };
+    setDrawnNumbers((prev) => [...prev, newNumber]);
   };
 
   return (
