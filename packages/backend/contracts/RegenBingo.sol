@@ -10,14 +10,29 @@ contract RegenBingo is ERC721 {
 
     uint256 constant LAYOUTS_COUNT = 3;
 
+    /*//////////////////////////////////////////////////////////////
+                             STATE VARIABLES
+    //////////////////////////////////////////////////////////////*/
+
     uint256 public mintPrice;
     uint256 public drawTimestamp;
     uint256 public drawNumberCooldownSeconds;
-    address payable public charityAddress;
     uint256 public lastDrawTime;
     uint256 public totalSupply;
+    address payable public charityAddress;
     mapping(uint256 => bool) public isDrawn;
     mapping(uint256 => uint256) private _seeds;
+
+    /*//////////////////////////////////////////////////////////////
+                                 EVENTS
+    //////////////////////////////////////////////////////////////*/
+
+    event DrawNumber(uint256 number);
+    event ClaimPrize(uint256 tokenId, address winner);
+
+    /*//////////////////////////////////////////////////////////////
+                               CONSTRUCTOR
+    //////////////////////////////////////////////////////////////*/
 
     constructor(
         string memory _name,
@@ -33,6 +48,10 @@ contract RegenBingo is ERC721 {
         charityAddress = _charityAddress;
     }
 
+    /*//////////////////////////////////////////////////////////////
+                           EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
     function mint() external payable {
         require(msg.value == mintPrice, "Incorrect payment amount");
         require(block.timestamp < drawTimestamp, "Draw already started");
@@ -44,13 +63,36 @@ contract RegenBingo is ERC721 {
     }
 
     function drawNumber() external returns (uint256) {
+        require(block.timestamp > drawTimestamp, "Draw not started yet");
         require(block.timestamp > lastDrawTime + drawNumberCooldownSeconds, "Draw too soon");
         // TODO: Use VRF
-        uint256 number = 1 + uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty))) % 90;
+
+        uint256 nonce = 0;
+        uint256 number = 1 + uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty, nonce))) % 90;
+
+        while (isDrawn[number]) {
+            number = 1 + uint256(keccak256(abi.encodePacked(number, block.timestamp, block.difficulty, nonce))) % 90;
+            nonce++;
+        }
+
         isDrawn[number] = true;
         lastDrawTime = block.timestamp;
+        emit DrawNumber(number);
         return number;
     }
+
+    function claimPrize(uint256 id) external {
+        _requireMinted(id);
+        require(coveredNumbers(id) == 15, "INELIGIBLE");
+        charityAddress.call{value: address(this).balance / 2}("");
+        address payable winner = payable(ownerOf(id));
+        winner.call{value: address(this).balance}("");
+        emit ClaimPrize(id, winner);
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                          PUBLIC VIEW FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
 
     function tokenImage(uint256 tokenId) public view returns (string memory) {
         require(ownerOf(tokenId) != address(0), "INVALID_TOKEN_ID");
@@ -168,12 +210,6 @@ contract RegenBingo is ERC721 {
         return string(abi.encodePacked("data:application/json;base64,", json));
     }
 
-    function claimPrize(uint256 id) external {
-        require(coveredNumbers(id) == 15, "INELIGIBLE");
-        charityAddress.call{value: address(this).balance / 2}("");
-        payable(ownerOf(id)).call{value: address(this).balance}("");
-    }
-
     function coveredNumbers(uint256 id) public view returns (uint256 count) {
         for (uint256 row = 0; row < 3; row++) {
             for (uint256 column = 0; column < 9; column++) {
@@ -197,6 +233,10 @@ contract RegenBingo is ERC721 {
     function getSeed(uint256 id) public view returns (uint256) {
         return _seeds[id];
     }
+
+    /*//////////////////////////////////////////////////////////////
+                           INTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
 
     function _getLayout(uint256 index) internal pure returns (uint16[9][3] memory) {
         return [

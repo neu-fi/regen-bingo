@@ -108,4 +108,103 @@ describe("RegenBingo", function () {
             expect(await bingo.getSeed(0)).to.not.equal(await bingo.getSeed(1));
         });
     });
+
+    describe("Drawing numbers", function () {
+        it("Draws one number correctly", async function () {
+            const { bingo } = await loadFixture(deployBingoFixture);
+
+            await time.increase(3600);
+
+            let tx = await bingo.drawNumber();
+
+            let receipt = await tx.wait();
+
+            let drawnNumber = Number(receipt.events[0].data);
+
+            expect(drawnNumber).to.be.within(1, 90);
+            expect(await bingo.lastDrawTime()).to.equal(await time.latest());
+            expect(await bingo.isDrawn(drawnNumber)).to.equal(true);
+        });
+
+        it("Draws multiple numbers correctly", async function () {
+            const { bingo } = await loadFixture(deployBingoFixture);
+
+            await time.increase(3600);
+
+            await bingo.drawNumber();
+
+            await time.increase(60 * 5);
+
+            let tx = await bingo.drawNumber();
+
+            let receipt = await tx.wait();
+
+            let drawnNumber = Number(receipt.events[0].data);
+
+            expect(drawnNumber).to.be.within(1, 90);
+            expect(await bingo.lastDrawTime()).to.equal(await time.latest());
+            expect(await bingo.isDrawn(drawnNumber)).to.equal(true);
+        });
+
+        it("Does not allow drawing number before drawTimestamp", async function () {
+            const { bingo } = await loadFixture(deployBingoFixture);
+
+            await expect(bingo.drawNumber()).to.be.revertedWith("Draw not started yet");
+        });
+
+        it("Does not allow drawing number before drawInterval", async function () {
+            const { bingo } = await loadFixture(deployBingoFixture);
+
+            await time.increase(3600);
+
+            await bingo.drawNumber();
+
+            await expect(bingo.drawNumber()).to.be.revertedWith("Draw too soon");
+        });
+    });
+
+    describe("Claiming prize", function () {
+        it("Any card eventually wins", async function () {
+            const { bingo, charity, addr2 } = await loadFixture(deployBingoFixture);
+
+            await bingo.mint({ value: ethers.utils.parseEther("0.1") });
+            await time.increase(3600);
+
+            for (let i = 0; i < 90; i++) {
+                await bingo.drawNumber();
+                await time.increase(60 * 5);
+            }
+
+            let winner = await bingo.ownerOf(0);
+            let bingoBalanceBefore = await ethers.provider.getBalance(bingo.address);
+            let charityBalanceBefore = await ethers.provider.getBalance(charity.address);
+            let winnerBalanceBefore = await ethers.provider.getBalance(winner);
+
+            expect(bingoBalanceBefore).to.eq(ethers.utils.parseEther("0.1"));
+
+            await bingo.connect(addr2).claimPrize(0);
+
+            expect(await ethers.provider.getBalance(bingo.address)).to.eq(0);
+            expect(await ethers.provider.getBalance(charity.address)).to.eq(
+                charityBalanceBefore.add(ethers.utils.parseEther("0.05"))
+            );
+            expect(await ethers.provider.getBalance(winner)).to.eq(
+                winnerBalanceBefore.add(ethers.utils.parseEther("0.05"))
+            );
+        });
+
+        it("Invalid cards can not claim", async function () {
+            const { bingo } = await loadFixture(deployBingoFixture);
+
+            await expect(bingo.claimPrize(0)).to.be.revertedWith("ERC721: invalid token ID");
+        });
+
+        it("Losing cards can not claim", async function () {
+            const { bingo } = await loadFixture(deployBingoFixture);
+
+            await bingo.mint({ value: ethers.utils.parseEther("0.1") });
+
+            await expect(bingo.claimPrize(0)).to.be.revertedWith("INELIGIBLE");
+        });
+    });
 });
