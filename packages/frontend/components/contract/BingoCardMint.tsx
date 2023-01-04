@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useAccount, useContract, useSigner } from "wagmi";
-import { CONTRACT_ADDRESS, MINT_PRICE } from "@/config";
-import { regenBingoABI } from "@/contracts/regen_bingo_abi";
+import { useAccount, useSigner } from "wagmi";
+import { MINT_PRICE } from "@/config";
+import { useBingoContract } from "@/hooks/useBingoContract";
 
 export const BingoCardMint = () => {
   const [loading, setLoading] = useState("");
@@ -10,11 +10,7 @@ export const BingoCardMint = () => {
   const { isConnected } = useAccount();
   const { data: signerData } = useSigner();
 
-  const contract = useContract({
-    address: CONTRACT_ADDRESS,
-    abi: regenBingoABI,
-    signerOrProvider: signerData,
-  });
+  const contract = useBingoContract(signerData);
 
   useEffect(() => {
     if (isConnected) {
