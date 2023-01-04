@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAccount, useSigner } from "wagmi";
 import { MINT_PRICE } from "@/config";
 import { useBingoContract } from "@/hooks/useBingoContract";
+import { ethers } from "ethers";
 
 export const BingoCardMint = () => {
   const [loading, setLoading] = useState("");
@@ -26,20 +27,20 @@ export const BingoCardMint = () => {
       try {
         setLoading("Approval waiting..");
         const tx = await contract?.mint({
-          value: MINT_PRICE,
+          value: ethers.utils.parseEther(MINT_PRICE.toString()),
         });
         setLoading("Transaction waiting..");
         await tx.wait();
         setLoading("");
-        setError("");
+        setError("Succesfully minted");
       } catch (err: any) {
         console.log(err);
         setError("An error occured");
-        await window.setTimeout(() => {
-          setError("");
-          setLoading("");
-        }, 1000);
       }
+      await window.setTimeout(() => {
+        setError("");
+        setLoading("");
+      }, 2000);
     } else {
       setError("Please connect a wallet!");
     }
