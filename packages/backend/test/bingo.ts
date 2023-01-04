@@ -108,4 +108,58 @@ describe("RegenBingo", function () {
             expect(await bingo.getSeed(0)).to.not.equal(await bingo.getSeed(1));
         });
     });
+
+    describe("Drawing numbers", function () {
+        it("Draws one number correctly", async function () {
+            const { bingo } = await loadFixture(deployBingoFixture);
+
+            await time.increase(3600);
+
+            let tx = await bingo.drawNumber();
+
+            let receipt = await tx.wait();
+
+            let drawnNumber = Number(receipt.events[0].data);
+
+            expect(drawnNumber).to.be.within(1, 90);
+            expect(await bingo.lastDrawTime()).to.equal(await time.latest());
+            expect(await bingo.isDrawn(drawnNumber)).to.equal(true);
+        });
+
+        it("Draws multiple numbers correctly", async function () {
+            const { bingo } = await loadFixture(deployBingoFixture);
+
+            await time.increase(3600);
+
+            await bingo.drawNumber();
+
+            await time.increase(60 * 5);
+
+            let tx = await bingo.drawNumber();
+
+            let receipt = await tx.wait();
+
+            let drawnNumber = Number(receipt.events[0].data);
+
+            expect(drawnNumber).to.be.within(1, 90);
+            expect(await bingo.lastDrawTime()).to.equal(await time.latest());
+            expect(await bingo.isDrawn(drawnNumber)).to.equal(true);
+        });
+
+        it("Does not allow drawing number before drawTimestamp", async function () {
+            const { bingo } = await loadFixture(deployBingoFixture);
+
+            await expect(bingo.drawNumber()).to.be.revertedWith("Draw not started yet");
+        });
+
+        it("Does not allow drawing number before drawInterval", async function () {
+            const { bingo } = await loadFixture(deployBingoFixture);
+
+            await time.increase(3600);
+
+            await bingo.drawNumber();
+
+            await expect(bingo.drawNumber()).to.be.revertedWith("Draw too soon");
+        });
+    });
 });
