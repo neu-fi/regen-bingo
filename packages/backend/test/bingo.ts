@@ -162,4 +162,49 @@ describe("RegenBingo", function () {
             await expect(bingo.drawNumber()).to.be.revertedWith("Draw too soon");
         });
     });
+
+    describe("Claiming prize", function () {
+        it("Any card eventually wins", async function () {
+            const { bingo, charity, addr2 } = await loadFixture(deployBingoFixture);
+
+            await bingo.mint({ value: ethers.utils.parseEther("0.1") });
+            await time.increase(3600);
+
+            for (let i = 0; i < 90; i++) {
+                await bingo.drawNumber();
+                await time.increase(60 * 5);
+            }
+
+            let winner = await bingo.ownerOf(0);
+            let bingoBalanceBefore = await ethers.provider.getBalance(bingo.address);
+            let charityBalanceBefore = await ethers.provider.getBalance(charity.address);
+            let winnerBalanceBefore = await ethers.provider.getBalance(winner);
+
+            expect(bingoBalanceBefore).to.eq(ethers.utils.parseEther("0.1"));
+
+            await bingo.connect(addr2).claimPrize(0);
+
+            expect(await ethers.provider.getBalance(bingo.address)).to.eq(0);
+            expect(await ethers.provider.getBalance(charity.address)).to.eq(
+                charityBalanceBefore.add(ethers.utils.parseEther("0.05"))
+            );
+            expect(await ethers.provider.getBalance(winner)).to.eq(
+                winnerBalanceBefore.add(ethers.utils.parseEther("0.05"))
+            );
+        });
+
+        it("Invalid cards can not claim", async function () {
+            const { bingo } = await loadFixture(deployBingoFixture);
+
+            await expect(bingo.claimPrize(0)).to.be.revertedWith("ERC721: invalid token ID");
+        });
+
+        it("Losing cards can not claim", async function () {
+            const { bingo } = await loadFixture(deployBingoFixture);
+
+            await bingo.mint({ value: ethers.utils.parseEther("0.1") });
+
+            await expect(bingo.claimPrize(0)).to.be.revertedWith("INELIGIBLE");
+        });
+    });
 });

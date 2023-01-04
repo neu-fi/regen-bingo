@@ -66,7 +66,15 @@ contract RegenBingo is ERC721 {
         require(block.timestamp > drawTimestamp, "Draw not started yet");
         require(block.timestamp > lastDrawTime + drawNumberCooldownSeconds, "Draw too soon");
         // TODO: Use VRF
-        uint256 number = 1 + uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty))) % 90;
+
+        uint256 nonce = 0;
+        uint256 number = 1 + uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty, nonce))) % 90;
+
+        while (isDrawn[number]) {
+            number = 1 + uint256(keccak256(abi.encodePacked(number, block.timestamp, block.difficulty, nonce))) % 90;
+            nonce++;
+        }
+
         isDrawn[number] = true;
         lastDrawTime = block.timestamp;
         emit DrawNumber(number);
@@ -74,6 +82,7 @@ contract RegenBingo is ERC721 {
     }
 
     function claimPrize(uint256 id) external {
+        _requireMinted(id);
         require(coveredNumbers(id) == 15, "INELIGIBLE");
         charityAddress.call{value: address(this).balance / 2}("");
         address payable winner = payable(ownerOf(id));
