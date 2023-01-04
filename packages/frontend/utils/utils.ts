@@ -24,7 +24,7 @@ export function getTimeDifference(
   const now = new Date();
   const date = new Date(timestamp);
   let diff = (date.getTime() - now.getTime()) / 1000;
-  for (let i = 0; i <= DIVISIONS.length; i++) {
+  for (let i = 0; i < DIVISIONS.length; i++) {
     const division = DIVISIONS[i];
     if (Math.abs(diff) < division.amount) {
       return timeFormatter.format(
