@@ -13,17 +13,13 @@ type GetDrawnNumbersProps = {
 export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
   const [drawnNumbers, setDrawnNumbers] = useState<ITableElement[]>([]);
   const [loading, setLoading] = useState("");
-  let drawCooldownMilis = 100000;
+  let luckyNumbers: Number[] = [];
 
   const provider = useProvider();
   const contract = useBingoContract(provider);
 
   useEffect(() => {
-    getDrawCooldownSeconds();
     getDrawnNumbers();
-    const interval = setInterval(() => {
-      getDrawnNumbers(interval);
-    }, drawCooldownMilis);
     if (contract) {
       contract.on("DrawNumber", eventHandler);
     }
@@ -31,24 +27,22 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
       if (contract) {
         contract.off("DrawNumber", eventHandler);
       }
-      clearInterval(interval);
     };
   }, []);
 
-  const getDrawnNumbers = async (interval?: NodeJS.Timer) => {
+  const getDrawnNumbers = async () => {
     setLoading("Loading...");
-    //A view function that returns drawnNumbers in an array can be added to contract
     let updatedDrawnNumbers: ITableElement[] = [];
     try {
-      for (var i = 1; i < 91; i++) {
-        const drawn = await contract?.isDrawn(i);
-        if (drawn) {
-          updatedDrawnNumbers.push({
-            drawnNumber: i,
-            timestamp: "2023-01-01T12:00:00Z",
-          });
-        }
+      const filter = contract?.filters.DrawNumber();
+      if (!filter) {
+        console.log("Events cannot found");
+        return;
       }
+      const events = await contract?.queryFilter(filter);
+      events?.forEach((event) => {
+        eventHandler(event.args?.number, event);
+      });
     } catch (err) {
       // If there is an error, we will use a mock array
       updatedDrawnNumbers = [
@@ -83,26 +77,21 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
     props.onDrawnNumbersUpdate(updatedDrawnNumbers);
   };
 
-  const getDrawCooldownSeconds = async () => {
-    try {
-      drawCooldownMilis = (await contract?.drawNumberCooldownSeconds()) * 1000;
-    } catch (err) {
-      console.log("Failed to getting drawCooldown");
-    }
-  };
-
   const eventHandler = async (number: BigNumber, event: Event) => {
-    const tx = await event.getTransaction();
     const block = await event.getBlock();
     const blockTimestamp = block?.timestamp;
+    const luckyNumber = event.args?.number.toNumber();
     const timestamp = new Date(blockTimestamp * 1000).toString();
-    await tx.wait();
+    const tx = event.transactionHash;
     const newNumber: ITableElement = {
-      drawnNumber: number.toNumber(),
+      drawnNumber: luckyNumber,
       timestamp: timestamp,
-      txHash: tx?.hash,
+      txHash: tx,
     };
-    setDrawnNumbers((prev) => [...prev, newNumber]);
+    if (!luckyNumbers.includes(luckyNumber)) {
+      luckyNumbers.push(luckyNumber);
+      setDrawnNumbers((prev) => [...prev, newNumber]);
+    }
   };
 
   return (
