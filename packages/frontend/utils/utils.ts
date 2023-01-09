@@ -5,7 +5,6 @@ export function classNames(...classes: any[]) {
 export const timeFormatter: Intl.RelativeTimeFormat =
   new Intl.RelativeTimeFormat("en-US", {
     numeric: "auto",
-    style: "narrow",
   });
 
 const DIVISIONS: any[] = [

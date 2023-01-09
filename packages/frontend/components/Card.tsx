@@ -2,6 +2,7 @@ import { classNames } from "@/utils/utils";
 import React from "react";
 import Image from "next/image";
 import { useEffect } from "react";
+import Link from "next/link";
 
 type CardProps = {
   card: ICard;
@@ -103,14 +104,16 @@ export default function Card(props: CardProps) {
           <div className="space-y-2 text-lg font-medium leading-6">
             <h3>
               Regen Bingo NFT{" "}
-              <span className="text-lg text-green-2">#{props.card.id}</span>
+              <Link href={`cards/${card.id}`} className="text-lg text-green-2">
+                #{card.id}
+              </Link>
             </h3>
           </div>
 
           <ul role="list" className="flex space-x-5">
             <li>
               <a
-                href={`https://opensea.io/assets/ethereum/${props.card.hash}`}
+                href={`https://opensea.io/assets/ethereum/${card.hash}`}
                 target="_blank"
                 className="text-gray-400 hover:text-gray-500"
               >
