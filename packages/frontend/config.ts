@@ -16,7 +16,7 @@ function getNetwork(): NetworkDetails {
         NETWORK_NAME: "Mainnet",
         CONTRACT_ADDRESS: process.env
           .NEXT_PUBLIC_MAINNET_CONTRACT_ADDRESS as string,
-        MINT_PRICE: 0.01,
+        MINT_PRICE: 0.1,
       };
       break;
     case "goerli":
@@ -25,7 +25,7 @@ function getNetwork(): NetworkDetails {
         NETWORK_NAME: "Goerli",
         CONTRACT_ADDRESS: process.env
           .NEXT_PUBLIC_TESTNET_CONTRACT_ADDRESS as string,
-        MINT_PRICE: 0.01,
+        MINT_PRICE: 0.1,
       };
       break;
     case "hardhat":
@@ -34,7 +34,7 @@ function getNetwork(): NetworkDetails {
         NETWORK_NAME: "Hardhat",
         CONTRACT_ADDRESS: process.env
           .NEXT_PUBLIC_HARDHAT_CONTRACT_ADDRESS as string,
-        MINT_PRICE: 0.01,
+        MINT_PRICE: 0.1,
       };
       break;
     default:
@@ -42,7 +42,7 @@ function getNetwork(): NetworkDetails {
         NETWORK_ID: 31337,
         NETWORK_NAME: "Hardhat",
         CONTRACT_ADDRESS: "",
-        MINT_PRICE: 0.01,
+        MINT_PRICE: 0.1,
       };
   }
   return networkDetails;

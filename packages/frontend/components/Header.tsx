@@ -14,6 +14,7 @@ interface ITab {
 export const tabs: ITab[] = [
   { name: "Mint", href: "/" },
   { name: "My Cards", href: "/my-cards" },
+  { name: "Lucky Numbers", href: "/lucky-numbers" },
 ];
 
 function classNames(...classes: any[]) {

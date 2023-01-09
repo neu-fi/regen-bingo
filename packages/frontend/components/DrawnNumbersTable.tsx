@@ -70,7 +70,7 @@ export function DrawnNumbersTable(props: DrawnNumbersTableProps) {
                         className="font-bold no-underline text-dark-1 hover:underline"
                       >
                         {drawnNumber.txHash ? (
-                          <>(clipHash(drawnNumber.txHash)</>
+                          <>{clipHash(drawnNumber.txHash)}</>
                         ) : (
                           <></>
                         )}
