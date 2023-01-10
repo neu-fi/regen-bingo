@@ -6,20 +6,24 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const signer = signers[0];
   const greeterContract = await hre.ethers.getContract("RegenBingo", signer);
   
-  console.log("\ntotalSupply");
+  console.log("\ntotalSupply:");
   console.log(await greeterContract.totalSupply());
   
-  console.log("\nmint");
+  console.log("\nminting...");
   await greeterContract.mint({ value: hre.ethers.utils.parseEther("0.1") })
   
-  console.log("\ntotalSupply");
+  console.log("\ntotalSupply:");
   console.log(await greeterContract.totalSupply());
   
-  console.log("\ntokenImage");
-  console.log(await greeterContract.tokenImage(0));
+  console.log("\ntokenId:");
+  let tokenId = await greeterContract.tokenByIndex(0);
+  console.log(tokenId);
   
-  console.log("\ntokenURI");
-  console.log(await greeterContract.tokenURI(0));
+  console.log("\ntokenImage:");
+  console.log(await greeterContract.tokenImage(tokenId));
+  
+  console.log("\ntokenURI:");
+  console.log(await greeterContract.tokenURI(tokenId));
 };
 
 export default main;
