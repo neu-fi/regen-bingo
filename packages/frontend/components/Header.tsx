@@ -50,7 +50,7 @@ export default function Header(props: HeaderProps) {
             </a>
           </div>
           <div className="mr-8 lg:mr-0 flex justify-center font-semibold">
-            <div className="sm:hidden">
+            <div className="block sm:hidden">
               <label htmlFor="tabs" className="sr-only">
                 Select a tab
               </label>
@@ -71,23 +71,29 @@ export default function Header(props: HeaderProps) {
             </div>
             <div className="hidden sm:block">
               <nav
-                className="ml-28 md:ml-52 space-x-8 lg:space-x-12 xl:space-x-16"
+                className="flex justify-evenly ml-auto md:ml-auto space-x-8 lg:space-x-12 xl:space-x-16"
                 aria-label="Tabs"
               >
                 {tabs.map((tab) => (
-                  <Link
-                    key={tab.name}
-                    href={tab.href}
-                    className={classNames(
-                      isCurrent(tab, router)
-                        ? "hover:bg-yellow-2 hover:text-black bg-green-2 text-white"
-                        : "hover:bg-green-3",
-                      "px-4 py-3 rounded-xl "
-                    )}
-                    aria-current={isCurrent(tab, router) ? "page" : undefined}
-                  >
-                    {tab.name}
-                  </Link>
+                  <>
+                    <div className="flex justify-center items-center">
+                      <Link
+                        key={tab.name}
+                        href={tab.href}
+                        className={classNames(
+                          isCurrent(tab, router)
+                            ? "hover:bg-yellow-2 hover:text-black bg-green-2 text-white"
+                            : "hover:bg-green-3",
+                          "px-4 py-3 rounded-xl text-center"
+                        )}
+                        aria-current={
+                          isCurrent(tab, router) ? "page" : undefined
+                        }
+                      >
+                        {tab.name}
+                      </Link>
+                    </div>{" "}
+                  </>
                 ))}
               </nav>
             </div>

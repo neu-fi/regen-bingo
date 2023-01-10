@@ -9,8 +9,6 @@ import DrawnNumbersTable, {
 type MyCardsProps = {};
 
 export default function MyCards(props: PropsWithChildren<MyCardsProps>) {
-  const [drawnNumbersList, setDrawnNumbersList] = useState<ITableElement[]>([]);
-
   return (
     <>
       <Head>
@@ -24,7 +22,7 @@ export default function MyCards(props: PropsWithChildren<MyCardsProps>) {
             </div>
             <div className="row-span-full mt-4">
               <div className="flex flex-col justify-center items-stretch flex-nowrap">
-                <CardList drawnNumbers={drawnNumbersList}></CardList>
+                <CardList></CardList>
               </div>
             </div>
           </div>
