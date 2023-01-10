@@ -4,9 +4,16 @@ pragma solidity ^0.8.13;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract RegenBingo is ERC721 {
+contract RegenBingo is ERC721, Ownable {
     using Strings for uint256;
+
+    enum BingoState {
+        MINT,
+        DRAW,
+        FINISHED
+    }
 
     uint256 constant LAYOUTS_COUNT = 3;
 
@@ -14,6 +21,7 @@ contract RegenBingo is ERC721 {
                              STATE VARIABLES
     //////////////////////////////////////////////////////////////*/
 
+    BingoState public bingoState;
     uint256 public mintPrice;
     uint256 public drawTimestamp;
     uint256 public drawNumberCooldownSeconds;
@@ -54,7 +62,7 @@ contract RegenBingo is ERC721 {
 
     function mint() external payable {
         require(msg.value == mintPrice, "Incorrect payment amount");
-        require(block.timestamp < drawTimestamp, "Draw already started");
+        require(bingoState == BingoState.MINT, "It is not mint period");
         // Using totalSupply so that one can mint multiple different cards in a block
         uint256 seed = uint256(keccak256(abi.encodePacked(totalSupply, msg.sender, block.timestamp)));
         _seeds[totalSupply] = seed;
@@ -63,7 +71,7 @@ contract RegenBingo is ERC721 {
     }
 
     function drawNumber() external returns (uint256) {
-        require(block.timestamp > drawTimestamp, "Draw not started yet");
+        require(bingoState == BingoState.DRAW, "It is not draw period");
         require(block.timestamp > lastDrawTime + drawNumberCooldownSeconds, "Draw too soon");
         // TODO: Use VRF
 
@@ -87,7 +95,12 @@ contract RegenBingo is ERC721 {
         charityAddress.call{value: address(this).balance / 2}("");
         address payable winner = payable(ownerOf(id));
         winner.call{value: address(this).balance}("");
+        bingoState = BingoState.FINISHED;
         emit ClaimPrize(id, winner);
+    }
+
+    function changeBingoState(BingoState _bingoState) external onlyOwner {
+        bingoState = _bingoState;
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -241,19 +254,109 @@ contract RegenBingo is ERC721 {
     function _getLayout(uint256 index) internal pure returns (uint16[9][3] memory) {
         return [
             [
-                [1009, 0, 1013, 1019, 0, 1021, 0, 0, 1031],
-                [1033, 0, 0, 1039, 1049, 0, 0, 1051, 1061],
-                [0, 1063, 0, 1069, 0, 1087, 1091, 0, 1093]
+                [
+                    345748237736302043954346415468961719667,
+                    0,
+                    346898908343340269085095797543225285067,
+                    349436888172124469953802313936204793639,
+                    0,
+                    350775825975224662536471623247112070683,
+                    0,
+                    0,
+                    351826028875514156289400300739130052693
+                ],
+                [
+                    352412280970268348994551642119472945107,
+                    0,
+                    0,
+                    352481965297794116322788845643729736229,
+                    359319764875976259388138010914940262119,
+                    0,
+                    0,
+                    359319764875976259388138010914940262119,
+                    364474025646518244225535015089205405063
+                ],
+                [
+                    0,
+                    365535512377247765880241266596284033459,
+                    0,
+                    366207651054021111846380872598610590333,
+                    0,
+                    370011511959930685076007398472051834473,
+                    375675342105268259527879793250735537607,
+                    0,
+                    385276465729037003106999007892189232991
+                ]
             ],
             [
-                [0, 1097, 1103, 0, 0, 0, 1109, 1117, 1123],
-                [1129, 0, 1151, 0, 1153, 0, 0, 1163, 1171],
-                [0, 0, 1181, 1187, 0, 1193, 0, 1201, 1213]
+                [
+                    0,
+                    752478976162152695750336264153270008129,
+                    884411108768674276248449812591821555643,
+                    0,
+                    0,
+                    0,
+                    818997084981774323406682788994440480437,
+                    477327201488947780574492016027263948981,
+                    534691080129906215359641758818379384531
+                ],
+                [
+                    861969755343198514646788631624839158823,
+                    0,
+                    704759227900474510123388972096453027291,
+                    0,
+                    991454951280122860476938618467170759769,
+                    0,
+                    0,
+                    480111808451552825798211835609850810341,
+                    776296298800794433141025708753720253491
+                ],
+                [
+                    0,
+                    0,
+                    673200763310277802606335995757729247109,
+                    799680481058283511463889442571003333009,
+                    0,
+                    707892941334525282895862854338152753051,
+                    0,
+                    467521440429357907382183580504233007109,
+                    600658054244367789475319402555863518407
+                ]
             ],
             [
-                [1217, 0, 0, 1223, 1229, 0, 1231, 0, 1237],
-                [0, 1249, 1259, 0, 1277, 1279, 1283, 0, 0],
-                [0, 1289, 1291, 0, 0, 1297, 1301, 1303, 0]
+                [
+                    428621447147115514244558621197835486531,
+                    0,
+                    0,
+                    741948372114680021996272140331525770709,
+                    848200397543352569763528213692140773419,
+                    0,
+                    626895810467138079469903989397807131241,
+                    0,
+                    717350210624371186164045285494540391527
+                ],
+                [
+                    0,
+                    485673940132413626579200748268010500983,
+                    829028867935044480215429772918736924093,
+                    0,
+                    720491891412383088036951434748915205463,
+                    970385647133082782542397999088317775527,
+                    419080879909513122816867660157483486459,
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    580803494837089368067454023791875682011,
+                    612869249350155736135728074656865425187,
+                    0,
+                    0,
+                    969327405231932480296597552054866657353,
+                    918305562651558646548820971664108023131,
+                    512473618152611811505402197379148803399,
+                    0
+                ]
             ]
         ][index];
     }
