@@ -7,64 +7,31 @@ type CardListProps = {};
 
 const dummyCards: ICard[] = [
   {
-    id: 1,
+    id: "0x36e1de2f4233ee543dc7e5670f9df61d997b5d648be5c4d8e36cf73edf0e46ea",
     coveredNumbersCount: 0,
     tokenURI: {
       name: "asd",
       image: svg,
       description: "...",
     },
-    hash: "0xd2ff891f5556c623f36a3f22b0e4815a3e36dc23/22",
   },
   {
-    id: 2,
+    id: "0x36e1de2f4233ee543dc7e5670f9df61d997b5d648be5c4d8e36cf73edf0e46ea",
     coveredNumbersCount: 3,
     tokenURI: {
       name: "asd",
       image: svg,
       description: "...",
     },
-    hash: "0xd2ff891f5556c623f36a3f22b0e4815a3e36dc23/22",
   },
   {
-    id: 3,
+    id: "0x36e1de2f4233ee543dc7e5670f9df61d997b5d648be5c4d8e36cf73edf0e46ea",
     coveredNumbersCount: 3,
     tokenURI: {
       name: "asd",
       image: svg,
       description: "...",
     },
-    hash: "0xd2ff891f5556c623f36a3f22b0e4815a3e36dc23/22",
-  },
-  {
-    id: 4,
-    coveredNumbersCount: 3,
-    tokenURI: {
-      name: "asd",
-      image: svg,
-      description: "...",
-    },
-    hash: "0xd2ff891f5556c623f36a3f22b0e4815a3e36dc23/22",
-  },
-  {
-    id: 5,
-    coveredNumbersCount: 3,
-    tokenURI: {
-      name: "asd",
-      image: svg,
-      description: "...",
-    },
-    hash: "0xd2ff891f5556c623f36a3f22b0e4815a3e36dc23/22",
-  },
-  {
-    id: 6,
-    coveredNumbersCount: 3,
-    tokenURI: {
-      name: "asd",
-      image: svg,
-      description: "...",
-    },
-    hash: "0xd2ff891f5556c623f36a3f22b0e4815a3e36dc23/22",
   },
 ];
 
@@ -83,10 +50,6 @@ export function sortCards(
       const aMatches = a.coveredNumbersCount;
       const bMatches = b.coveredNumbersCount;
       return type.sort === "asc" ? aMatches - bMatches : bMatches - aMatches;
-    });
-  } else if (type.key === "id") {
-    return cards.sort((a, b) => {
-      return type.sort === "asc" ? a.id - b.id : b.id - a.id;
     });
   }
   return cards;
