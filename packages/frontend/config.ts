@@ -1,9 +1,9 @@
 console.log("NODE_ENV:", process.env.NODE_ENV);
 
 export const network = {
-  "development": "hardhat",
-  "test": "goerli",
-  "production": "mainnet"
+  development: "hardhat",
+  test: "goerli",
+  production: "mainnet",
 }[process.env.NODE_ENV];
 
 type NetworkDetails = {
@@ -36,7 +36,7 @@ function getNetwork(): NetworkDetails {
       networkDetails = {
         NETWORK_ID: 31337,
         NETWORK_NAME: "Hardhat",
-        CONTRACT_ADDRESS: "",
+        CONTRACT_ADDRESS: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string,
         MINT_PRICE: 0.1,
       };
       break;
