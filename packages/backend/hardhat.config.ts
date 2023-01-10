@@ -5,7 +5,12 @@ import 'hardhat-deploy';
 import '@nomiclabs/hardhat-ethers';
 import '@nomiclabs/hardhat-etherscan';
 
-dotenv.config({ path: '../../.env' });
+dotenv.config({ path: '.env' });
+if (!process.env.NETWORK) {
+  process.env['NETWORK'] = 'hardhat';
+}
+console.log("NETWORK:", process.env.NETWORK);
+
 const defaultNetwork = 'localhost';
 
 /**
