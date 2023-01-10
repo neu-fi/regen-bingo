@@ -2,10 +2,12 @@ import { classNames } from "@/utils/utils";
 import React from "react";
 import Image from "next/image";
 import { useEffect } from "react";
+import Link from "next/link";
 
 type CardProps = {
   card: ICard;
-  drawnNumbers: number[];
+  drawnNumbers?: number[];
+  displayPublicDetails?: Boolean;
 };
 
 export interface ICard {
@@ -56,27 +58,28 @@ const ClaimButton = (props: {
 
 export default function Card(props: CardProps) {
   const [matchCount, setMatchCount] = React.useState<number>(0);
-  const { card, drawnNumbers } = props;
+  const { card, drawnNumbers, displayPublicDetails = false } = props;
 
-  useEffect(() => {
-    const assignMatchCount = (
-      setMatchCount: React.Dispatch<React.SetStateAction<number>>,
-      card: ICard,
-      drawnNumbers: number[]
-    ) => {
-      setMatchCount(
-        card.numbers.filter((number) => drawnNumbers.includes(number)).length
-      );
-    };
-    assignMatchCount(setMatchCount, card, drawnNumbers);
-  }, [drawnNumbers]);
-
+  if (!displayPublicDetails) {
+    useEffect(() => {
+      const assignMatchCount = (
+        setMatchCount: React.Dispatch<React.SetStateAction<number>>,
+        card: ICard,
+        drawnNumbers: number[]
+      ) => {
+        setMatchCount(
+          card.numbers.filter((number) => drawnNumbers.includes(number)).length
+        );
+      };
+      assignMatchCount(setMatchCount, card, drawnNumbers!);
+    }, [drawnNumbers]);
+  }
   function isSVG(card: any): boolean {
     return card.image.includes(`<svg `);
   }
 
   function didWinPrize(matchCount: number): boolean {
-    return drawnNumbers.length != 0 && matchCount === drawnNumbers.length;
+    return drawnNumbers!.length != 0 && matchCount === drawnNumbers!.length;
   }
 
   return (
@@ -103,14 +106,16 @@ export default function Card(props: CardProps) {
           <div className="space-y-2 text-lg font-medium leading-6">
             <h3>
               Regen Bingo NFT{" "}
-              <span className="text-lg text-green-2">#{props.card.id}</span>
+              <Link href={`cards/${card.id}`} className="text-lg text-green-2">
+                #{card.id}
+              </Link>
             </h3>
           </div>
 
           <ul role="list" className="flex space-x-5">
             <li>
               <a
-                href={`https://opensea.io/assets/ethereum/${props.card.hash}`}
+                href={`https://opensea.io/assets/ethereum/${card.hash}`}
                 target="_blank"
                 className="text-gray-400 hover:text-gray-500"
               >
