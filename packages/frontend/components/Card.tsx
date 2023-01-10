@@ -1,7 +1,4 @@
-import { classNames } from "@/utils/utils";
-import React from "react";
 import Image from "next/image";
-import { useEffect } from "react";
 import Link from "next/link";
 
 type CardProps = {
