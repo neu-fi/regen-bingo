@@ -5,6 +5,8 @@ import DrawnNumbersTable, {
 } from "@/components/DrawnNumbersTable";
 import { useBingoContract } from "@/hooks/useBingoContract";
 import { BigNumber, Event } from "ethers";
+import { toast } from "react-toastify";
+import { errorSlicing } from "@/utils/utils";
 
 type GetDrawnNumbersProps = {
   onDrawnNumbersUpdate: (drawnNumbers: ITableElement[]) => void;
@@ -43,32 +45,18 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
       events?.forEach((event) => {
         eventHandler(event.args?.number, event);
       });
-    } catch (err) {
-      // If there is an error, we will use a mock array
-      updatedDrawnNumbers = [
-        {
-          drawnNumber: 3,
-          timestamp: "2023-01-01T12:00:00Z",
-        },
-        {
-          drawnNumber: 2,
-          timestamp: "2023-01-01T12:00:00Z",
-        },
-        {
-          drawnNumber: 21,
-          timestamp: "2023-01-01T12:00:00Z",
-        },
-        {
-          drawnNumber: 33,
-          timestamp: "2023-01-01T12:00:00Z",
-        },
-        {
-          drawnNumber: 31,
-          timestamp: "2023-01-01T12:00:00Z",
-        },
-      ];
+    } catch (err: any) {
+      toast.error(`${errorSlicing(err.reason)}!`, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        theme: "light",
+      });
+      setDrawnNumbers([]);
+      setLoading("");
     }
-    setDrawnNumbers(updatedDrawnNumbers);
     if (drawnNumbers.length === 0) {
       setLoading("No numbers drawn yet.");
     } else {

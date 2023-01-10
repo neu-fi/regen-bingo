@@ -19,6 +19,8 @@ import {
 
 import { useIsMounted } from "../hooks";
 import Layout from "@/components/Layout";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 // Get environment variables
 const alchemyId = process.env.NEXT_PUBLIC_ALCHEMY_ID as string;
@@ -69,6 +71,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         })}
         chains={chains}
       >
+        <ToastContainer />
         <NextHead>
           <title>Regen Bingo</title>
         </NextHead>

@@ -54,6 +54,16 @@ export function timestampToCountdown(
     `;
 }
 
+export function errorSlicing(error: string){
+  try{
+    const left = error.indexOf('\'')
+    return error.slice(left + 1, error.length - 1);
+  }
+  catch(err){
+    return "Error message couldn't found";
+  }
+}
+
 export function clipHash(hash: string) {
   return hash.slice(0, 6) + "..." + hash.slice(hash.length - 4, hash.length);
 }
