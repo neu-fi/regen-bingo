@@ -5,17 +5,18 @@ import { timestampToCountdown } from "@/utils/utils";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { errorSlicing } from "@/utils/utils";
+import { Contract } from "ethers";
 
 export const DrawnCountDown = () => {
   const [remainingTime, setRemainingTime] = useState<number>();
   const [drawTimestamp, setTimeStamp] = useState<number>(0);
 
   const provider = useProvider();
-  const contract = useBingoContract(provider);
+  const contract: Contract | undefined = useBingoContract(provider);
 
   const getDrawTime = async () => {
     try {
-      const drawTime = Number(await contract?.drawTimestamp());
+      const drawTime = Number(await contract!.drawTimestamp());
       setTimeStamp(drawTime);
     } catch (err: any) {
       console.log(err);
@@ -36,7 +37,7 @@ export const DrawnCountDown = () => {
   }
 
   useEffect(() => {
-    if (!drawTimestamp) {
+    if (!drawTimestamp && contract) {
       getDrawTime();
     }
     const interval = setInterval(() => {
