@@ -1,6 +1,6 @@
 console.log("NODE_ENV:", process.env.NODE_ENV);
 
-export const network = {
+export const NETWORK = {
   development: "hardhat",
   test: "goerli",
   production: "mainnet",
@@ -15,12 +15,12 @@ type NetworkDetails = {
 
 function getNetwork(): NetworkDetails {
   let networkDetails: NetworkDetails = {};
-  switch (network) {
+  switch (NETWORK) {
     case "mainnet":
       networkDetails = {
         NETWORK_ID: 1,
         NETWORK_NAME: "Mainnet",
-        CONTRACT_ADDRESS: process.env.CONTRACT_ADDRESS as string,
+        CONTRACT_ADDRESS: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string,
         MINT_PRICE: 0.1,
       };
       break;
@@ -28,7 +28,7 @@ function getNetwork(): NetworkDetails {
       networkDetails = {
         NETWORK_ID: 5,
         NETWORK_NAME: "Goerli",
-        CONTRACT_ADDRESS: process.env.CONTRACT_ADDRESS as string,
+        CONTRACT_ADDRESS: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string,
         MINT_PRICE: 0.1,
       };
       break;
