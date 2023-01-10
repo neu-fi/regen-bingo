@@ -6,15 +6,20 @@ import Link from "next/link";
 
 type CardProps = {
   card: ICard;
-  drawnNumbers?: number[];
   displayPublicDetails?: Boolean;
 };
 
 export interface ICard {
   id: number;
-  numbers: number[];
-  image: string;
+  coveredNumbersCount: number;
+  tokenURI: ITokenURI;
   hash?: string;
+}
+
+export interface ITokenURI {
+  name: string;
+  description: string;
+  image: string;
 }
 
 const ClaimButton = (props: {
@@ -57,29 +62,14 @@ const ClaimButton = (props: {
 };
 
 export default function Card(props: CardProps) {
-  const [matchCount, setMatchCount] = React.useState<number>(0);
-  const { card, drawnNumbers, displayPublicDetails = false } = props;
+  const { card, displayPublicDetails = false } = props;
 
-  if (!displayPublicDetails) {
-    useEffect(() => {
-      const assignMatchCount = (
-        setMatchCount: React.Dispatch<React.SetStateAction<number>>,
-        card: ICard,
-        drawnNumbers: number[]
-      ) => {
-        setMatchCount(
-          card.numbers.filter((number) => drawnNumbers.includes(number)).length
-        );
-      };
-      assignMatchCount(setMatchCount, card, drawnNumbers!);
-    }, [drawnNumbers]);
-  }
-  function isSVG(card: any): boolean {
-    return card.image.includes(`<svg `);
+  function isSVG(card: ICard): boolean {
+    return card.tokenURI.image.includes(`<svg `);
   }
 
-  function didWinPrize(matchCount: number): boolean {
-    return drawnNumbers!.length != 0 && matchCount === drawnNumbers!.length;
+  function didWinPrize(): boolean {
+    return card.coveredNumbersCount === 15;
   }
 
   return (
@@ -91,7 +81,7 @@ export default function Card(props: CardProps) {
             dangerouslySetInnerHTML={
               isSVG(card)
                 ? {
-                    __html: card.image,
+                    __html: card.tokenURI.image,
                   }
                 : {
                     __html: "",
@@ -106,7 +96,7 @@ export default function Card(props: CardProps) {
           <div className="space-y-2 text-lg font-medium leading-6">
             <h3>
               Regen Bingo NFT{" "}
-              <Link href={`cards/${card.id}`} className="text-lg text-green-2">
+              <Link href={`/cards/${card.id}`} className="text-lg text-green-2">
                 #{card.id}
               </Link>
             </h3>
@@ -131,16 +121,16 @@ export default function Card(props: CardProps) {
           </ul>
           <div className="text-lg">
             <p className="text-gray-500">
-              {didWinPrize(matchCount) ? (
+              {didWinPrize() ? (
                 "Congratulations, you won the prize! Please claim your prize."
               ) : (
                 <>
                   Unlucky, you have{" "}
-                  {matchCount === 0
+                  {card.coveredNumbersCount === 0
                     ? "no matches. "
-                    : matchCount === 1
+                    : card.coveredNumbersCount === 1
                     ? "1 match. "
-                    : `${matchCount} matches. `}
+                    : `${card.coveredNumbersCount} matches. `}
                   Better luck next time!
                 </>
               )}
@@ -148,7 +138,7 @@ export default function Card(props: CardProps) {
           </div>
           <div className="block">
             <ClaimButton
-              matchCount={matchCount}
+              matchCount={card.coveredNumbersCount}
               didWinPrize={didWinPrize}
             ></ClaimButton>
           </div>

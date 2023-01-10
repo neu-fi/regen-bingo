@@ -4,7 +4,7 @@ import Card, { ICard } from "@/components/Card";
 import { useBingoContract } from "@/hooks/useBingoContract";
 import { useProvider } from "wagmi";
 import { Contract } from "ethers";
-import { svg } from "@/utils/utils";
+import { svg, getToken } from "@/utils/utils";
 import { useEffect } from "react";
 
 type CardProps = {};
@@ -17,8 +17,12 @@ function Cards(props: CardProps) {
   const [loading, setLoading] = React.useState<string | null>(null);
   const [card, setCard] = React.useState<ICard>({
     id: 1,
-    numbers: [],
-    image: svg,
+    coveredNumbersCount: 0,
+    tokenURI: {
+      image: svg,
+      name: "Regen Bingo NFT",
+      description: "Regen Bingo NFT",
+    },
   });
 
   // Contract
@@ -26,17 +30,16 @@ function Cards(props: CardProps) {
   const contract: Contract | undefined = useBingoContract(provider);
 
   useEffect(() => {
-    if (contract) {
-      getTokenURI(id);
-    }
-  }, [contract]);
+    getTokenURI(id);
+  }, [id]);
 
   const getTokenURI = async (tokenId: string) => {
     setLoading("Loading...");
     if (contract) {
       try {
-        const tokenURI = await contract.tokenURI(tokenId);
-        setCard(JSON.parse(tokenURI) as ICard);
+        const card = await getToken(contract, tokenId);
+        setCard(card as ICard);
+        setLoading(null);
       } catch (err) {
         console.log("Error!", err);
         setLoading("Couldn't fetch token data, try again later!");
@@ -57,7 +60,7 @@ function Cards(props: CardProps) {
               <>
                 <div className="flex row-span-full justify-center">
                   <h1 className="text-2xl font-bold tracking-tight sm:text-center sm:text-5xl">
-                    `Bingo Card #${id}`
+                    {`Bingo Card #${id}`}
                   </h1>
                 </div>
                 <div className="flex row-span-full mt-4">
@@ -66,7 +69,7 @@ function Cards(props: CardProps) {
                       <div className="space-y-12 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0">
                         <div className="lg:col-span-2">
                           <div className="space-y-12 sm:-mt-8 sm:space-y-0 divide-y divide-gray-200 lg:gap-x-8 lg:space-y-0">
-                            {card && <Card card={card} drawnNumbers={[]} />}
+                            {card && <Card card={card} />}
                           </div>
                         </div>
                       </div>

@@ -3,45 +3,67 @@ import { ITableElement } from "@/components/DrawnNumbersTable";
 import { svg } from "@/utils/utils";
 import { PropsWithChildren, useEffect, useState } from "react";
 
-type CardListProps = {
-  drawnNumbers: ITableElement[];
-};
+type CardListProps = {};
 
 const dummyCards: ICard[] = [
   {
     id: 1,
-    numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 21],
-    image: svg,
+    coveredNumbersCount: 0,
+    tokenURI: {
+      name: "asd",
+      image: svg,
+      description: "...",
+    },
     hash: "0xd2ff891f5556c623f36a3f22b0e4815a3e36dc23/22",
   },
   {
     id: 2,
-    numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-    image: svg,
+    coveredNumbersCount: 3,
+    tokenURI: {
+      name: "asd",
+      image: svg,
+      description: "...",
+    },
     hash: "0xd2ff891f5556c623f36a3f22b0e4815a3e36dc23/22",
   },
   {
     id: 3,
-    numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-    image: svg,
+    coveredNumbersCount: 3,
+    tokenURI: {
+      name: "asd",
+      image: svg,
+      description: "...",
+    },
     hash: "0xd2ff891f5556c623f36a3f22b0e4815a3e36dc23/22",
   },
   {
     id: 4,
-    numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-    image: svg,
+    coveredNumbersCount: 3,
+    tokenURI: {
+      name: "asd",
+      image: svg,
+      description: "...",
+    },
     hash: "0xd2ff891f5556c623f36a3f22b0e4815a3e36dc23/22",
   },
   {
     id: 5,
-    numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-    image: svg,
+    coveredNumbersCount: 3,
+    tokenURI: {
+      name: "asd",
+      image: svg,
+      description: "...",
+    },
     hash: "0xd2ff891f5556c623f36a3f22b0e4815a3e36dc23/22",
   },
   {
     id: 6,
-    numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-    image: svg,
+    coveredNumbersCount: 3,
+    tokenURI: {
+      name: "asd",
+      image: svg,
+      description: "...",
+    },
     hash: "0xd2ff891f5556c623f36a3f22b0e4815a3e36dc23/22",
   },
 ];
@@ -53,18 +75,13 @@ type SortType = {
 
 export function sortCards(
   cards: ICard[],
-  drawnNumbers: number[],
   type: SortType = { sort: "desc", key: "matches" }
 ): ICard[] {
   if (type.key === "matches") {
     // SORT BY MATCHES
     return cards.sort((a, b) => {
-      const aMatches = a.numbers.filter((number) =>
-        drawnNumbers.includes(number)
-      ).length;
-      const bMatches = b.numbers.filter((number) =>
-        drawnNumbers.includes(number)
-      ).length;
+      const aMatches = a.coveredNumbersCount;
+      const bMatches = b.coveredNumbersCount;
       return type.sort === "asc" ? aMatches - bMatches : bMatches - aMatches;
     });
   } else if (type.key === "id") {
@@ -78,15 +95,12 @@ export function sortCards(
 export default function CardList(props: PropsWithChildren<CardListProps>) {
   const [cards, setCards] = useState<ICard[]>(dummyCards);
   const [sort, setSort] = useState<SortType>({ sort: "desc", key: "matches" });
-  const drawnNumbersAsNumber: number[] = props.drawnNumbers.map(
-    (number) => number.drawnNumber
-  );
 
   useEffect(() => {
     const fetchDrawnNumbers = async () => {
       // TODO: Fetch cards from the contract
       // const drawnNumbers = await contract.getDrawnNumbers();
-      setCards(sortCards(cards, drawnNumbersAsNumber, sort));
+      setCards(sortCards(cards, sort));
     };
     fetchDrawnNumbers();
   }, [sort]);
@@ -102,7 +116,7 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
             >
               {cards.map((card) => (
                 <li key={card.id} className="sm:py-4">
-                  <Card card={card} drawnNumbers={drawnNumbersAsNumber}></Card>
+                  <Card card={card}></Card>
                 </li>
               ))}
             </ul>
