@@ -1,6 +1,8 @@
 import { useBingoContract } from "@/hooks/useBingoContract";
 import { useAccount, useSigner } from "wagmi";
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import { errorSlicing } from "@/utils/utils";
 
 export const DrawNumber = () => {
   const [error, setError] = useState("");
@@ -27,9 +29,24 @@ export const DrawNumber = () => {
         setLoading("Transaction waiting..");
         await tx.wait();
         setLoading("");
-        setError("Number Drawn Succesfully");
+        setError("Succesfully Drawn");
+        toast.success("Number drawn successfully, please check your cards!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          theme: "light",
+        });
       } catch (err: any) {
-        console.log(err);
+        toast.error(`${errorSlicing(err.reason)}!`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          theme: "light",
+        });
         setLoading("");
         setError("An error occured");
       }
@@ -48,7 +65,7 @@ export const DrawNumber = () => {
       onClick={() => {
         handleClick();
       }}
-      className="disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center w-32 h-12 rounded-lg bg-green-2 px-4 py-1.5 text-base text-white font-semibold leading-7 shadow-sm hover:bg-green-1 justify-center md:w-1/3 mb-6"
+      className="disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center w-32 h-auto rounded-lg bg-green-2 px-4 py-1.5 text-base text-white font-semibold leading-7 shadow-sm hover:bg-green-1 justify-center md:w-1/3 mb-6"
     >
       <span>
         {loading && !error && <span>{loading}</span>}
