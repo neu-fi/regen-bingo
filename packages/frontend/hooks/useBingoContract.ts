@@ -1,4 +1,4 @@
-import { CONTRACT_ADDRESS, NETWORK_ID, network } from "../config";
+import { CONTRACT_ADDRESS, NETWORK_ID, NETWORK } from "../config";
 import { regenBingoABI } from "../contracts/regen_bingo_abi";
 import { useContract } from "wagmi";
 import contracts from "@/contracts/hardhat_contracts.json";
@@ -7,7 +7,7 @@ export const useBingoContract = (providerOrSigner: any) => {
   let contractAddress;
   let contractABI;
 
-  if (network === "hardhat") {
+  if (NETWORK === "hardhat") {
     const chainId = Number(NETWORK_ID);
     const allContracts = contracts as any;
     const hardhatABI = allContracts[chainId][0].contracts.RegenBingo.abi;

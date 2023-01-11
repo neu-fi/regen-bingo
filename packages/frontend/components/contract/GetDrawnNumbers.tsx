@@ -6,7 +6,7 @@ import DrawnNumbersTable, {
 import { useBingoContract } from "@/hooks/useBingoContract";
 import { BigNumber, Event } from "ethers";
 import { toast } from "react-toastify";
-import { errorSlicing } from "@/utils/utils";
+import { errorSlicing, toastOptions } from "@/utils/utils";
 
 type GetDrawnNumbersProps = {
   onDrawnNumbersUpdate: (drawnNumbers: ITableElement[]) => void;
@@ -46,14 +46,7 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
         eventHandler(event.args?.number, event);
       });
     } catch (err: any) {
-      toast.error(`${errorSlicing(err.reason)}!`, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        theme: "light",
-      });
+      toast.error(`${errorSlicing(err.reason)}!`, toastOptions);
       setDrawnNumbers([]);
       setLoading("");
     }

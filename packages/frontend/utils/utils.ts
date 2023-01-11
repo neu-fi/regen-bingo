@@ -1,5 +1,6 @@
 import { ICard } from "@/components/Card";
 import { Contract } from "ethers";
+import { ToastOptions } from "react-toastify";
 
 export function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
@@ -55,6 +56,15 @@ export function timestampToCountdown(
     ${seconds ? `${seconds} Seconds` : ""}
     `;
 }
+
+export const toastOptions: ToastOptions = {
+  position: "top-right",
+  autoClose: 3000,
+  hideProgressBar: true,
+  closeOnClick: true,
+  pauseOnHover: true,
+  theme: "light",
+};
 
 export function errorSlicing(error: string) {
   try {

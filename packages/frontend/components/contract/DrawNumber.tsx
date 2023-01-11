@@ -2,7 +2,7 @@ import { useBingoContract } from "@/hooks/useBingoContract";
 import { useAccount, useSigner } from "wagmi";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { errorSlicing } from "@/utils/utils";
+import { errorSlicing, toastOptions } from "@/utils/utils";
 
 export const DrawNumber = () => {
   const [error, setError] = useState("");
@@ -30,23 +30,12 @@ export const DrawNumber = () => {
         await tx.wait();
         setLoading("");
         setError("Succesfully Drawn");
-        toast.success("Number drawn successfully, please check your cards!", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          theme: "light",
-        });
+        toast.success(
+          "Number drawn successfully, please check your cards!",
+          toastOptions
+        );
       } catch (err: any) {
-        toast.error(`${errorSlicing(err.reason)}!`, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          theme: "light",
-        });
+        toast.error(`${errorSlicing(err.reason)}!`, toastOptions);
         setLoading("");
         setError("An error occured");
       }

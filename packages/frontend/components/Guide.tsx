@@ -85,17 +85,15 @@ export default function Guide() {
           </p>
         </div>
         <div className="prose prose-lg prose-indigo mx-auto mt-6 text-gray-500">
-          <p>
-            The game is simple:
-            <ol role="list">
-              <li>Mint Regen Bingo Cards</li>
-              <li>Wait for winning numbers to be drawn</li>
-              <li>
-                Be the first card owner to have matching numbers with the
-                randomly drawn numbers and claim the prize pool!
-              </li>
-            </ol>
-          </p>
+          <p>The game is simple:</p>
+          <ol role="list">
+            <li>Mint Regen Bingo Cards</li>
+            <li>Wait for winning numbers to be drawn</li>
+            <li>
+              Be the first card owner to have matching numbers with the randomly
+              drawn numbers and claim the prize pool!
+            </li>
+          </ol>
 
           {/* <blockquote>
             <p>
@@ -131,11 +129,11 @@ export default function Guide() {
               Gitcoin Matching Fund
             </a>{" "}
             when the winner claims their prize from the smart contract.
-            <ul>
-              <li>50% - Prize pool</li>
-              <li>50% - Gitcoin Matching Fund</li>
-            </ul>
           </p>
+          <ul>
+            <li>50% - Prize pool</li>
+            <li>50% - Gitcoin Matching Fund</li>
+          </ul>
         </div>
       </div>
     </div>
