@@ -8,9 +8,7 @@ import { BigNumber, Event } from "ethers";
 import { toast } from "react-toastify";
 import { errorSlicing, toastOptions } from "@/utils/utils";
 
-type GetDrawnNumbersProps = {
-  onDrawnNumbersUpdate: (drawnNumbers: ITableElement[]) => void;
-};
+type GetDrawnNumbersProps = {};
 
 export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
   const [drawnNumbers, setDrawnNumbers] = useState<ITableElement[]>([]);
@@ -36,51 +34,37 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
     setLoading("Loading...");
     let updatedDrawnNumbers: ITableElement[] = [];
     try {
-      const filter = contract?.filters.DrawNumber();
-      if (!filter) {
-        console.log("Events cannot found");
-        return;
+      for (var i = 1; i <= 90; i++) {
+        const isDrawn = await contract!.isDrawn(i);
+        if (isDrawn) {
+          updatedDrawnNumbers.push({ drawnNumber: i });
+        }
       }
-      const events = await contract?.queryFilter(filter);
-      events?.forEach((event) => {
-        eventHandler(event.args?.number, event);
-      });
+      setDrawnNumbers(updatedDrawnNumbers);
+      if (drawnNumbers.length === 0) {
+        setLoading("No numbers drawn yet.");
+      } else {
+        setLoading("");
+      }
     } catch (err: any) {
       toast.error(`${errorSlicing(err.reason)}!`, toastOptions);
       setDrawnNumbers([]);
       setLoading("");
     }
-    if (drawnNumbers.length === 0) {
-      setLoading("No numbers drawn yet.");
-    } else {
-      setLoading("");
-    }
-    props.onDrawnNumbersUpdate(updatedDrawnNumbers);
   };
 
   const eventHandler = async (number: BigNumber, event: Event) => {
-    const block = await event.getBlock();
-    const blockTimestamp = block?.timestamp;
     const luckyNumber = event.args?.number.toNumber();
-    const timestamp = new Date(blockTimestamp * 1000).toString();
-    const tx = event.transactionHash;
-    const newNumber: ITableElement = {
-      drawnNumber: luckyNumber,
-      timestamp: timestamp,
-      txHash: tx,
-    };
     if (!luckyNumbers.includes(luckyNumber)) {
       luckyNumbers.push(luckyNumber);
-      setDrawnNumbers((prev) => [...prev, newNumber]);
+      setDrawnNumbers((prev) => [...prev, { drawnNumber: luckyNumber }]);
     }
   };
 
   return (
     <>
-      {drawnNumbers.length == 0 && (
-        <div className="text-xl m-20 font-semibold">{loading}</div>
-      )}
-      {drawnNumbers.length > 0 && (
+      {loading && <div className="text-xl m-20 font-semibold">{loading}</div>}
+      {!loading && (
         <DrawnNumbersTable drawnNumbers={drawnNumbers}></DrawnNumbersTable>
       )}
     </>
