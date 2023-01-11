@@ -4,22 +4,47 @@ pragma solidity ^0.8.13;
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
+import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 contract RegenBingo is ERC721Enumerable {
     using Strings for uint256;
+    using EnumerableSet for EnumerableSet.UintSet;
+
+    enum BingoState {
+        MINT,
+        DRAW,
+        FINISHED
+    }
 
     uint256 constant LAYOUTS_COUNT = 3;
+
+    uint256 constant PRIME_1 = 345748237736302043954346415468961719667;
+    uint256 constant PRIME_2 = 346898908343340269085095797543225285067;
+    uint256 constant PRIME_3 = 349436888172124469953802313936204793639;
+    uint256 constant PRIME_4 = 350775825975224662536471623247112070683;
+    uint256 constant PRIME_5 = 351826028875514156289400300739130052693;
+    uint256 constant PRIME_6 = 352412280970268348994551642119472945107;
+    uint256 constant PRIME_7 = 352481965297794116322788845643729736229;
+    uint256 constant PRIME_8 = 355662614806814143955140513875615460687;
+    uint256 constant PRIME_9 = 359319764875976259388138010914940262119;
+    uint256 constant PRIME_10 = 364474025646518244225535015089205405063;
+    uint256 constant PRIME_11 = 365535512377247765880241266596284033459;
+    uint256 constant PRIME_12 = 366207651054021111846380872598610590333;
+    uint256 constant PRIME_13 = 370011511959930685076007398472051834473;
+    uint256 constant PRIME_14 = 375675342105268259527879793250735537607;
+    uint256 constant PRIME_15 = 385276465729037003106999007892189232991;
 
     /*//////////////////////////////////////////////////////////////
                              STATE VARIABLES
     //////////////////////////////////////////////////////////////*/
 
+    BingoState public bingoState;
     uint256 public mintPrice;
     uint256 public drawTimestamp;
     uint256 public drawNumberCooldownSeconds;
     uint256 public lastDrawTime;
     address payable public charityAddress;
-    mapping(uint256 => bool) public isDrawn;
+    EnumerableSet.UintSet private drawnNumbers;
 
     /*//////////////////////////////////////////////////////////////
                                  EVENTS
@@ -27,6 +52,7 @@ contract RegenBingo is ERC721Enumerable {
 
     event DrawNumber(uint256 number);
     event ClaimPrize(uint256 tokenId, address winner);
+    event DrawStarted();
 
     /*//////////////////////////////////////////////////////////////
                                CONSTRUCTOR
@@ -51,39 +77,49 @@ contract RegenBingo is ERC721Enumerable {
     //////////////////////////////////////////////////////////////*/
 
     function mint() external payable {
+        require(bingoState == BingoState.MINT, "It is not mint period");
         require(msg.value == mintPrice, "Incorrect payment amount");
-        require(block.timestamp < drawTimestamp, "Draw already started");
         // Using totalSupply() so that one can mint multiple different cards in a block
         uint256 tokenId = uint256(keccak256(abi.encodePacked(totalSupply(), msg.sender, block.timestamp)));
+        require(!_containsDuplicates(tokenId), "This card has duplicate numbers");
         _mint(msg.sender, tokenId);
     }
 
     function drawNumber() external returns (uint256) {
-        require(block.timestamp > drawTimestamp, "Draw not started yet");
+        require(bingoState == BingoState.DRAW, "It is not draw period");
         require(block.timestamp > lastDrawTime + drawNumberCooldownSeconds, "Draw too soon");
         // TODO: Use VRF
 
         uint256 nonce = 0;
         uint256 number = 1 + uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty, nonce))) % 90;
 
-        while (isDrawn[number]) {
+        while (drawnNumbers.contains(number)) {
             number = 1 + uint256(keccak256(abi.encodePacked(number, block.timestamp, block.difficulty, nonce))) % 90;
             nonce++;
         }
 
-        isDrawn[number] = true;
+        drawnNumbers.add(number);
         lastDrawTime = block.timestamp;
         emit DrawNumber(number);
         return number;
     }
 
     function claimPrize(uint256 id) external {
+        require(bingoState != BingoState.FINISHED, "Game Over");
         _requireMinted(id);
         require(coveredNumbers(id) == 15, "INELIGIBLE");
         charityAddress.call{value: address(this).balance / 2}("");
         address payable winner = payable(ownerOf(id));
         winner.call{value: address(this).balance}("");
+        bingoState = BingoState.FINISHED;
         emit ClaimPrize(id, winner);
+    }
+
+    function startDrawPeriod() external {
+        require(bingoState == BingoState.MINT);
+        require(block.timestamp > drawTimestamp, "It is not draw period yet");
+        bingoState = BingoState.DRAW;
+        emit DrawStarted();
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -209,7 +245,7 @@ contract RegenBingo is ERC721Enumerable {
     function coveredNumbers(uint256 id) public view returns (uint256 count) {
         for (uint256 row = 0; row < 3; row++) {
             for (uint256 column = 0; column < 9; column++) {
-                if (isDrawn[getNumberByCoordinates(id, row, column)]) {
+                if (drawnNumbers.contains(getNumberByCoordinates(id, row, column))) {
                     count++;
                 }
             }
@@ -217,7 +253,7 @@ contract RegenBingo is ERC721Enumerable {
     }
 
     function getNumberByCoordinates(uint256 tokenId, uint256 row, uint256 column) public view returns (uint256) {
-        uint16[9][3] memory layout = _getLayout(tokenId % LAYOUTS_COUNT);
+        uint256[9][3] memory layout = _getLayout(tokenId % LAYOUTS_COUNT);
         if (layout[row][column] == 0) {
             return 0;
         } else {
@@ -225,26 +261,30 @@ contract RegenBingo is ERC721Enumerable {
         }
     }
 
+    function getDrawnNumbers() public view returns (uint256[] memory) {
+        return drawnNumbers.values();
+    }
+
     /*//////////////////////////////////////////////////////////////
                            INTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
-    function _getLayout(uint256 index) internal pure returns (uint16[9][3] memory) {
+    function _getLayout(uint256 index) internal pure returns (uint256[9][3] memory) {
         return [
             [
-                [1009, 0, 1013, 1019, 0, 1021, 0, 0, 1031],
-                [1033, 0, 0, 1039, 1049, 0, 0, 1051, 1061],
-                [0, 1063, 0, 1069, 0, 1087, 1091, 0, 1093]
+                [PRIME_1, 0, PRIME_2, PRIME_3, 0, PRIME_4, 0, 0, PRIME_5],
+                [PRIME_6, 0, 0, PRIME_7, PRIME_8, 0, 0, PRIME_9, PRIME_10],
+                [0, PRIME_11, 0, PRIME_12, 0, PRIME_13, PRIME_14, 0, PRIME_15]
             ],
             [
-                [0, 1097, 1103, 0, 0, 0, 1109, 1117, 1123],
-                [1129, 0, 1151, 0, 1153, 0, 0, 1163, 1171],
-                [0, 0, 1181, 1187, 0, 1193, 0, 1201, 1213]
+                [0, PRIME_10, PRIME_14, 0, 0, 0, PRIME_9, PRIME_11, PRIME_8],
+                [PRIME_15, 0, PRIME_5, 0, PRIME_12, 0, 0, PRIME_4, PRIME_13],
+                [0, 0, PRIME_1, PRIME_6, 0, PRIME_2, 0, PRIME_7, PRIME_3]
             ],
             [
-                [1217, 0, 0, 1223, 1229, 0, 1231, 0, 1237],
-                [0, 1249, 1259, 0, 1277, 1279, 1283, 0, 0],
-                [0, 1289, 1291, 0, 0, 1297, 1301, 1303, 0]
+                [PRIME_13, 0, 0, PRIME_15, PRIME_6, 0, PRIME_7, 0, PRIME_12],
+                [0, PRIME_1, PRIME_14, 0, PRIME_2, PRIME_3, PRIME_11, 0, 0],
+                [0, PRIME_5, PRIME_4, 0, 0, PRIME_10, PRIME_8, PRIME_9, 0]
             ]
         ][index];
     }
@@ -255,5 +295,31 @@ contract RegenBingo is ERC721Enumerable {
         } else {
             return "";
         }
+    }
+
+    //will change to a better algorithm
+    function _containsDuplicates(uint256 tokenId) internal pure returns (bool) {
+        uint256[9][3] memory layout = _getLayout(tokenId % LAYOUTS_COUNT);
+        for (uint256 row = 0; row < 3; row++) {
+            for (uint256 column = 0; column < 9; column++) {
+                if (layout[row][column] == 0) {
+                    continue;
+                }
+                for (uint256 row2 = 0; row2 < 3; row2++) {
+                    for (uint256 column2 = 0; column2 < 9; column2++) {
+                        if (layout[row2][column2] == 0) {
+                            continue;
+                        }
+                        if (row == row2 && column == column2) {
+                            continue;
+                        }
+                        if (layout[row][column] == layout[row2][column2]) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 }
