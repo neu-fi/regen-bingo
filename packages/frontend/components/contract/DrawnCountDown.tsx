@@ -25,7 +25,7 @@ export const DrawnCountDown = () => {
   };
 
   function changeRemaining() {
-    const diff = drawTimestamp - new Date().getTime();
+    const diff = drawTimestamp - Math.floor(Date.now() / 1000);
     setRemainingTime(diff);
   }
 
@@ -47,7 +47,7 @@ export const DrawnCountDown = () => {
             <>
               Numbers will be drawn in
               <span className="text-green-4">
-                {timestampToCountdown(remainingTime / 1000)}
+                {timestampToCountdown(remainingTime)}
               </span>
             </>
           ) : (

@@ -40,9 +40,9 @@ export function getTimeDifference(
 }
 
 export function timestampToCountdown(
-  timeDifferenceAsMiliseconds: number
+  timeDifferenceAsSeconds: number
 ): string {
-  let difference = timeDifferenceAsMiliseconds;
+  let difference = timeDifferenceAsSeconds;
   const seconds = Math.floor(difference % 60);
   difference /= 60;
   const minutes = Math.floor(difference % 60);
@@ -71,7 +71,7 @@ export function errorSlicing(error: string) {
     const left = error.indexOf("'");
     return error.slice(left + 1, error.length - 1);
   } catch (err) {
-    return "Error message couldn't found";
+    return "Unexpected error";
   }
 }
 
