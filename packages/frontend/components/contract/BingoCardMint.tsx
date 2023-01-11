@@ -3,6 +3,8 @@ import { useAccount, useSigner } from "wagmi";
 import { MINT_PRICE } from "@/config";
 import { useBingoContract } from "@/hooks/useBingoContract";
 import { ethers } from "ethers";
+import { toast } from "react-toastify";
+import { errorSlicing, toastOptions } from "@/utils/utils";
 
 export const BingoCardMint = () => {
   const [loading, setLoading] = useState("");
@@ -33,8 +35,12 @@ export const BingoCardMint = () => {
         await tx.wait();
         setLoading("");
         setError("Succesfully minted");
+        toast.success(
+          "Succesfully minted, please check My Cards page to see!",
+          toastOptions
+        );
       } catch (err: any) {
-        console.log(err);
+        toast.error(`${errorSlicing(err.reason)}!`, toastOptions);
         setError("An error occured");
       }
       await window.setTimeout(() => {

@@ -1,4 +1,10 @@
-export const network = process.env.NEXT_PUBLIC_NETWORK as string;
+console.log("NODE_ENV:", process.env.NODE_ENV);
+
+export const NETWORK = {
+  development: "hardhat",
+  test: "goerli",
+  production: "mainnet",
+}[process.env.NODE_ENV];
 
 type NetworkDetails = {
   NETWORK_ID?: number;
@@ -9,13 +15,12 @@ type NetworkDetails = {
 
 function getNetwork(): NetworkDetails {
   let networkDetails: NetworkDetails = {};
-  switch (network) {
+  switch (NETWORK) {
     case "mainnet":
       networkDetails = {
         NETWORK_ID: 1,
         NETWORK_NAME: "Mainnet",
-        CONTRACT_ADDRESS: process.env
-          .NEXT_PUBLIC_MAINNET_CONTRACT_ADDRESS as string,
+        CONTRACT_ADDRESS: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string,
         MINT_PRICE: 0.1,
       };
       break;
@@ -23,8 +28,7 @@ function getNetwork(): NetworkDetails {
       networkDetails = {
         NETWORK_ID: 5,
         NETWORK_NAME: "Goerli",
-        CONTRACT_ADDRESS: process.env
-          .NEXT_PUBLIC_TESTNET_CONTRACT_ADDRESS as string,
+        CONTRACT_ADDRESS: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string,
         MINT_PRICE: 0.1,
       };
       break;
@@ -32,18 +36,10 @@ function getNetwork(): NetworkDetails {
       networkDetails = {
         NETWORK_ID: 31337,
         NETWORK_NAME: "Hardhat",
-        CONTRACT_ADDRESS: process.env
-          .NEXT_PUBLIC_HARDHAT_CONTRACT_ADDRESS as string,
+        CONTRACT_ADDRESS: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string,
         MINT_PRICE: 0.1,
       };
       break;
-    default:
-      networkDetails = {
-        NETWORK_ID: 31337,
-        NETWORK_NAME: "Hardhat",
-        CONTRACT_ADDRESS: "",
-        MINT_PRICE: 0.1,
-      };
   }
   return networkDetails;
 }

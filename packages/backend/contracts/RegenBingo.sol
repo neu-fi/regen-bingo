@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 
-contract RegenBingo is ERC721 {
+contract RegenBingo is ERC721Enumerable {
     using Strings for uint256;
 
     uint256 constant LAYOUTS_COUNT = 3;
@@ -18,10 +18,8 @@ contract RegenBingo is ERC721 {
     uint256 public drawTimestamp;
     uint256 public drawNumberCooldownSeconds;
     uint256 public lastDrawTime;
-    uint256 public totalSupply;
     address payable public charityAddress;
     mapping(uint256 => bool) public isDrawn;
-    mapping(uint256 => uint256) private _seeds;
 
     /*//////////////////////////////////////////////////////////////
                                  EVENTS
@@ -55,11 +53,9 @@ contract RegenBingo is ERC721 {
     function mint() external payable {
         require(msg.value == mintPrice, "Incorrect payment amount");
         require(block.timestamp < drawTimestamp, "Draw already started");
-        // Using totalSupply so that one can mint multiple different cards in a block
-        uint256 seed = uint256(keccak256(abi.encodePacked(totalSupply, msg.sender, block.timestamp)));
-        _seeds[totalSupply] = seed;
-        _mint(msg.sender, totalSupply);
-        totalSupply++;
+        // Using totalSupply() so that one can mint multiple different cards in a block
+        uint256 tokenId = uint256(keccak256(abi.encodePacked(totalSupply(), msg.sender, block.timestamp)));
+        _mint(msg.sender, tokenId);
     }
 
     function drawNumber() external returns (uint256) {
@@ -220,18 +216,13 @@ contract RegenBingo is ERC721 {
         }
     }
 
-    function getNumberByCoordinates(uint256 id, uint256 row, uint256 column) public view returns (uint256) {
-        uint256 seed = _seeds[id];
-        uint16[9][3] memory layout = _getLayout(seed % LAYOUTS_COUNT);
+    function getNumberByCoordinates(uint256 tokenId, uint256 row, uint256 column) public view returns (uint256) {
+        uint16[9][3] memory layout = _getLayout(tokenId % LAYOUTS_COUNT);
         if (layout[row][column] == 0) {
             return 0;
         } else {
-            return 1 + (column * 10) + ((seed % layout[row][column]) % 10);
+            return 1 + (column * 10) + ((tokenId % layout[row][column]) % 10);
         }
-    }
-
-    function getSeed(uint256 id) public view returns (uint256) {
-        return _seeds[id];
     }
 
     /*//////////////////////////////////////////////////////////////

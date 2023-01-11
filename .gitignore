@@ -69,6 +69,11 @@ yarn-error.log\*
 .env.test.local
 .env.production.local
 
+# don't ignore .env links
+!/packages/backend/.env
+!/packages/frontend/.env
+
+
 # vercel
 
 .vercel

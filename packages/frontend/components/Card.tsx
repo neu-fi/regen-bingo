@@ -1,18 +1,23 @@
-import { classNames } from "@/utils/utils";
-import React from "react";
 import Image from "next/image";
-import { useEffect } from "react";
+import Link from "next/link";
+import { clipHash } from "@/utils/utils";
+import { CONTRACT_ADDRESS, NETWORK } from "@/config";
 
 type CardProps = {
   card: ICard;
-  drawnNumbers: number[];
+  displayPublicDetails?: Boolean;
 };
 
 export interface ICard {
-  id: number;
-  numbers: number[];
+  id: string;
+  coveredNumbersCount: number;
+  tokenURI: ITokenURI;
+}
+
+export interface ITokenURI {
+  name: string;
+  description: string;
   image: string;
-  hash?: string;
 }
 
 const ClaimButton = (props: {
@@ -55,28 +60,14 @@ const ClaimButton = (props: {
 };
 
 export default function Card(props: CardProps) {
-  const [matchCount, setMatchCount] = React.useState<number>(0);
-  const { card, drawnNumbers } = props;
+  const { card, displayPublicDetails = false } = props;
 
-  useEffect(() => {
-    const assignMatchCount = (
-      setMatchCount: React.Dispatch<React.SetStateAction<number>>,
-      card: ICard,
-      drawnNumbers: number[]
-    ) => {
-      setMatchCount(
-        card.numbers.filter((number) => drawnNumbers.includes(number)).length
-      );
-    };
-    assignMatchCount(setMatchCount, card, drawnNumbers);
-  }, [drawnNumbers]);
-
-  function isSVG(card: any): boolean {
-    return card.image.includes(`<svg `);
+  function isSVG(card: ICard): boolean {
+    return card.tokenURI.image.includes(`<svg `);
   }
 
-  function didWinPrize(matchCount: number): boolean {
-    return drawnNumbers.length != 0 && matchCount === drawnNumbers.length;
+  function didWinPrize(): boolean {
+    return card.coveredNumbersCount === 15;
   }
 
   return (
@@ -88,7 +79,7 @@ export default function Card(props: CardProps) {
             dangerouslySetInnerHTML={
               isSVG(card)
                 ? {
-                    __html: card.image,
+                    __html: card.tokenURI.image,
                   }
                 : {
                     __html: "",
@@ -103,14 +94,20 @@ export default function Card(props: CardProps) {
           <div className="space-y-2 text-lg font-medium leading-6">
             <h3>
               Regen Bingo NFT{" "}
-              <span className="text-lg text-green-2">#{props.card.id}</span>
+              <Link href={`/cards/${card.id}`} className="text-lg text-green-2">
+                #{clipHash(card.id)}
+              </Link>
             </h3>
           </div>
 
           <ul role="list" className="flex space-x-5">
             <li>
               <a
-                href={`https://opensea.io/assets/ethereum/${props.card.hash}`}
+                href={`https://${
+                  NETWORK == "goerli" ? `testnet.` : ``
+                }opensea.io/assets/${
+                  NETWORK == "goerli" ? `goerli` : `ethereum`
+                }/${CONTRACT_ADDRESS}/${BigInt(card.id)}`}
                 target="_blank"
                 className="text-gray-400 hover:text-gray-500"
               >
@@ -126,16 +123,16 @@ export default function Card(props: CardProps) {
           </ul>
           <div className="text-lg">
             <p className="text-gray-500">
-              {didWinPrize(matchCount) ? (
+              {didWinPrize() ? (
                 "Congratulations, you won the prize! Please claim your prize."
               ) : (
                 <>
                   Unlucky, you have{" "}
-                  {matchCount === 0
+                  {card.coveredNumbersCount === 0
                     ? "no matches. "
-                    : matchCount === 1
+                    : card.coveredNumbersCount === 1
                     ? "1 match. "
-                    : `${matchCount} matches. `}
+                    : `${card.coveredNumbersCount} matches. `}
                   Better luck next time!
                 </>
               )}
@@ -143,7 +140,7 @@ export default function Card(props: CardProps) {
           </div>
           <div className="block">
             <ClaimButton
-              matchCount={matchCount}
+              matchCount={card.coveredNumbersCount}
               didWinPrize={didWinPrize}
             ></ClaimButton>
           </div>
