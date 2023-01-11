@@ -52,6 +52,7 @@ contract RegenBingo is ERC721Enumerable {
 
     event DrawNumber(uint256 number);
     event ClaimPrize(uint256 tokenId, address winner);
+    event DrawStarted();
 
     /*//////////////////////////////////////////////////////////////
                                CONSTRUCTOR
@@ -118,6 +119,7 @@ contract RegenBingo is ERC721Enumerable {
         require(bingoState == BingoState.MINT);
         require(block.timestamp > drawTimestamp, "It is not draw period yet");
         bingoState = BingoState.DRAW;
+        emit DrawStarted();
     }
 
     /*//////////////////////////////////////////////////////////////
