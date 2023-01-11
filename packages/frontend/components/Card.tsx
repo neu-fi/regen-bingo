@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { clipHash } from "@/utils/utils";
+import { CONTRACT_ADDRESS, NETWORK } from "@/config";
 
 type CardProps = {
   card: ICard;
@@ -7,10 +9,9 @@ type CardProps = {
 };
 
 export interface ICard {
-  id: number;
+  id: string;
   coveredNumbersCount: number;
   tokenURI: ITokenURI;
-  hash?: string;
 }
 
 export interface ITokenURI {
@@ -94,7 +95,7 @@ export default function Card(props: CardProps) {
             <h3>
               Regen Bingo NFT{" "}
               <Link href={`/cards/${card.id}`} className="text-lg text-green-2">
-                #{card.id}
+                #{clipHash(card.id)}
               </Link>
             </h3>
           </div>
@@ -102,7 +103,11 @@ export default function Card(props: CardProps) {
           <ul role="list" className="flex space-x-5">
             <li>
               <a
-                href={`https://opensea.io/assets/ethereum/${card.hash}`}
+                href={`https://${
+                  NETWORK == "goerli" ? `testnet.` : ``
+                }opensea.io/assets/${
+                  NETWORK == "goerli" ? `goerli` : `ethereum`
+                }/${CONTRACT_ADDRESS}/${BigInt(card.id)}`}
                 target="_blank"
                 className="text-gray-400 hover:text-gray-500"
               >

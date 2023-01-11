@@ -71,7 +71,7 @@ export default function Header(props: HeaderProps) {
             </div>
             <div className="hidden sm:block">
               <nav
-                className="flex justify-evenly ml-auto md:ml-auto space-x-8 lg:space-x-12 xl:space-x-16"
+                className="flex justify-evenly ml-auto md:ml-52 space-x-8 lg:space-x-12 xl:space-x-16"
                 aria-label="Tabs"
               >
                 {tabs.map((tab) => (

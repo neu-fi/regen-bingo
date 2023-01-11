@@ -4,7 +4,7 @@ import Card, { ICard } from "@/components/Card";
 import { useBingoContract } from "@/hooks/useBingoContract";
 import { useProvider } from "wagmi";
 import { Contract } from "ethers";
-import { svg, getToken } from "@/utils/utils";
+import { svg, getToken, clipHash } from "@/utils/utils";
 import { useEffect } from "react";
 
 type CardProps = {};
@@ -16,7 +16,7 @@ function Cards(props: CardProps) {
   // States
   const [loading, setLoading] = React.useState<string | null>(null);
   const [card, setCard] = React.useState<ICard>({
-    id: 1,
+    id: "0x36e1de2f4233ee543dc7e5670f9df61d997b5d648be5c4d8e36cf73edf0e46ea",
     coveredNumbersCount: 0,
     tokenURI: {
       image: svg,
@@ -37,7 +37,7 @@ function Cards(props: CardProps) {
     setLoading("Loading...");
     if (contract) {
       try {
-        const card = await getToken(contract, tokenId);
+        const card: ICard = await getToken(contract, tokenId);
         setCard(card as ICard);
         setLoading(null);
       } catch (err) {
@@ -60,7 +60,7 @@ function Cards(props: CardProps) {
               <>
                 <div className="flex row-span-full justify-center">
                   <h1 className="text-2xl font-bold tracking-tight sm:text-center sm:text-5xl">
-                    {`Bingo Card #${id}`}
+                    {`Bingo Card #${clipHash(id)}`}
                   </h1>
                 </div>
                 <div className="flex row-span-full mt-4">

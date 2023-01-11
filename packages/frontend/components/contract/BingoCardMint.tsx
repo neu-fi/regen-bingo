@@ -4,7 +4,7 @@ import { MINT_PRICE } from "@/config";
 import { useBingoContract } from "@/hooks/useBingoContract";
 import { ethers } from "ethers";
 import { toast } from "react-toastify";
-import { errorSlicing } from "@/utils/utils";
+import { errorSlicing, toastOptions } from "@/utils/utils";
 
 export const BingoCardMint = () => {
   const [loading, setLoading] = useState("");
@@ -37,24 +37,10 @@ export const BingoCardMint = () => {
         setError("Succesfully minted");
         toast.success(
           "Succesfully minted, please check My Cards page to see!",
-          {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            theme: "light",
-          }
+          toastOptions
         );
       } catch (err: any) {
-        toast.error(`${errorSlicing(err.reason)}!`, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          theme: "light",
-        });
+        toast.error(`${errorSlicing(err.reason)}!`, toastOptions);
         setError("An error occured");
       }
       await window.setTimeout(() => {

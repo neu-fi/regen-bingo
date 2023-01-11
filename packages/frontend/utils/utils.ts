@@ -1,4 +1,6 @@
+import { ICard } from "@/components/Card";
 import { Contract } from "ethers";
+import { ToastOptions } from "react-toastify";
 
 export function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
@@ -55,6 +57,15 @@ export function timestampToCountdown(
     `;
 }
 
+export const toastOptions: ToastOptions = {
+  position: "top-right",
+  autoClose: 3000,
+  hideProgressBar: true,
+  closeOnClick: true,
+  pauseOnHover: true,
+  theme: "light",
+};
+
 export function errorSlicing(error: string) {
   try {
     const left = error.indexOf("'");
@@ -68,18 +79,25 @@ export function clipHash(hash: string) {
   return hash.slice(0, 6) + "..." + hash.slice(hash.length - 4, hash.length);
 }
 
-export async function getToken(contract: Contract, tokenId: string) {
-  const tokenURIBase64 = await contract.tokenURI(tokenId);
-  const tokenURI = await getTokenDataJSON(tokenURIBase64);
-  const coveredNumbersCount = Number(
-    (await contract.coveredNumbers(tokenId)).toString()
-  );
-  const card = {
-    id: Number(tokenId),
-    coveredNumbersCount,
-    tokenURI: tokenURI,
-  };
-  return card;
+export async function getToken(
+  contract: Contract,
+  tokenId: string
+): Promise<ICard> {
+  try {
+    const tokenURIBase64 = await contract.tokenURI(tokenId);
+    const tokenURI = await getTokenDataJSON(tokenURIBase64);
+    const coveredNumbersCount = Number(
+      (await contract.coveredNumbers(tokenId)).toString()
+    );
+    const card: ICard = {
+      id: tokenId,
+      coveredNumbersCount,
+      tokenURI: tokenURI,
+    };
+    return card;
+  } catch (err) {
+    throw err;
+  }
 }
 
 export async function getTokenDataJSON(tokenURI: URL) {

@@ -1,10 +1,6 @@
 import { PropsWithChildren, useState } from "react";
 import Head from "next/head";
 import CardList from "@/components/CardList";
-import { GetDrawnNumbers } from "@/components/contract/GetDrawnNumbers";
-import DrawnNumbersTable, {
-  ITableElement,
-} from "@/components/DrawnNumbersTable";
 
 type MyCardsProps = {};
 
