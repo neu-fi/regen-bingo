@@ -63,8 +63,10 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
 
   return (
     <>
-      {loading && <div className="text-xl m-20 font-semibold">{loading}</div>}
-      {!loading && (
+      {drawnNumbers.length === 0 && (
+        <div className="text-xl m-20 font-semibold">{loading}</div>
+      )}
+      {drawnNumbers.length !== 0 && (
         <DrawnNumbersTable drawnNumbers={drawnNumbers}></DrawnNumbersTable>
       )}
     </>

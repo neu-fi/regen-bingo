@@ -40,9 +40,7 @@ function LuckyNumbers(props: {
       <h3 className="text-xl font-bold text-green-4 tracking-tight sm:text-center sm:text-4xl">
         Lucky Numbers
       </h3>
-      <GetDrawnNumbers
-        onDrawnNumbersUpdate={props.setDrawnNumbersList}
-      ></GetDrawnNumbers>
+      <GetDrawnNumbers />
     </div>
   );
 }
