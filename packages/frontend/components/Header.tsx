@@ -36,25 +36,31 @@ export default function Header(props: HeaderProps) {
   const router = useRouter();
 
   return (
-    <div className="px-6 pt-6 lg:px-8">
+    <div className="px-6 pt-8 lg:px-8">
       <div>
         <nav className="flex h-9 items-center justify-between">
-          <div>
-            <a href="/#" className="-m-1.5 p-1.5">
+          <div className="flex justify-center align-middle items-center">
+            <a href="/#" className="p-1">
               <span className="sr-only">Regen Bingo</span>
               <img
-                className="h-6 sm:h-8 md:h-8"
-                src="https://tailwindui.com/img/logos/mark.svg?color=green&shade=600"
+                className="hidden sm:landscape:hidden sm:block md:portrait:hidden md:landscape:hidden lg:landscape:block sm:h-16"
+                src="/logo.png"
+                alt=""
+              />
+              <img
+                className="block sm:landscape:block mr-2 sm:hidden md:portrait:block md:landscape:block lg:landscape:hidden"
+                width={32}
+                height={32}
+                src="/favicon.svg"
                 alt=""
               />
             </a>
           </div>
-          <div className="mr-8 lg:mr-0 flex justify-center font-semibold">
+          <div className="mr-1 sm:mr-8 md:mr-0 flex justify-center font-semibold">
             <div className="sm:hidden">
               <label htmlFor="tabs" className="sr-only">
                 Select a tab
               </label>
-              {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
               <select
                 id="tabs"
                 name="tabs"
@@ -71,7 +77,7 @@ export default function Header(props: HeaderProps) {
             </div>
             <div className="hidden sm:block">
               <nav
-                className="ml-28 md:ml-52 space-x-8 lg:space-x-12 xl:space-x-16"
+                className="mr-2 md:mr-4 space-x-4 lg:space-x-6 xl:space-x-8"
                 aria-label="Tabs"
               >
                 {tabs.map((tab) => (
