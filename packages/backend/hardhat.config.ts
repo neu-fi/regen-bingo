@@ -2,6 +2,7 @@ import '@nomiclabs/hardhat-waffle';
 import * as dotenv from 'dotenv';
 import { HardhatUserConfig } from 'hardhat/config';
 import 'hardhat-deploy';
+import 'hardhat-contract-sizer';
 import '@nomiclabs/hardhat-ethers';
 import '@nomiclabs/hardhat-etherscan';
 
@@ -92,6 +93,11 @@ const config: HardhatUserConfig = {
       apiKey: process.env.ETHERSCAN_API_KEY as string,
     },
   },
+  contractSizer: {
+    disambiguatePaths: false,
+    runOnCompile: true,
+    strict: true,
+  }
 };
 
 export default config;
