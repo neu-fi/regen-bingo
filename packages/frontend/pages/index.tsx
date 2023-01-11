@@ -15,7 +15,7 @@ export default function Home() {
           name="description"
           content="A global trustless Bingo game where half of the proceeds go to public good funding"
         />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.svg" />
       </Head>
       <section id="mint">
         <Mint></Mint>
