@@ -19,9 +19,6 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   let tokenId = await greeterContract.tokenByIndex(0);
   console.log(tokenId);
   
-  console.log("\ntokenImage:");
-  console.log(await greeterContract.tokenImage(tokenId));
-  
   console.log("\ntokenURI:");
   console.log(await greeterContract.tokenURI(tokenId));
 };

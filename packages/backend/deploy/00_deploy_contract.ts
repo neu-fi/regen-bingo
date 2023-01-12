@@ -12,12 +12,17 @@ const main: DeployFunction = async function ({getNamedAccounts, deployments}: Ha
   //   from: deployer,
   //   log: true,
   // });
+
+  let uri = await deploy('URI', {from: deployer, log: true});
   
   const regenBingoArgs = ['REGENBINGO', 'Regen Bingo — The OG Collection', parseEther('0.1'), Math.floor(Date.now() / 1000) + 60, 15, deployer];
   await deploy('RegenBingo', {
     args: regenBingoArgs,
     from: deployer,
     log: true,
+    libraries: {
+      URI: uri.address,
+    }
   });
 };
 
