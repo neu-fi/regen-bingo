@@ -20,7 +20,7 @@ import {
 import { useIsMounted } from "../hooks";
 import Layout from "@/components/Layout";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 // Get environment variables
 // const alchemyId = process.env.NEXT_PUBLIC_ALCHEMY_ID as string;

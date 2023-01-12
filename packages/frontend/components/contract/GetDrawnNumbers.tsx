@@ -58,9 +58,10 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
   }, [initialFetchCompleted]);
 
   const eventHandler = async (number: BigNumber, event: Event) => {
-    const luckyNumber = event.args?.number.toNumber();
+    const luckyNumber = number.toNumber();
     if (!drawnNumbers.includes(luckyNumber)) {
       setDrawnNumbers((prev) => [...prev, luckyNumber]);
+      toast.info(`New number drawn: ${luckyNumber}`, toastOptions);
     }
   };
 
