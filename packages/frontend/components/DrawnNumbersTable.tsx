@@ -1,5 +1,3 @@
-import { clipHash } from "@/utils/utils";
-import { getTimeDifference } from "@/utils/utils";
 import React from "react";
 
 type DrawnNumbersTableProps = {
@@ -21,7 +19,7 @@ export function DrawnNumbersTable(props: DrawnNumbersTableProps) {
             <div className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-10">
               {drawnNumbers.map((drawnNumber) => (
                 <div className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  <span className="bg-green-1 hover:bg-yellow-2 w-10 leading-10 mx-1 text-center rounded-full inline-block">
+                  <span className="bg-green-1 hover:bg-yellow-2 w-10 leading-10 mx-1 text-center rounded-full inline-block cursor-pointer">
                     {drawnNumber.drawnNumber}
                   </span>
                 </div>

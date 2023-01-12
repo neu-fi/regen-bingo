@@ -4,7 +4,7 @@ import DrawnNumbersTable, {
   ITableElement,
 } from "@/components/DrawnNumbersTable";
 import { useBingoContract } from "@/hooks/useBingoContract";
-import { BigNumber, Event } from "ethers";
+import { BigNumber, Event, Contract } from "ethers";
 import { toast } from "react-toastify";
 import { errorSlicing, toastOptions } from "@/utils/utils";
 
@@ -16,7 +16,7 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
   let luckyNumbers: Number[] = [];
 
   const provider = useProvider();
-  const contract = useBingoContract(provider);
+  const contract: Contract | undefined = useBingoContract(provider);
 
   useEffect(() => {
     getDrawnNumbers();
