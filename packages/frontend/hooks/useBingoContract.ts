@@ -2,6 +2,8 @@ import { CONTRACT_ADDRESS, NETWORK_ID, NETWORK } from "../config";
 import { regenBingoABI } from "../contracts/regen_bingo_abi";
 import { useContract } from "wagmi";
 import contracts from "@/contracts/hardhat_contracts.json";
+import { toast } from "react-toastify";
+import { toastOptions } from "@/utils/utils";
 
 export const useBingoContract = (providerOrSigner: any) => {
   let contractAddress;
@@ -27,7 +29,7 @@ export const useBingoContract = (providerOrSigner: any) => {
   });
 
   if (!contract) {
-    console.error("Contract cannot found");
+    toast.error("Contract cannot found", toastOptions);
     return;
   }
 
