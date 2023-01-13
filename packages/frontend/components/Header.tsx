@@ -43,12 +43,12 @@ export default function Header(props: HeaderProps) {
             <a href="/#" className="p-1">
               <span className="sr-only">Regen Bingo</span>
               <img
-                className="hidden sm:landscape:hidden sm:block md:portrait:hidden md:landscape:hidden lg:landscape:block sm:h-16"
+                className="hidden sm:portrait:hidden sm:landscape:hidden sm:block md:portrait:hidden md:landscape:hidden lg:landscape:block sm:h-16"
                 src="/logo.png"
                 alt=""
               />
               <img
-                className="block sm:landscape:block mr-2 sm:hidden md:portrait:block md:landscape:block lg:landscape:hidden"
+                className="block sm:portrait:block sm:landscape:block mr-2 sm:hidden md:portrait:block md:landscape:block lg:landscape:hidden"
                 width={32}
                 height={32}
                 src="/favicon.svg"
