@@ -1,6 +1,11 @@
 import Card, { ICard } from "@/components/Card";
 import { useBingoContract } from "@/hooks/useBingoContract";
-import { errorSlicing, getToken, svg } from "@/utils/utils";
+import {
+  checkIfNetworkIsCorrect,
+  errorSlicing,
+  getToken,
+  svg,
+} from "@/utils/utils";
 import { Contract } from "ethers";
 import { PropsWithChildren, useEffect, useState } from "react";
 import { useSigner, useAccount } from "wagmi";
@@ -40,51 +45,54 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
   const signer = useSigner();
   const contract: Contract | undefined = useBingoContract(signer.data);
 
-  async function fetchCardsOwnedByUser(contract: Contract, account: any) {
-    if (!account.isConnected) {
-      toast.error("Please connect your wallet!", toastOptions);
-      return;
-    }
-    if (!contract) {
-      toast.error("Contract not found!", toastOptions);
+  useEffect(() => {
+    if (!checkIfNetworkIsCorrect()) {
       return;
     }
 
-    try {
-      const balance = await contract!.balanceOf(account.address!);
-      const balanceOfUser: Number = Number(balance);
-
-      if (balanceOfUser === 0) {
-        setIsNoCardsMinted(true);
+    async function fetchCardsOwnedByUser() {
+      if (!account.isConnected) {
+        toast.error("Please connect your wallet!", toastOptions);
+        return;
+      }
+      if (!contract) {
+        toast.error("Contract not found!", toastOptions);
         return;
       }
 
-      setIsNoCardsMinted(false);
-      let fetchedCards: ICard[] = [];
-      for (let i = 0; i < balanceOfUser; i++) {
-        const tokenId: string = (
-          await contract!.tokenOfOwnerByIndex(account.address, i)
-        )._hex.toString();
-        const card: ICard = await getToken(contract, tokenId);
-        fetchedCards.push(card);
-      }
-      return fetchedCards;
-    } catch (err: any) {
-      console.log(err);
-      if (!(err instanceof TypeError)) {
-        toast.error(`${errorSlicing(err.reason)}!`, toastOptions);
-      } else {
-        window.setTimeout(() => {
-          setRetry(true);
-        }, 1);
+      try {
+        const balance = await contract!.balanceOf(account.address!);
+        const balanceOfUser: Number = Number(balance);
+
+        if (balanceOfUser === 0) {
+          setIsNoCardsMinted(true);
+          return;
+        }
+
+        setIsNoCardsMinted(false);
+        let fetchedCards: ICard[] = [];
+        for (let i = 0; i < balanceOfUser; i++) {
+          const tokenId: string = (
+            await contract!.tokenOfOwnerByIndex(account.address, i)
+          )._hex.toString();
+          const card: ICard = await getToken(contract, tokenId);
+          fetchedCards.push(card);
+        }
+        return fetchedCards;
+      } catch (err: any) {
+        console.log(err);
+        if (!(err instanceof TypeError)) {
+          toast.error(`${errorSlicing(err.reason)}!`, toastOptions);
+        } else {
+          window.setTimeout(() => {
+            setRetry(true);
+          }, 1);
+        }
       }
     }
-  }
-
-  useEffect(() => {
     setRetry(false);
     if (isConnected && contract) {
-      fetchCardsOwnedByUser(contract, account).then((fetchedCards) => {
+      fetchCardsOwnedByUser().then((fetchedCards) => {
         if (fetchedCards && fetchedCards.length > 0) {
           setCards(sortCards(fetchedCards!));
         } else {
@@ -92,7 +100,7 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
         }
       });
     }
-  }, [retry]);
+  }, [contract, account, retry]);
 
   return (
     <>
