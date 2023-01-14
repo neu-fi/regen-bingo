@@ -1,5 +1,8 @@
 import contracts from "@/contracts/hardhat_contracts.json";
 
+console.log("process.env.NETWORK")
+console.log(process.env.NETWORK)
+
 type NetworkDetails = {
   NETWORK_ID: number;
   NETWORK_NAME: string;
