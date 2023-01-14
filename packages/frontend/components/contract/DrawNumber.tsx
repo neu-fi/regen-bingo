@@ -35,12 +35,12 @@ export const DrawNumber = () => {
           const tx = await contract.startDrawPeriod();
           await tx.wait();
         }
-        setLoading("Approval waiting..");
-        const tx = await contract.drawNumber();
-        setLoading("Transaction waiting..");
+        setLoading("Waiting for approval...");
+        const tx = await contract.drawNumber({gasLimit: 250000});
+        setLoading("Waiting for the transaction...");
         await tx.wait();
         setLoading("");
-        setError("Succesfully Drawn");
+        setError("Succesfully drawn");
         toast.success(
           "Number drawn successfully, please check your cards!",
           toastOptions
