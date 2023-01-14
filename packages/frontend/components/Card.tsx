@@ -67,11 +67,12 @@ export default function Card(props: CardProps) {
           <ul role="list" className="flex space-x-5">
             <li>
               <a
-                href={`https://${
-                  NETWORK_NAME == "goerli" ? `testnets.` : ``
-                }opensea.io/assets/${
-                  NETWORK_NAME == "goerli" ? `goerli` : `ethereum`
-                }/${CONTRACT_ADDRESS}/${BigInt(card.id)}`}
+                // href={`https://${
+                //   NETWORK_NAME == "goerli" ? `testnets.` : ``
+                // }opensea.io/assets/${
+                //   NETWORK_NAME == "goerli" ? `goerli` : `ethereum`
+                // }/${CONTRACT_ADDRESS}/${BigInt(card.id)}`}
+                href={`https://testnets.opensea.io/assets/goerli/${CONTRACT_ADDRESS}/${BigInt(card.id)}`}
                 target="_blank"
                 className="text-gray-400 hover:text-gray-500"
               >
