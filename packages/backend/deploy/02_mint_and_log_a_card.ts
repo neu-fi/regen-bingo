@@ -1,6 +1,5 @@
 import {HardhatRuntimeEnvironment} from 'hardhat/types';
 import {DeployFunction} from 'hardhat-deploy/types';
-import { regenBingoArgs } from '../config';
 
 const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   if (hre.network.name !== 'ethereum' ) {
@@ -14,7 +13,7 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     
     console.log("\nMinting...");
     let tx = await regenBingoContract.mint({ value: mintPrice })
-    let receipt = await tx.wait();
+    await tx.wait();
     
     console.log("\ntotalSupply():");
     console.log(await regenBingoContract.totalSupply());

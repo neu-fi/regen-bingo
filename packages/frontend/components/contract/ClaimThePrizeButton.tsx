@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAccount, useSigner } from "wagmi";
-import { MINT_PRICE } from "@/config";
 import { useBingoContract } from "@/hooks/useBingoContract";
-import { ethers } from "ethers";
 import { toast } from "react-toastify";
 import { errorSlicing, toastOptions } from "@/utils/utils";
 

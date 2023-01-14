@@ -1,7 +1,6 @@
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
 import router, { NextRouter, useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React from "react";
 import { ConnectOrSwitchNetworkButton } from "./web3/ConnectOrSwitchNetworkButton";
 
 type HeaderProps = {};
