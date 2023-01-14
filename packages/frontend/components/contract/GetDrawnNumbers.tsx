@@ -5,9 +5,6 @@ import { useBingoContract } from "@/hooks/useBingoContract";
 import { BigNumber, Event, Contract } from "ethers";
 import { toast } from "react-toastify";
 import { errorSlicing, toastOptions } from "@/utils/utils";
-import { getNetwork } from "@wagmi/core";
-import { NETWORK_ID } from "@/config";
-import { NETWORK_NAME } from "../../config";
 import { checkIfNetworkIsCorrect } from "../../utils/utils";
 
 type GetDrawnNumbersProps = {};

@@ -44,7 +44,7 @@ contract RegenBingo is ERC721Enumerable {
     uint256 public drawTimestamp;
     uint256 public drawNumberCooldownSeconds;
     uint256 public lastDrawTime;
-    address payable public charityAddress;
+    address payable public donationAddress;
     EnumerableSet.UintSet private drawnNumbers;
 
     /*//////////////////////////////////////////////////////////////
@@ -65,12 +65,12 @@ contract RegenBingo is ERC721Enumerable {
         uint256 _mintPrice,
         uint256 _drawTimestamp,
         uint256 _drawNumberCooldownSeconds,
-        address payable _charityAddress
+        address payable _donationAddress
     ) ERC721(_name, _symbol) {
         mintPrice = _mintPrice;
         drawTimestamp = _drawTimestamp;
         drawNumberCooldownSeconds = _drawNumberCooldownSeconds;
-        charityAddress = _charityAddress;
+        donationAddress = _donationAddress;
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -109,7 +109,7 @@ contract RegenBingo is ERC721Enumerable {
         require(bingoState != BingoState.FINISHED, "Game Over");
         _requireMinted(id);
         require(coveredNumbers(id) == 15, "INELIGIBLE");
-        charityAddress.call{value: address(this).balance / 2}("");
+        donationAddress.call{value: address(this).balance / 2}("");
         address payable winner = payable(ownerOf(id));
         winner.call{value: address(this).balance}("");
         bingoState = BingoState.FINISHED;

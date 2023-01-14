@@ -40,7 +40,6 @@ export const DrawNumber = () => {
         setLoading("Waiting for the transaction...");
         await tx.wait();
         setLoading("");
-        setError("Succesfully drawn");
         toast.success(
           "Number drawn successfully, please check your cards!",
           toastOptions
@@ -50,7 +49,7 @@ export const DrawNumber = () => {
         setLoading("");
         setError("An error occured");
       }
-      await window.setTimeout(() => {
+      window.setTimeout(() => {
         setError("");
         setLoading("");
       }, 2000);

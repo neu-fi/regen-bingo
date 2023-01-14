@@ -2,9 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { clipHash } from "@/utils/utils";
 import { CONTRACT_ADDRESS, NETWORK_NAME } from "@/config";
-import { BingoCardMint } from "./contract/BingoCardMint";
 import { ClaimThePrizeButton } from "./contract/ClaimThePrizeButton";
-import { BingoState } from "@/hooks/useBingoContract";
 
 type CardProps = {
   card: ICard;
@@ -21,6 +19,17 @@ export interface ITokenURI {
   name: string;
   description: string;
   image: string;
+}
+
+function openseaURL(tokenId: bigint) {
+  switch (NETWORK_NAME) {
+    case "Ethereum":
+      return `https://opensea.io/assets/ethereum/${CONTRACT_ADDRESS}/${tokenId}`
+    case "Goerli":
+      return `https://testnets.opensea.io/assets/goerli/${CONTRACT_ADDRESS}/${tokenId}`
+    case "Hardhat":
+      return `https://opensea.io/assets/hardhat/${CONTRACT_ADDRESS}/${tokenId}`
+  }
 }
 
 export default function Card(props: CardProps) {
@@ -57,8 +66,8 @@ export default function Card(props: CardProps) {
         <div className="space-y-4">
           <div className="space-y-2 text-lg font-medium leading-6">
             <h3>
-              Regen Bingo NFT{" "}
               <Link href={`/cards/${card.id}`} className="text-lg text-green-2">
+                Regen Bingo Card{" "}
                 #{clipHash(card.id)}
               </Link>
             </h3>
@@ -67,12 +76,7 @@ export default function Card(props: CardProps) {
           <ul role="list" className="flex space-x-5">
             <li>
               <a
-                // href={`https://${
-                //   NETWORK_NAME == "goerli" ? `testnets.` : ``
-                // }opensea.io/assets/${
-                //   NETWORK_NAME == "goerli" ? `goerli` : `ethereum`
-                // }/${CONTRACT_ADDRESS}/${BigInt(card.id)}`}
-                href={`https://testnets.opensea.io/assets/goerli/${CONTRACT_ADDRESS}/${BigInt(card.id)}`}
+                href={openseaURL(BigInt(card.id))}
                 target="_blank"
                 className="text-gray-400 hover:text-gray-500"
               >
@@ -101,13 +105,12 @@ export default function Card(props: CardProps) {
                 )
                 : (
                     <p className="text-gray-500">
-                      You have{" "}
+                      Has{" "}
                       {card.coveredNumbersCount === 0
-                        ? "no matches"
+                        ? "no matches."
                         : card.coveredNumbersCount === 1
-                        ? "1 match"
-                        : `${card.coveredNumbersCount} matches`}
-                      {card.coveredNumbersCount ? "! " : ". "}
+                        ? "1 match!"
+                        : `${card.coveredNumbersCount} matches!`}
                     </p>
                   )
               }

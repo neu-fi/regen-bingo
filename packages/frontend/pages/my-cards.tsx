@@ -61,7 +61,7 @@ function MyCardsHeader() {
         My Cards
       </h1>
       <p className="mt-6 text-lg leading-8 text-gray-600 sm:text-center">
-        You can see your Regen Bingo Card NFTs here and watch them as the
+        You can see your Regen Bingo Cards here and watch them as the
         numbers are drawn!
       </p>
     </div>

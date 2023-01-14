@@ -1,54 +1,32 @@
-console.log("NODE_ENV:", process.env.NODE_ENV);
-
-export const NETWORK = process.env.NETWORK;
+import contracts from "@/contracts/hardhat_contracts.json";
 
 type NetworkDetails = {
-  NETWORK_ID?: number;
-  NETWORK_NAME?: string;
-  CONTRACT_ADDRESS?: string;
-  MINT_PRICE?: number;
+  NETWORK_ID: number;
+  NETWORK_NAME: string;
 };
 
 function getNetwork(): NetworkDetails {
-  let networkDetails: NetworkDetails = {};
-  switch (NETWORK) {
-    case "mainnet":
-      networkDetails = {
+  switch (process.env.NETWORK) {
+    case "ethereum":
+      return {
         NETWORK_ID: 1,
-        NETWORK_NAME: "Mainnet",
-        CONTRACT_ADDRESS: process.env.CONTRACT_ADDRESS as string,
-        MINT_PRICE: 0.1,
+        NETWORK_NAME: "Ethereum",
       };
-      break;
     case "goerli":
-      networkDetails = {
+      return {
         NETWORK_ID: 5,
         NETWORK_NAME: "Goerli",
-        CONTRACT_ADDRESS: process.env.CONTRACT_ADDRESS as string,
-        MINT_PRICE: 0.01,
       };
-      break;
-    case "hardhat":
-      networkDetails = {
+    default:
+      return {
         NETWORK_ID: 31337,
         NETWORK_NAME: "Hardhat",
-        CONTRACT_ADDRESS: process.env.CONTRACT_ADDRESS as string,
-        MINT_PRICE: 0.1,
       };
-      break;
-    default:
-      networkDetails = {
-        NETWORK_ID: 5,
-        NETWORK_NAME: "Goerli",
-        CONTRACT_ADDRESS: "0xAa2CCBdd7AB14EF3459051635E0Cce16B1720eb5",
-        MINT_PRICE: 0.01,
-      };
-      break;
   }
-  return networkDetails;
 }
 
 export const NETWORK_ID = getNetwork().NETWORK_ID as number;
 export const NETWORK_NAME = getNetwork().NETWORK_NAME as string;
-export const CONTRACT_ADDRESS = getNetwork().CONTRACT_ADDRESS as string;
-export const MINT_PRICE = getNetwork().MINT_PRICE as number;
+export const CONTRACT = (contracts as any)[NETWORK_ID][0].contracts.RegenBingo;
+export const CONTRACT_ADDRESS = CONTRACT.address;
+export const CONTRACT_ABI  = CONTRACT.abi;

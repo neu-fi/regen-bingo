@@ -59,8 +59,8 @@ function Cards(props: CardProps) {
             ) : (
               <>
                 <div className="flex row-span-full justify-center">
-                  <h1 className="text-2xl font-bold tracking-tight sm:text-center sm:text-5xl">
-                    {`Bingo Card #${clipHash(id)}`}
+                  <h1 className="font-bold tracking-tight text-center text-2xl sm:text-5xl">
+                    {`Regen Bingo Card #${clipHash(id)}`}
                   </h1>
                 </div>
                 <div className="flex row-span-full mt-4">

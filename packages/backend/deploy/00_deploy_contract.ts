@@ -1,21 +1,14 @@
 import {HardhatRuntimeEnvironment} from 'hardhat/types';
 import {DeployFunction} from 'hardhat-deploy/types';
-import { parseEther } from 'ethers/lib/utils';
+import { regenBingoArgs } from '../config';
 
-const main: DeployFunction = async function ({getNamedAccounts, deployments}: HardhatRuntimeEnvironment) {
+const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+  const {getNamedAccounts, deployments} = hre;
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
 
-  // const greeterArgs = ['Hello!!!!!!!!'];
-  // await deploy('Greeter', {
-  //   args: greeterArgs,
-  //   from: deployer,
-  //   log: true,
-  // });
-
   let uri = await deploy('URI', {from: deployer, log: true});
-  
-  const regenBingoArgs = ['REGENBINGO', 'Regen Bingo — The OG Collection', parseEther('0.1'), Math.floor(Date.now() / 1000) + 60, 5, deployer];
+
   await deploy('RegenBingo', {
     args: regenBingoArgs,
     from: deployer,
@@ -28,4 +21,4 @@ const main: DeployFunction = async function ({getNamedAccounts, deployments}: Ha
 
 export default main;
  
-export const tags = ['all', 'greeter', 'regen-bingo'];
+export const tags = ['all', 'regen-bingo'];

@@ -108,12 +108,9 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
   return (
     <>
       {isNoCardsMinted ? (
-        <>
-          NOT MINTED
-          {/* TODO: Inform user that no cards are minted */}
-          {/* TODO: User can refresh the list */}
-          {/* TODO: Redirection button to minting page */}
-        </>
+        <p className="mt-6 text-lg leading-8 text-gray-600 sm:text-center">
+          You don't have any Regen Bingo Cards.
+        </p>
       ) : (
         <div className="bg-white rounded-2xl shadow-2xl my-4">
           <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8 lg:py-12 ">

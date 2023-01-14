@@ -5,7 +5,7 @@
       "chainId": "5",
       "contracts": {
         "RegenBingo": {
-          "address": "0x73B336AeC0F950923BFad979c0b4d71776bc9D9e",
+          "address": "0x1A9eBe47E35ae30A73a8f3334809c075aabf5dDf",
           "abi": [
             {
               "inputs": [
@@ -36,7 +36,7 @@
                 },
                 {
                   "internalType": "address payable",
-                  "name": "_charityAddress",
+                  "name": "_donationAddress",
                   "type": "address"
                 }
               ],
@@ -207,19 +207,6 @@
               "type": "function"
             },
             {
-              "inputs": [],
-              "name": "charityAddress",
-              "outputs": [
-                {
-                  "internalType": "address payable",
-                  "name": "",
-                  "type": "address"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
               "inputs": [
                 {
                   "internalType": "uint256",
@@ -246,6 +233,19 @@
                   "internalType": "uint256",
                   "name": "count",
                   "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "donationAddress",
+              "outputs": [
+                {
+                  "internalType": "address payable",
+                  "name": "",
+                  "type": "address"
                 }
               ],
               "stateMutability": "view",
@@ -710,7 +710,7 @@
       "chainId": "31337",
       "contracts": {
         "RegenBingo": {
-          "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+          "address": "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1",
           "abi": [
             {
               "inputs": [
@@ -741,7 +741,7 @@
                 },
                 {
                   "internalType": "address payable",
-                  "name": "_charityAddress",
+                  "name": "_donationAddress",
                   "type": "address"
                 }
               ],
@@ -912,19 +912,6 @@
               "type": "function"
             },
             {
-              "inputs": [],
-              "name": "charityAddress",
-              "outputs": [
-                {
-                  "internalType": "address payable",
-                  "name": "",
-                  "type": "address"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
               "inputs": [
                 {
                   "internalType": "uint256",
@@ -951,6 +938,19 @@
                   "internalType": "uint256",
                   "name": "count",
                   "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "donationAddress",
+              "outputs": [
+                {
+                  "internalType": "address payable",
+                  "name": "",
+                  "type": "address"
                 }
               ],
               "stateMutability": "view",
