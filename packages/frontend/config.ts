@@ -20,7 +20,7 @@ function getNetwork(): NetworkDetails {
       networkDetails = {
         NETWORK_ID: 1,
         NETWORK_NAME: "Mainnet",
-        CONTRACT_ADDRESS: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string,
+        CONTRACT_ADDRESS: process.env.CONTRACT_ADDRESS as string,
         MINT_PRICE: 0.1,
       };
       break;
@@ -28,15 +28,15 @@ function getNetwork(): NetworkDetails {
       networkDetails = {
         NETWORK_ID: 5,
         NETWORK_NAME: "Goerli",
-        CONTRACT_ADDRESS: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string,
-        MINT_PRICE: 0.1,
+        CONTRACT_ADDRESS: process.env.CONTRACT_ADDRESS as string,
+        MINT_PRICE: 0.01,
       };
       break;
     case "hardhat":
       networkDetails = {
         NETWORK_ID: 31337,
         NETWORK_NAME: "Hardhat",
-        CONTRACT_ADDRESS: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string,
+        CONTRACT_ADDRESS: process.env.CONTRACT_ADDRESS as string,
         MINT_PRICE: 0.1,
       };
       break;
