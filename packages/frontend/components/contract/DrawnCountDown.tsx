@@ -72,9 +72,9 @@ export const DrawnCountDown = () => {
                 </>
               ) : (
                 <span>
-                  Lucky numbers have been drawn!{" "}
+                  Lucky numbers can be drawn!{" "}
                   <Link href="my-cards" className="text-yellow-1">
-                    <span>Check your card now.</span>
+                    <span>Check your cards now.</span>
                   </Link>
                 </span>
               )}
