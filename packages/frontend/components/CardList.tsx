@@ -12,7 +12,9 @@ import { useSigner, useAccount } from "wagmi";
 import { toast } from "react-toastify";
 import { toastOptions } from "../utils/utils";
 
-type CardListProps = {};
+type CardListProps = {
+  trigger?: Event;
+};
 
 type SortType = {
   sort: "asc" | "desc";
@@ -35,6 +37,7 @@ function sortCards(
 }
 
 export default function CardList(props: PropsWithChildren<CardListProps>) {
+  const { trigger } = props;
   const [cards, setCards] = useState<ICard[]>();
   const [retry, setRetry] = useState<boolean>(false);
   const [isNoCardsMinted, setIsNoCardsMinted] = useState<boolean>(true);
@@ -100,7 +103,7 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
         }
       });
     }
-  }, [contract, account, retry]);
+  }, [contract, account, retry, trigger]);
 
   return (
     <>

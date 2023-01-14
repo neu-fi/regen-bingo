@@ -1,10 +1,36 @@
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import Head from "next/head";
 import CardList from "@/components/CardList";
+import { useProvider } from "wagmi";
+import { BigNumber, Contract } from "ethers";
+import { useBingoContract } from "@/hooks/useBingoContract";
+import { toastOptions } from "@/utils/utils";
+import { toast } from "react-toastify";
 
 type MyCardsProps = {};
 
 export default function MyCards(props: PropsWithChildren<MyCardsProps>) {
+  const [trigger, setTrigger] = useState<Event>();
+  const provider = useProvider();
+  const contract: Contract | undefined = useBingoContract(provider);
+  useEffect(() => {
+    if (contract) {
+      contract.on("DrawNumber", eventHandler);
+    }
+    return () => {
+      if (contract) {
+        contract.off("DrawNumber", eventHandler);
+      }
+    };
+  }, []);
+
+  const eventHandler = async (number: BigNumber, event: Event) => {
+    const luckyNumber = number.toNumber();
+    if (luckyNumber === undefined) return;
+    toast.info(`New number drawn: ${luckyNumber}`, toastOptions);
+    setTrigger((trigger) => new Event("fetchCards"));
+  };
+
   return (
     <>
       <Head>
@@ -18,7 +44,7 @@ export default function MyCards(props: PropsWithChildren<MyCardsProps>) {
             </div>
             <div className="row-span-full mt-4">
               <div className="flex flex-col justify-center items-stretch flex-nowrap">
-                <CardList></CardList>
+                <CardList trigger={trigger}></CardList>
               </div>
             </div>
           </div>

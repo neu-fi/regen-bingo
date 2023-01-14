@@ -5,6 +5,11 @@ import contracts from "@/contracts/hardhat_contracts.json";
 import { toast } from "react-toastify";
 import { toastOptions } from "@/utils/utils";
 
+export const enum BingoState {
+  MINT,
+  DRAW,
+  FINISHED,
+}
 export const useBingoContract = (providerOrSigner: any) => {
   let contractAddress;
   let contractABI;

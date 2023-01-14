@@ -1,8 +1,9 @@
-import { useBingoContract } from "@/hooks/useBingoContract";
+import { BingoState, useBingoContract } from "@/hooks/useBingoContract";
 import { useAccount, useSigner } from "wagmi";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { errorSlicing, toastOptions } from "@/utils/utils";
+import { Contract } from "ethers";
 
 export const DrawNumber = () => {
   const [error, setError] = useState("");
@@ -10,7 +11,7 @@ export const DrawNumber = () => {
 
   const isConnected = useAccount();
   const { data: signerData } = useSigner();
-  const contract = useBingoContract(signerData);
+  const contract: Contract | undefined = useBingoContract(signerData);
 
   useEffect(() => {
     if (signerData) {
@@ -22,10 +23,20 @@ export const DrawNumber = () => {
   }, [signerData]);
 
   async function handleClick() {
-    if (isConnected) {
+    if (isConnected && contract) {
       try {
+        const state = await contract.bingoState();
+        if (state === BingoState.FINISHED) {
+          setError("Bingo is finished");
+          toast.error(`Draw is finished!`, toastOptions);
+          return;
+        }
+        if (state === BingoState.MINT) {
+          const tx = await contract.startDrawPeriod();
+          await tx.wait();
+        }
         setLoading("Approval waiting..");
-        const tx = await contract?.drawNumber();
+        const tx = await contract.drawNumber();
         setLoading("Transaction waiting..");
         await tx.wait();
         setLoading("");
