@@ -68,7 +68,7 @@ export default function Card(props: CardProps) {
             <li>
               <a
                 href={`https://${
-                  NETWORK == "goerli" ? `testnet.` : ``
+                  NETWORK == "goerli" ? `testnets.` : ``
                 }opensea.io/assets/${
                   NETWORK == "goerli" ? `goerli` : `ethereum`
                 }/${CONTRACT_ADDRESS}/${BigInt(card.id)}`}
@@ -102,9 +102,9 @@ export default function Card(props: CardProps) {
                     <p className="text-gray-500">
                       You have{" "}
                       {card.coveredNumbersCount === 0
-                        ? "no matches. "
+                        ? "no matches"
                         : card.coveredNumbersCount === 1
-                        ? "1 match. "
+                        ? "1 match"
                         : `${card.coveredNumbersCount} matches`}
                       {card.coveredNumbersCount ? "! " : ". "}
                     </p>
