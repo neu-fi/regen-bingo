@@ -1,10 +1,6 @@
 console.log("NODE_ENV:", process.env.NODE_ENV);
 
-export const NETWORK = {
-  development: "hardhat",
-  test: "goerli",
-  production: "mainnet",
-}[process.env.NODE_ENV];
+export const NETWORK = process.env.NETWORK;
 
 type NetworkDetails = {
   NETWORK_ID?: number;
