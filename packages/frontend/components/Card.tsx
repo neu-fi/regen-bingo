@@ -124,16 +124,17 @@ export default function Card(props: CardProps) {
           <div className="text-lg">
             <p className="text-gray-500">
               {didWinPrize() ? (
-                "Congratulations, you won the prize! Please claim your prize."
+                "Congratulations, you won the prize! Claim the prize immidately! 🔥"
               ) : (
                 <>
-                  Unlucky, you have{" "}
+                  You have{" "}
                   {card.coveredNumbersCount === 0
                     ? "no matches. "
                     : card.coveredNumbersCount === 1
                     ? "1 match. "
-                    : `${card.coveredNumbersCount} matches. `}
-                  Better luck next time!
+                    : `${card.coveredNumbersCount} matches`}
+                  {card.coveredNumbersCount ? "! " : ". "}
+                  Fingers crossed 🤞
                 </>
               )}
             </p>
