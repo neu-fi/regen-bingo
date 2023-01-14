@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { clipHash } from "@/utils/utils";
-import { CONTRACT_ADDRESS, NETWORK } from "@/config";
+import { CONTRACT_ADDRESS, NETWORK_NAME } from "@/config";
 import { BingoCardMint } from "./contract/BingoCardMint";
 import { ClaimThePrizeButton } from "./contract/ClaimThePrizeButton";
 import { BingoState } from "@/hooks/useBingoContract";
@@ -68,9 +68,9 @@ export default function Card(props: CardProps) {
             <li>
               <a
                 href={`https://${
-                  NETWORK == "goerli" ? `testnets.` : ``
+                  NETWORK_NAME == "goerli" ? `testnets.` : ``
                 }opensea.io/assets/${
-                  NETWORK == "goerli" ? `goerli` : `ethereum`
+                  NETWORK_NAME == "goerli" ? `goerli` : `ethereum`
                 }/${CONTRACT_ADDRESS}/${BigInt(card.id)}`}
                 target="_blank"
                 className="text-gray-400 hover:text-gray-500"
