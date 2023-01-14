@@ -36,6 +36,14 @@ function getNetwork(): NetworkDetails {
         MINT_PRICE: 0.1,
       };
       break;
+    default:
+      networkDetails = {
+        NETWORK_ID: 5,
+        NETWORK_NAME: "Goerli",
+        CONTRACT_ADDRESS: "0xAa2CCBdd7AB14EF3459051635E0Cce16B1720eb5",
+        MINT_PRICE: 0.01,
+      };
+      break;
   }
   return networkDetails;
 }
