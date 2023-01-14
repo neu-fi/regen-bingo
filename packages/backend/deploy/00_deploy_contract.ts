@@ -15,7 +15,7 @@ const main: DeployFunction = async function ({getNamedAccounts, deployments}: Ha
 
   let uri = await deploy('URI', {from: deployer, log: true});
   
-  const regenBingoArgs = ['REGENBINGO', 'Regen Bingo — The OG Collection', parseEther('0.1'), Math.floor(Date.now() / 1000) + 60, 15, deployer];
+  const regenBingoArgs = ['REGENBINGO', 'Regen Bingo — The OG Collection', parseEther('0.1'), Math.floor(Date.now() / 1000) + 60, 5, deployer];
   await deploy('RegenBingo', {
     args: regenBingoArgs,
     from: deployer,
