@@ -5,7 +5,7 @@
       "chainId": "5",
       "contracts": {
         "RegenBingo": {
-          "address": "0x23Ead7757289B4920BB8B71B6D07464Fa3976cd8",
+          "address": "0xff5B93188Cc29a8883049702b3871D3eB50fe3EE",
           "abi": [
             {
               "inputs": [
