@@ -20,7 +20,7 @@ const faqs = [
   },
   {
     question: "How is the winner determined?",
-    answer: `Each Bingo card NFT has 15 randomly generated numbers on it. At [time] UTC, winning numbers will begin to be drawn by randomly generating them in the smart contract. The first Bingo card to have all winning numbers earns the prize pool in the contract. Any address can claim the prize for a winning card. However, the prize is only transferred to the address actually holding the winning card.
+    answer: `Each Regen Bingo Card has 15 randomly generated numbers on it. At [time] UTC, winning numbers will begin to be drawn by randomly generating them in the smart contract. The first Regen Bingo Card to have all winning numbers earns the prize pool in the contract. Any address can claim the prize for a winning card. However, the prize is only transferred to the address actually holding the winning card.
     `,
   },
 ];
