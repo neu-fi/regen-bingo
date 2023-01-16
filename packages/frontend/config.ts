@@ -2,6 +2,8 @@ import contracts from "@/contracts/hardhat_contracts.json";
 
 console.log("process.env.NETWORK")
 console.log(process.env.NETWORK)
+console.log("process.env.NEXT_PUBLIC_NETWORK")
+console.log(process.env.NEXT_PUBLIC_NETWORK)
 
 type NetworkDetails = {
   NETWORK_ID: number;
@@ -9,7 +11,7 @@ type NetworkDetails = {
 };
 
 function getNetwork(): NetworkDetails {
-  switch (process.env.NETWORK) {
+  switch (process.env.NEXT_PUBLIC_NETWORK) {
     case "ethereum":
       return {
         NETWORK_ID: 1,
