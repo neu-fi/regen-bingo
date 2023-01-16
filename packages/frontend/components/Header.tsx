@@ -1,6 +1,5 @@
 import Link from "next/link";
 import router, { NextRouter, useRouter } from "next/router";
-import React from "react";
 import { ConnectOrSwitchNetworkButton } from "./web3/ConnectOrSwitchNetworkButton";
 
 type HeaderProps = {};
@@ -11,7 +10,6 @@ interface ITab {
 }
 
 export const tabs: ITab[] = [
-  { name: "Mint", href: "/" },
   { name: "My Cards", href: "/my-cards" },
   { name: "Lucky Numbers", href: "/lucky-numbers" },
 ];
@@ -39,13 +37,16 @@ export default function Header(props: HeaderProps) {
       <div>
         <nav className="flex h-9 items-center justify-between">
           <div className="flex justify-center align-middle items-center">
-            <a href="/#" className="p-1">
+            <Link href="/#" className="p-1">
               <span className="sr-only">Regen Bingo</span>
               <img
                 className="hidden sm:portrait:hidden sm:landscape:hidden sm:block md:portrait:hidden md:landscape:hidden lg:landscape:block sm:h-16"
                 src="/logo.png"
                 alt=""
               />
+            </Link>
+            <Link href="/#" className="p-1">
+              <span className="sr-only">Regen Bingo</span>
               <img
                 className="block sm:portrait:block sm:landscape:block mr-2 sm:hidden md:portrait:block md:landscape:block lg:landscape:hidden"
                 width={32}
@@ -53,9 +54,9 @@ export default function Header(props: HeaderProps) {
                 src="/favicon.svg"
                 alt=""
               />
-            </a>
+            </Link>
           </div>
-          <div className="mr-1 sm:mr-8 md:mr-0 flex justify-center font-semibold">
+          <div className="mr-1 sm:mr-8 md:-mr-24 flex justify-center font-semibold">
             <div className="block sm:hidden">
               <label htmlFor="tabs" className="sr-only">
                 Select a tab
@@ -80,7 +81,7 @@ export default function Header(props: HeaderProps) {
                 aria-label="Tabs"
               >
                 {tabs.map((tab) => (
-                  <>
+                  <div key={tab.name}>
                     <div className="flex justify-center items-center">
                       <Link
                         key={tab.name}
@@ -98,7 +99,7 @@ export default function Header(props: HeaderProps) {
                         {tab.name}
                       </Link>
                     </div>{" "}
-                  </>
+                  </div>
                 ))}
               </nav>
             </div>

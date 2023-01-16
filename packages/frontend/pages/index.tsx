@@ -1,10 +1,5 @@
-// import { GetGreeter, SetGreeter } from "@/components";
 import Head from "next/head";
-import Layout from "@/components/Layout";
-import Mint from "@/components/Mint";
-import Guide from "@/components/Guide";
-import FAQ from "@/components/FAQ";
-import BGBlur from "@/components/BGBlur";
+import { Mint, Guide, FAQ, BGBlur } from "@/components";
 
 export default function Home() {
   return (

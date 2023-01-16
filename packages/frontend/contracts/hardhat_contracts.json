@@ -709,8 +709,61 @@
       "name": "localhost",
       "chainId": "31337",
       "contracts": {
+        "URI": {
+          "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+          "abi": [
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "row",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "column",
+                  "type": "uint256"
+                }
+              ],
+              "name": "getNumberByCoordinates",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                }
+              ],
+              "name": "tokenImage",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            }
+          ]
+        },
         "RegenBingo": {
-          "address": "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1",
+          "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
           "abi": [
             {
               "inputs": [
@@ -1349,59 +1402,6 @@
               "name": "transferFrom",
               "outputs": [],
               "stateMutability": "nonpayable",
-              "type": "function"
-            }
-          ]
-        },
-        "URI": {
-          "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-          "abi": [
-            {
-              "inputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "tokenId",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "row",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "column",
-                  "type": "uint256"
-                }
-              ],
-              "name": "getNumberByCoordinates",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
-              "stateMutability": "pure",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "tokenId",
-                  "type": "uint256"
-                }
-              ],
-              "name": "tokenImage",
-              "outputs": [
-                {
-                  "internalType": "string",
-                  "name": "",
-                  "type": "string"
-                }
-              ],
-              "stateMutability": "pure",
               "type": "function"
             }
           ]
