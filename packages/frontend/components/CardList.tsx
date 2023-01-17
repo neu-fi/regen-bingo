@@ -107,25 +107,59 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
           You don't have any Regen Bingo Cards.
         </p>
       ) : (
-        <div className="bg-white rounded-2xl shadow-2xl my-4">
-          <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8 lg:py-12 ">
-            <div className="space-y-12 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0">
-              <div className="lg:col-span-2">
-                <ul
-                  role="list"
-                  className="space-y-12 sm:-mt-8 sm:space-y-0 divide-y divide-gray-200 lg:gap-x-8 lg:space-y-0"
-                >
-                  {cards &&
-                    cards!.map((card) => (
-                      <li key={card.id} className="sm:py-4">
-                        <Card card={card}></Card>
-                      </li>
-                    ))}
-                </ul>
+        <>
+          {cards ? (
+            <div className="bg-white rounded-2xl shadow-2xl my-4">
+              <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8 lg:py-12 ">
+                <div className="space-y-12 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0">
+                  <div className="lg:col-span-2">
+                    <ul
+                      role="list"
+                      className="space-y-12 sm:-mt-8 sm:space-y-0 divide-y divide-gray-200 lg:gap-x-8 lg:space-y-0"
+                    >
+                      {cards &&
+                        cards!.map((card) => (
+                          <li key={card.id} className="sm:py-4">
+                            <Card card={card}></Card>
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlnsXlink="http://www.w3.org/1999/xlink"
+              style={{
+                margin: "auto",
+
+                display: "block",
+              }}
+              shapeRendering="auto"
+              width="200px"
+              height="200px"
+              viewBox="0 0 100 100"
+              preserveAspectRatio="xMidYMid"
+            >
+              <path
+                d="M10 50A40 40 0 0 0 90 50A40 43.4 0 0 1 10 50"
+                fill="#d4ecc9"
+                stroke="none"
+              >
+                <animateTransform
+                  attributeName="transform"
+                  type="rotate"
+                  dur="1.1764705882352942s"
+                  repeatCount="indefinite"
+                  keyTimes="0;1"
+                  values="0 50 51.7;360 50 51.7"
+                ></animateTransform>
+              </path>
+            </svg>
+          )}
+        </>
       )}
     </>
   );
