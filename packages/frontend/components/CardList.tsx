@@ -1,11 +1,6 @@
 import Card, { ICard } from "@/components/Card";
 import { useBingoContract } from "@/hooks/useBingoContract";
-import {
-  checkIfNetworkIsCorrect,
-  errorSlicing,
-  getToken,
-  svg,
-} from "@/utils/utils";
+import { isNetworkCorrect, errorSlicing, getToken, svg } from "@/utils/utils";
 import { Contract } from "ethers";
 import { PropsWithChildren, useEffect, useState } from "react";
 import { useSigner, useAccount } from "wagmi";
@@ -49,7 +44,7 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
   const contract: Contract | undefined = useBingoContract(signer.data);
 
   useEffect(() => {
-    if (!checkIfNetworkIsCorrect()) {
+    if (!isNetworkCorrect()) {
       return;
     }
 

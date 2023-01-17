@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useProvider } from "wagmi";
 import DrawnNumbersTable from "@/components/DrawnNumbersTable";
 import { useBingoContract } from "@/hooks/useBingoContract";
 import { BigNumber, Event, Contract } from "ethers";
 import { toast } from "react-toastify";
-import { errorSlicing, toastOptions } from "@/utils/utils";
-import { checkIfNetworkIsCorrect } from "../../utils/utils";
+import { errorSlicing, toastOptions, isNetworkCorrect } from "@/utils/utils";
 
 type GetDrawnNumbersProps = {};
 
@@ -18,7 +17,7 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
   const contract: Contract | undefined = useBingoContract(provider);
 
   useEffect(() => {
-    if (!checkIfNetworkIsCorrect()) {
+    if (!isNetworkCorrect()) {
       return;
     }
 

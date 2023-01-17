@@ -85,10 +85,18 @@ export async function getToken(
 ): Promise<ICard> {
   try {
     const tokenURIBase64 = await contract.tokenURI(tokenId);
-    const tokenURI = await getTokenDataJSON(tokenURIBase64);
+    let tokenURI = JSON.parse(
+      Buffer.from(tokenURIBase64.split(",")[1], "base64").toString()
+    );
+    tokenURI.image = Buffer.from(
+      tokenURI.image.split(",")[1],
+      "base64"
+    ).toString();
+
     const coveredNumbersCount = Number(
       (await contract.coveredNumbers(tokenId)).toString()
     );
+
     const card: ICard = {
       id: tokenId,
       coveredNumbersCount,
@@ -100,16 +108,7 @@ export async function getToken(
   }
 }
 
-export async function getTokenDataJSON(tokenURI: URL) {
-  return await fetch(tokenURI).then(async (res) => {
-    let data = await res.json();
-    let image = await fetch(data.image).then((res) => res.text());
-    data.image = image;
-    return data;
-  });
-}
-
-export function checkIfNetworkIsCorrect() {
+export function isNetworkCorrect() {
   const network = getNetwork();
   if (network.chain && network.chain.id !== NETWORK_ID) {
     toast.error(`Please switch to ${NETWORK_NAME}`, toastOptions);
