@@ -7,7 +7,7 @@ import '@nomiclabs/hardhat-ethers';
 import '@nomiclabs/hardhat-etherscan';
 
 dotenv.config({ path: '.env' });
-const defaultNetwork = process.env.NETWORK || 'localhost';
+const defaultNetwork = process.env.NEXT_PUBLIC_NETWORK || 'localhost';
 
 const config: HardhatUserConfig = {
   solidity: '0.8.17',
