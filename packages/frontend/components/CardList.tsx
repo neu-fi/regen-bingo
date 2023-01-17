@@ -98,7 +98,7 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
         }
       });
     }
-  }, [contract, account, retry, trigger]);
+  }, [retry, trigger]);
 
   return (
     <>
