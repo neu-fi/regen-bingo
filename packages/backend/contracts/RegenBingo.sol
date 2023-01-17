@@ -159,7 +159,7 @@ contract RegenBingo is ERC721Enumerable {
         }
     }
 
-    function getNumberByCoordinates(uint256 tokenId, uint256 row, uint256 column) public view returns (uint256) {
+    function getNumberByCoordinates(uint256 tokenId, uint256 row, uint256 column) public pure returns (uint256) {
         uint256[9][3] memory layout = _getLayout(tokenId % LAYOUTS_COUNT);
         if (layout[row][column] == 0) {
             return 0;
@@ -204,25 +204,18 @@ contract RegenBingo is ERC721Enumerable {
         }
     }
 
-    //will change to a better algorithm
     function _containsDuplicates(uint256 tokenId) internal pure returns (bool) {
-        uint256[9][3] memory layout = _getLayout(tokenId % LAYOUTS_COUNT);
         for (uint256 row = 0; row < 3; row++) {
+            bytes memory numbers = new bytes(90);
             for (uint256 column = 0; column < 9; column++) {
-                if (layout[row][column] == 0) {
+                uint256 numberInCoordinate = getNumberByCoordinates(tokenId, row, column);
+                if (numberInCoordinate == 0) {
                     continue;
-                }
-                for (uint256 row2 = 0; row2 < 3; row2++) {
-                    for (uint256 column2 = 0; column2 < 9; column2++) {
-                        if (layout[row2][column2] == 0) {
-                            continue;
-                        }
-                        if (row == row2 && column == column2) {
-                            continue;
-                        }
-                        if (layout[row][column] == layout[row2][column2]) {
-                            return true;
-                        }
+                } else {
+                    if (numbers[numberInCoordinate - 1] == 0) {
+                        numbers[numberInCoordinate - 1] = 0x01;
+                    } else {
+                        return true;
                     }
                 }
             }
