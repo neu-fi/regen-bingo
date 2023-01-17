@@ -1,11 +1,6 @@
 import Card, { ICard } from "@/components/Card";
 import { useBingoContract } from "@/hooks/useBingoContract";
-import {
-  checkIfNetworkIsCorrect,
-  errorSlicing,
-  getToken,
-  svg,
-} from "@/utils/utils";
+import { checkIfNetworkIsCorrect, errorSlicing, getToken } from "@/utils/utils";
 import { Contract } from "ethers";
 import { PropsWithChildren, useEffect, useState } from "react";
 import { useSigner, useAccount } from "wagmi";
@@ -103,7 +98,7 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
         }
       });
     }
-  }, [contract, account, retry, trigger]);
+  }, [retry, trigger]);
 
   return (
     <>
