@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useProvider } from "wagmi";
 import { useBingoContract } from "@/hooks/useBingoContract";
 import {
-  checkIfNetworkIsCorrect,
+  isNetworkCorrect,
   timestampToCountdown,
   toastOptions,
 } from "@/utils/utils";
@@ -28,7 +28,7 @@ export const DrawnCountDown = () => {
   }
 
   useEffect(() => {
-    if (!checkIfNetworkIsCorrect()) {
+    if (!isNetworkCorrect()) {
       return;
     }
     async function getDrawTime() {
