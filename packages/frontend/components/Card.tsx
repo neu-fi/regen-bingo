@@ -1,8 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { clipHash } from "@/utils/utils";
+import { clipHash, isSVG } from "@/utils/utils";
 import { CONTRACT_ADDRESS, NETWORK_NAME } from "@/config";
 import { ClaimThePrizeButton } from "./contract/ClaimThePrizeButton";
+import { useContext } from "react";
+import { ContractStateContext } from "@/components/Layout";
+import { BingoState } from "@/hooks/useBingoContract";
 
 type CardProps = {
   card: ICard;
@@ -24,33 +27,34 @@ export interface ITokenURI {
 function openseaURL(tokenId: bigint) {
   switch (NETWORK_NAME) {
     case "Ethereum":
-      return `https://opensea.io/assets/ethereum/${CONTRACT_ADDRESS}/${tokenId}`
+      return `https://opensea.io/assets/ethereum/${CONTRACT_ADDRESS}/${tokenId}`;
     case "Goerli":
-      return `https://testnets.opensea.io/assets/goerli/${CONTRACT_ADDRESS}/${tokenId}`
+      return `https://testnets.opensea.io/assets/goerli/${CONTRACT_ADDRESS}/${tokenId}`;
     case "Hardhat":
-      return `https://opensea.io/assets/hardhat/${CONTRACT_ADDRESS}/${tokenId}`
+      return `https://opensea.io/assets/hardhat/${CONTRACT_ADDRESS}/${tokenId}`;
   }
 }
 
 export default function Card(props: CardProps) {
   const { card, displayPublicDetails = false } = props;
-
-  function isSVG(card: ICard): boolean {
-    return card.tokenURI.image.includes(`<svg `);
-  }
+  const bingoState = useContext(ContractStateContext);
 
   function didWinPrize(): boolean {
     return card.coveredNumbersCount === 15;
   }
 
+  function isClaimed(): boolean {
+    return bingoState === BingoState.FINISHED;
+  }
+
   return (
     <div className="mt-4 space-y-4 sm:grid sm:grid-cols-2 sm:items-start sm:gap-6 sm:space-y-0">
       <div>
-        <div className="aspect-w-9 aspect-h-3 sm:aspect-w-9 sm:aspect-h-3 my-2">
+        <div className="aspect-w-1 aspect-h-1 sm:aspect-w-1 sm:aspect-h-1">
           <div
             className="h-auto bg-cover rounded-lg"
             dangerouslySetInnerHTML={
-              isSVG(card)
+              isSVG(card.tokenURI.image)
                 ? {
                     __html: card.tokenURI.image,
                   }
@@ -61,14 +65,13 @@ export default function Card(props: CardProps) {
           ></div>
         </div>
       </div>
-
+      
       <div className="sm:col-span-1">
         <div className="space-y-4">
           <div className="space-y-2 text-lg font-medium leading-6">
             <h3>
               <Link href={`/cards/${card.id}`} className="text-lg text-green-2">
-                Regen Bingo Card{" "}
-                #{clipHash(card.id)}
+                Regen Bingo Card #{clipHash(card.id)}
               </Link>
             </h3>
           </div>
@@ -92,28 +95,25 @@ export default function Card(props: CardProps) {
           </ul>
           <div className="text-lg">
             <>
-              {didWinPrize()
-                ? (
-                  <>
-                    <p className="text-gray-500">
-                      Full house! Claim the prize immidately! 🔥
-                    </p>
-                    <ClaimThePrizeButton
-                      tokenId={card.id}
-                    />
-                  </>
-                )
-                : (
-                    <p className="text-gray-500">
-                      Has{" "}
-                      {card.coveredNumbersCount === 0
-                        ? "no matches."
-                        : card.coveredNumbersCount === 1
-                        ? "1 match!"
-                        : `${card.coveredNumbersCount} matches!`}
-                    </p>
-                  )
-              }
+              {didWinPrize() && !isClaimed() ? (
+                <>
+                  <p className="text-gray-500">
+                    Full house! Claim the prize immidately! 🔥
+                  </p>
+                  <ClaimThePrizeButton tokenId={card.id} />
+                </>
+              ) : !isClaimed() ? (
+                <p className="text-gray-500">
+                  Has{" "}
+                  {card.coveredNumbersCount === 0
+                    ? "no matches."
+                    : card.coveredNumbersCount === 1
+                    ? "1 match!"
+                    : `${card.coveredNumbersCount} matches!`}
+                </p>
+              ) : (
+                <span>Winner of the GitCoin Alpha Round</span>
+              )}
             </>
           </div>
         </div>
