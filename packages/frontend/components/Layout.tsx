@@ -24,7 +24,6 @@ function Layout(props: PropsWithChildren<LayoutProps>) {
   const contract: Contract | undefined = useBingoContract(provider);
 
   useEffect(() => {
-    console.log("triggerOnUseEffect", trigger);
     const contractState = async () => {
       try {
         const state = await contract!.bingoState();
@@ -41,8 +40,6 @@ function Layout(props: PropsWithChildren<LayoutProps>) {
       contractState().then((state) => {
         if (state !== undefined) {
           setBingoState((prevState) => {
-            console.log("prevState", prevState);
-            console.log("state", state);
             if (prevState === undefined && state !== undefined) {
               setInitialFetchCompleted(true);
             }
