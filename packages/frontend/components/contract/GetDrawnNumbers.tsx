@@ -21,38 +21,41 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
 
   useEffect(() => {
     if (!networkState) {
+      setDrawnNumbers((prev) => []);
+      setInitialFetchCompleted(false);
       setLoading("Please switch network!");
       return;
     }
-
-    if (!initialFetchCompleted) {
-      (async () => {
-        if (!contract) {
-          toast.error(`Unexpected Error!`, toastOptions);
+    const getDrawnNumbers = async () => {
+      setLoading("Loading...");
+      try {
+        const drawnNumbers: BigNumber[] = await contract!.getDrawnNumbers();
+        if (drawnNumbers.length === 0) {
+          setLoading("No numbers drawn yet.");
           return;
-        }
-        setLoading("Loading...");
-        try {
-          const drawnNumbers: BigNumber[] = await contract.getDrawnNumbers();
-          if (drawnNumbers.length === 0) {
-            setLoading("No numbers drawn yet.");
-            return;
-          } else {
-            setLoading("");
-          }
-          const drawnNumbersAsNumber: number[] = drawnNumbers.map((number) =>
-            number.toNumber()
-          );
-          setDrawnNumbers((prev) => drawnNumbersAsNumber);
-          setInitialFetchCompleted(true); // [1]
-        } catch (err: any) {
-          toast.error(`${errorSlicing(err.reason)}!`, toastOptions);
-          setDrawnNumbers((prev) => []);
+        } else {
           setLoading("");
         }
-      })();
+        const drawnNumbersAsNumber: number[] = drawnNumbers.map((number) =>
+          number.toNumber()
+        );
+        return drawnNumbersAsNumber;
+      } catch (err: any) {
+        toast.error(`${errorSlicing(err.reason)}!`, toastOptions);
+        setLoading("");
+        return [];
+      }
+    };
+    if (contract && !initialFetchCompleted) {
+      getDrawnNumbers().then((drawnNumbersAsNumber) => {
+        if (drawnNumbersAsNumber === undefined) return;
+        setDrawnNumbers(drawnNumbersAsNumber);
+        setInitialFetchCompleted(true); // [1]
+      });
+      return;
     }
-  }, []);
+    toast.error(`Unexpected Error!`, toastOptions);
+  }, [networkState]);
 
   useEffect(() => {
     if (contract && initialFetchCompleted) {
