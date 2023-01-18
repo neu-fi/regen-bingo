@@ -54,7 +54,7 @@ export const DrawnCountDown = () => {
       changeRemaining();
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [networkState]);
 
   return (
     <>

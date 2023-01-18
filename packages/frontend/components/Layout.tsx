@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { useProvider } from "wagmi";
 import { isNetworkCorrect, toastOptions } from "@/utils/utils";
 import { NETWORK_NAME } from "@/config";
+import { getNetwork, watchNetwork } from "@wagmi/core";
 
 type LayoutProps = {};
 
@@ -28,15 +29,14 @@ function Layout(props: PropsWithChildren<LayoutProps>) {
   // Web3 Hooks
   const provider = useProvider();
   const contract: Contract | undefined = useBingoContract(provider);
+  const [network, setNetwork] = useState(() => getNetwork());
+  watchNetwork((network) => setNetwork(network));
 
   useEffect(() => {
     const networkState: boolean = isNetworkCorrect();
     setIsOnCorrectNetwork(networkState);
     if (!networkState) {
-      toast.error(`Please switch to ${NETWORK_NAME}`, {
-        ...toastOptions,
-        autoClose: false,
-      });
+      toast.error(`Please switch to ${NETWORK_NAME}`, toastOptions);
       return;
     }
     const contractState = async () => {
@@ -63,7 +63,7 @@ function Layout(props: PropsWithChildren<LayoutProps>) {
         }
       });
     }
-  }, [trigger]);
+  }, [trigger, network.chain]);
 
   useEffect(() => {
     if (contract) {

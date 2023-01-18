@@ -12,7 +12,7 @@ type GetDrawnNumbersProps = {};
 export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
   const [drawnNumbers, setDrawnNumbers] = useState<number[]>([]);
   const [initialFetchCompleted, setInitialFetchCompleted] = useState(false);
-  const [loading, setLoading] = useState("");
+  const [loading, setLoading] = useState("Loading...");
 
   const networkState: boolean = useContext(NetworkContext);
 
@@ -21,6 +21,7 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
 
   useEffect(() => {
     if (!networkState) {
+      setLoading("Please switch network!");
       return;
     }
 
