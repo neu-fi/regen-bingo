@@ -1,11 +1,12 @@
 import Card, { ICard } from "@/components/Card";
 import { useBingoContract } from "@/hooks/useBingoContract";
-import { isNetworkCorrect, errorSlicing, getToken, svg } from "@/utils/utils";
+import { errorSlicing, getToken, svg } from "@/utils/utils";
 import { Contract } from "ethers";
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useState, useContext } from "react";
 import { useSigner, useAccount } from "wagmi";
 import { toast } from "react-toastify";
 import { toastOptions } from "../utils/utils";
+import { NetworkContext } from "@/components/Layout";
 
 type CardListProps = {
   trigger?: Event;
@@ -38,13 +39,15 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
   const [isNoCardsMinted, setIsNoCardsMinted] = useState<boolean>(true);
   const [sort, setSort] = useState<SortType>({ sort: "desc", key: "matches" });
 
+  const networkState: boolean = useContext(NetworkContext);
+
   const account = useAccount();
   const { isConnected } = useAccount();
   const signer = useSigner();
   const contract: Contract | undefined = useBingoContract(signer.data);
 
   useEffect(() => {
-    if (!isNetworkCorrect()) {
+    if (!networkState) {
       return;
     }
 

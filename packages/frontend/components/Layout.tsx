@@ -5,25 +5,40 @@ import Link from "next/link";
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useProvider } from "wagmi";
+import { isNetworkCorrect, toastOptions } from "@/utils/utils";
+import { NETWORK_NAME } from "@/config";
 
 type LayoutProps = {};
 
+// Contexts
 export const ContractStateContext = createContext<BingoState | undefined>(
   undefined
 );
-
 export const WinnerCardContext = createContext<string | undefined>(undefined);
+export const NetworkContext = createContext<boolean>(false);
 
 function Layout(props: PropsWithChildren<LayoutProps>) {
+  // States
   const [bingoState, setBingoState] = useState<BingoState>();
   const [winnerCardId, setWinnerCardId] = useState<string>();
+  const [isOnCorrectNetwork, setIsOnCorrectNetwork] = useState<boolean>(false);
   const [initialFetchCompleted, setInitialFetchCompleted] = useState(false);
   const [trigger, setTrigger] = useState<Event>();
 
+  // Web3 Hooks
   const provider = useProvider();
   const contract: Contract | undefined = useBingoContract(provider);
 
   useEffect(() => {
+    const networkState: boolean = isNetworkCorrect();
+    setIsOnCorrectNetwork(networkState);
+    if (!networkState) {
+      toast.error(`Please switch to ${NETWORK_NAME}`, {
+        ...toastOptions,
+        autoClose: false,
+      });
+      return;
+    }
     const contractState = async () => {
       try {
         const state = await contract!.bingoState();
@@ -98,11 +113,13 @@ function Layout(props: PropsWithChildren<LayoutProps>) {
       <BGBlur type={"header"} colors={["#ffcc01", "#00e2ab"]}></BGBlur>
       <Header></Header>
       <main className="flex-grow">
-        <ContractStateContext.Provider value={bingoState}>
-          <WinnerCardContext.Provider value={winnerCardId!}>
-            {props.children}
-          </WinnerCardContext.Provider>
-        </ContractStateContext.Provider>
+        <NetworkContext.Provider value={isOnCorrectNetwork}>
+          <ContractStateContext.Provider value={bingoState}>
+            <WinnerCardContext.Provider value={winnerCardId!}>
+              {props.children}
+            </WinnerCardContext.Provider>
+          </ContractStateContext.Provider>
+        </NetworkContext.Provider>
       </main>
       <Footer></Footer>
     </div>

@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useProvider } from "wagmi";
 import { useBingoContract } from "@/hooks/useBingoContract";
-import {
-  isNetworkCorrect,
-  timestampToCountdown,
-  toastOptions,
-} from "@/utils/utils";
+import { timestampToCountdown, toastOptions } from "@/utils/utils";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { errorSlicing } from "@/utils/utils";
 import { Contract } from "ethers";
 import { getNetwork, watchNetwork } from "@wagmi/core";
+import { NetworkContext } from "@/components/Layout";
 
 export const DrawnCountDown = () => {
   const [remainingTime, setRemainingTime] = useState<number>();
   const [drawTimestamp, setTimeStamp] = useState<number>(0);
+
+  const networkState = useContext(NetworkContext);
 
   const provider = useProvider();
   const contract: Contract | undefined = useBingoContract(provider);
@@ -28,7 +27,7 @@ export const DrawnCountDown = () => {
   }
 
   useEffect(() => {
-    if (!isNetworkCorrect()) {
+    if (!networkState) {
       return;
     }
     async function getDrawTime() {
@@ -55,7 +54,7 @@ export const DrawnCountDown = () => {
       changeRemaining();
     }, 1000);
     return () => clearInterval(interval);
-  });
+  }, []);
 
   return (
     <>

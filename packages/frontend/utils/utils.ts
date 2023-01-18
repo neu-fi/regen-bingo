@@ -81,7 +81,7 @@ export function clipHash(hash: string) {
 
 export async function getToken(
   contract: Contract,
-  tokenId: string,
+  tokenId: string
 ): Promise<ICard> {
   try {
     const tokenURIBase64 = await contract.tokenURI(tokenId);
@@ -111,7 +111,6 @@ export async function getToken(
 export function isNetworkCorrect() {
   const network = getNetwork();
   if (network.chain && network.chain.id !== NETWORK_ID) {
-    toast.error(`Please switch to ${NETWORK_NAME}`, toastOptions);
     return false;
   }
   return true;
