@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useAccount, useSigner } from "wagmi";
 import { useBingoContract } from "@/hooks/useBingoContract";
 import { ethers } from "ethers";
 import { toast } from "react-toastify";
 import { errorSlicing, toastOptions } from "@/utils/utils";
+import { NetworkContext } from "@/components/Layout";
 
 export const BingoCardMint = () => {
   const [mintPrice, setMintPrice] = useState(0);
   const [loading, setLoading] = useState("");
   const [error, setError] = useState("");
+
+  const networkState: boolean = useContext(NetworkContext);
 
   const { isConnected } = useAccount();
   const { data: signerData } = useSigner();
@@ -16,36 +19,40 @@ export const BingoCardMint = () => {
   const contract = useBingoContract(signerData);
 
   useEffect(() => {
+    if (!networkState) {
+      return;
+    }
+    const getMintPrice = async () => {
+      try {
+        const fetchedMintPrice = await contract!.mintPrice();
+        return fetchedMintPrice;
+      } catch (e) {
+        console.error(e);
+      }
+    };
     if (isConnected && contract) {
       setError("");
-      (async () => {
-        try {
-          setMintPrice(await contract.mintPrice())
-        } catch (e) {
-          console.error(e)
-        }
-      })();
+      getMintPrice().then((mintPrice) => {
+        setMintPrice(mintPrice);
+      });
     } else {
       setError("Please connect wallet to mint");
     }
     return;
-  }, [contract, isConnected]);
+  }, [contract, isConnected, networkState]);
 
   async function mintBingoCard() {
     if (isConnected) {
       try {
         setLoading("Waiting for approval...");
         const tx = await contract?.mint({
-          value: mintPrice
+          value: mintPrice,
         });
         setLoading("Transaction waiting..");
         await tx.wait();
         setLoading("");
         setError("Succesfully minted");
-        toast.success(
-          "Minted a new Regen Bingo Card!",
-          toastOptions
-        );
+        toast.success("Minted a new Regen Bingo Card!", toastOptions);
       } catch (err: any) {
         toast.error(`${errorSlicing(err.reason)}!`, toastOptions);
         setError("An error occured");
@@ -71,7 +78,11 @@ export const BingoCardMint = () => {
         <span>
           {loading && !error && <span>{loading}</span>}
           {error && <span>{error}</span>}
-          {!error && !loading && <span>Mint for {ethers.utils.formatEther(mintPrice)} ETH</span>}
+          {!error && !loading && (
+            <span>
+              Mint for {mintPrice && ethers.utils.formatEther(mintPrice)} ETH
+            </span>
+          )}
         </span>
       </button>
     </>

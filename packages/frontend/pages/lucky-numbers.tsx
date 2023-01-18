@@ -2,13 +2,14 @@ import Head from "next/head";
 import { DrawNumber } from "@/components/contract/DrawNumber";
 import { GetDrawnNumbers } from "@/components/contract/GetDrawnNumbers";
 import { useContext } from "react";
-import { ContractStateContext } from "@/components/Layout";
+import { ContractStateContext, NetworkContext } from "@/components/Layout";
 import { BingoState } from "@/hooks/useBingoContract";
 
 type DrawnNumbersProps = {};
 
 export default function DrawnNumbers(props: DrawnNumbersProps) {
   const bingoState = useContext(ContractStateContext);
+  const networkState = useContext(NetworkContext);
   return (
     <>
       <Head>
@@ -27,7 +28,7 @@ export default function DrawnNumbers(props: DrawnNumbersProps) {
         </div>
       </div>
       <div className="w-full mt-4 relative flex justify-center">
-        {bingoState !== BingoState.FINISHED && <DrawNumber />}
+        {bingoState !== BingoState.FINISHED && networkState && <DrawNumber />}
       </div>
     </>
   );

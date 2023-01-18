@@ -2,7 +2,11 @@ import { PropsWithChildren, useContext, useEffect, useState } from "react";
 import { BingoCardMint } from "./contract/BingoCardMint";
 import { DrawnCountDown } from "./contract/DrawnCountDown";
 import Image from "next/image";
-import { ContractStateContext, WinnerCardContext } from "@/components/Layout";
+import {
+  ContractStateContext,
+  WinnerCardContext,
+  NetworkContext,
+} from "@/components/Layout";
 import { BingoState, useBingoContract } from "@/hooks/useBingoContract";
 import { useProvider } from "wagmi";
 import { Contract } from "ethers";
@@ -14,9 +18,9 @@ type MintProps = {};
 export default function Mint(props: PropsWithChildren<MintProps>) {
   const bingoState = useContext(ContractStateContext);
   const winnerCardId = useContext(WinnerCardContext);
+  const networkState = useContext(NetworkContext);
   const [winnerCardURI, setWinnerCardURI] = useState<ICard>();
 
-  
   const provider = useProvider();
   const contract: Contract | undefined = useBingoContract(provider);
 
@@ -70,7 +74,9 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
                   while getting a chance to claim the prize pool!
                 </p>
                 <div className="mt-8 flex gap-x-4 sm:justify-center">
-                  {bingoState === BingoState.MINT && <BingoCardMint />}
+                  {bingoState === BingoState.MINT && networkState && (
+                    <BingoCardMint />
+                  )}
                   <a
                     href="#guide"
                     className="inline-block rounded-lg  px-2 sm:px-4 py-1.5 text-base font-semibold leading-7 text-gray-900 ring-1 ring-gray-900/10 hover:ring-gray-900/20"
@@ -82,7 +88,7 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
                   </a>
                 </div>
                 <div className="mt-8 text-md text-gray-600 sm:text-center">
-                  <DrawnCountDown />
+                  {networkState && <DrawnCountDown />}
                 </div>
               </div>
             </div>
