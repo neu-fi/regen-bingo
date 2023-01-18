@@ -13,7 +13,6 @@ import {
   getDefaultWallets,
   RainbowKitProvider,
   Chain,
-  Theme,
   lightTheme,
 } from "@rainbow-me/rainbowkit";
 
@@ -21,6 +20,7 @@ import { useIsMounted } from "../hooks";
 import Layout from "@/components/Layout";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
+import { NETWORK_ID } from "../config";
 
 // Get environment variables
 // const alchemyId = process.env.ALCHEMY_ID as string;
@@ -41,10 +41,24 @@ const hardhatChain: Chain = {
   testnet: true,
 };
 
-const { chains, provider } = configureChains(
-  [chain.mainnet, chain.goerli, hardhatChain],
-  [publicProvider()]
-);
+const supportedChain = [];
+switch (NETWORK_ID) {
+  case 1:
+    supportedChain.push(chain.mainnet);
+    break;
+  case 5:
+    supportedChain.push(chain.goerli);
+    break;
+  case 31337:
+    supportedChain.push(hardhatChain);
+    break;
+  default:
+    supportedChain.push(hardhatChain);
+}
+
+const { chains, provider } = configureChains(supportedChain, [
+  publicProvider(),
+]);
 
 const { connectors } = getDefaultWallets({
   appName: "regen-bingo",
