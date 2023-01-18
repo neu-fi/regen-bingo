@@ -10,7 +10,7 @@ type GetDrawnNumbersProps = {};
 
 export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
   const [drawnNumbers, setDrawnNumbers] = useState<number[]>([]);
-  const [initialFetchCompleted, setInitialFetchCompleted] = useState(false); // [1
+  const [initialFetchCompleted, setInitialFetchCompleted] = useState(false);
   const [loading, setLoading] = useState("");
 
   const provider = useProvider();
