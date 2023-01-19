@@ -1,6 +1,6 @@
-import { ICard, ITokenURI } from "@/components/Card";
+import { ICard } from "@/components/Card";
 import { Contract } from "ethers";
-import { toast, ToastOptions } from "react-toastify";
+import { ToastOptions } from "react-toastify";
 import { getNetwork } from "@wagmi/core";
 import { CHAIN_ID, CHAIN_NAME } from "@/config";
 
@@ -106,14 +106,6 @@ export async function getToken(
   } catch (err) {
     throw err;
   }
-}
-
-export function isNetworkCorrect() {
-  const network = getNetwork();
-  if (network.chain && network.chain.id !== CHAIN_ID) {
-    return false;
-  }
-  return true;
 }
 
 export function isSVG(image: string): boolean {

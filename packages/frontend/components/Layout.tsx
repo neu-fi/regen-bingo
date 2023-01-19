@@ -5,9 +5,9 @@ import Link from "next/link";
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useProvider } from "wagmi";
-import { isNetworkCorrect, toastOptions } from "@/utils/utils";
-import { CHAIN_NAME } from "@/config";
-import { getNetwork, watchNetwork } from "@wagmi/core";
+import { toastOptions } from "@/utils/utils";
+import { CHAIN_ID, CHAIN_NAME } from "@/config";
+import { getNetwork, GetNetworkResult, watchNetwork } from "@wagmi/core";
 
 type LayoutProps = {};
 
@@ -29,13 +29,15 @@ function Layout(props: PropsWithChildren<LayoutProps>) {
   // Web3 Hooks
   const provider = useProvider();
   const contract: Contract | undefined = useBingoContract(provider);
-  const [network, setNetwork] = useState(() => getNetwork());
-  watchNetwork((network) => setNetwork(network));
+  const [network, setNetwork] = useState<GetNetworkResult>(() => getNetwork());
+  watchNetwork((newNetwork) => {
+    if (newNetwork.chain?.id != network.chain?.id) {
+      setNetwork(newNetwork)
+    }
+  });
 
   useEffect(() => {
-    const networkState: boolean = isNetworkCorrect();
-    setIsOnCorrectNetwork(networkState);
-    if (!networkState) {
+    if (network.chain?.id !== CHAIN_ID) {
       toast.error(`Please switch to ${CHAIN_NAME}`, toastOptions);
       return;
     }
@@ -63,7 +65,7 @@ function Layout(props: PropsWithChildren<LayoutProps>) {
         }
       });
     }
-  }, [trigger, network.chain]);
+  }, [trigger, network.chain?.id]);
 
   useEffect(() => {
     if (contract) {
