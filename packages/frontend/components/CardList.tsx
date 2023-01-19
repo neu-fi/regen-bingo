@@ -101,7 +101,7 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
         }
       });
     }
-  }, [retry, trigger]);
+  }, [networkState, retry, trigger]);
 
   return (
     <>
