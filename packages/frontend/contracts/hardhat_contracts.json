@@ -807,7 +807,7 @@
       "chainId": "31337",
       "contracts": {
         "RegenBingo": {
-          "address": "0x8f86403A4DE0BB5791fa46B8e795C547942fE4Cf",
+          "address": "0xe8D2A1E88c91DCd5433208d4152Cc4F399a7e91d",
           "abi": [
             {
               "inputs": [
@@ -1456,7 +1456,7 @@
           ]
         },
         "RegenBingoMetadata": {
-          "address": "0x0E801D84Fa97b50751Dbf25036d067dCf18858bF",
+          "address": "0x720472c8ce72c2A2D711333e064ABD3E6BbEAdd3",
           "abi": [
             {
               "inputs": [
@@ -1514,7 +1514,7 @@
           ]
         },
         "RegenBingoSVG": {
-          "address": "0x99bbA657f2BbC93c02D617f8bA121cB8Fc104Acf",
+          "address": "0x5c74c94173F05dA1720953407cbb920F3DF9f887",
           "abi": [
             {
               "inputs": [

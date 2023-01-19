@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { clipHash, isSVG } from "@/utils/utils";
-import { CONTRACT_ADDRESS, NETWORK_NAME } from "@/config";
+import { CONTRACT_ADDRESS, CHAIN_NAME } from "@/config";
 import { ClaimThePrizeButton } from "./contract/ClaimThePrizeButton";
 import { useContext } from "react";
 import { ContractStateContext } from "@/components/Layout";
@@ -25,7 +25,7 @@ export interface ITokenURI {
 }
 
 function openseaURL(tokenId: bigint) {
-  switch (NETWORK_NAME) {
+  switch (CHAIN_NAME) {
     case "Ethereum":
       return `https://opensea.io/assets/ethereum/${CONTRACT_ADDRESS}/${tokenId}`;
     case "Goerli":

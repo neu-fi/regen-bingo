@@ -6,7 +6,7 @@ import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useProvider } from "wagmi";
 import { isNetworkCorrect, toastOptions } from "@/utils/utils";
-import { NETWORK_NAME } from "@/config";
+import { CHAIN_NAME } from "@/config";
 import { getNetwork, watchNetwork } from "@wagmi/core";
 
 type LayoutProps = {};
@@ -36,7 +36,7 @@ function Layout(props: PropsWithChildren<LayoutProps>) {
     const networkState: boolean = isNetworkCorrect();
     setIsOnCorrectNetwork(networkState);
     if (!networkState) {
-      toast.error(`Please switch to ${NETWORK_NAME}`, toastOptions);
+      toast.error(`Please switch to ${CHAIN_NAME}`, toastOptions);
       return;
     }
     const contractState = async () => {

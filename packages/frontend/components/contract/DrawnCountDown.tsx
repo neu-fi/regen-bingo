@@ -64,7 +64,7 @@ export const DrawnCountDown = () => {
             <>
               {remainingTime > 0 ? (
                 <>
-                  Numbers will be drawn in
+                  Numbers can be drawn in
                   <span className="text-green-4">
                     {timestampToCountdown(remainingTime)}
                   </span>

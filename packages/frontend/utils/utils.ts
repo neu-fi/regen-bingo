@@ -2,7 +2,7 @@ import { ICard, ITokenURI } from "@/components/Card";
 import { Contract } from "ethers";
 import { toast, ToastOptions } from "react-toastify";
 import { getNetwork } from "@wagmi/core";
-import { NETWORK_ID, NETWORK_NAME } from "@/config";
+import { CHAIN_ID, CHAIN_NAME } from "@/config";
 
 export function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
@@ -110,7 +110,7 @@ export async function getToken(
 
 export function isNetworkCorrect() {
   const network = getNetwork();
-  if (network.chain && network.chain.id !== NETWORK_ID) {
+  if (network.chain && network.chain.id !== CHAIN_ID) {
     return false;
   }
   return true;

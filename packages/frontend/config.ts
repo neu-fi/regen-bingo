@@ -1,32 +1,28 @@
 import contracts from "@/contracts/hardhat_contracts.json";
+import { chain, configureChains } from "wagmi";
+import { publicProvider } from "wagmi/providers/public";
 
-type NetworkDetails = {
-  NETWORK_ID: number;
-  NETWORK_NAME: string;
-};
-
-function getNetwork(): NetworkDetails {
+let supportedChain = (() => {
   switch (process.env.NEXT_PUBLIC_NETWORK) {
     case "ethereum":
-      return {
-        NETWORK_ID: 1,
-        NETWORK_NAME: "Ethereum",
-      };
+      return chain.mainnet;
     case "goerli":
-      return {
-        NETWORK_ID: 5,
-        NETWORK_NAME: "Goerli",
-      };
+      return chain.goerli;
     default:
-      return {
-        NETWORK_ID: 31337,
-        NETWORK_NAME: "Hardhat",
-      };
+      return chain.hardhat;
   }
-}
+})();
 
-export const NETWORK_ID = getNetwork().NETWORK_ID as number;
-export const NETWORK_NAME = getNetwork().NETWORK_NAME as string;
-export const CONTRACT = (contracts as any)[NETWORK_ID][0].contracts.RegenBingo;
-export const CONTRACT_ADDRESS = CONTRACT.address;
-export const CONTRACT_ABI = CONTRACT.abi;
+let { chains, provider } = configureChains(
+  [supportedChain],
+  [publicProvider()]
+);
+
+export const CHAIN_ID = supportedChain.id;
+export const CHAIN_NAME = supportedChain.name;
+export const CHAINS = chains;
+export const PROVIDER = provider;
+
+let regenBingo = (contracts as any)[CHAIN_ID][0].contracts.RegenBingo;
+export const CONTRACT_ADDRESS = regenBingo.address;
+export const CONTRACT_ABI = regenBingo.abi;
