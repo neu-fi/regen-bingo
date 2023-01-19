@@ -11,10 +11,10 @@ contract RegenBingoSVG is IRegenBingoSVG {
     uint256 constant circleXOffset = 300;
     uint256 constant circleYOffset = 900;
     string[18] backgroundColors = [
-        "#297739",
-        "#4B9074",
+        "#709F79",
+        "#5B7074"
         "#496851",
-        "#7C7451",
+        "#9C9491",
         "#E0BB44",
         "#A0B59E",
         "#A4A57A",
@@ -35,42 +35,26 @@ contract RegenBingoSVG is IRegenBingoSVG {
         string(
             abi.encodePacked(
                 "<defs>",
-                '<path id="text-path-a" d="M0 0 L5400 0 Z"/>',
-                '<text id="rolling-text-right" text-rendering="optimizeSpeed">',
-                '<textPath xlink:href="#text-path-a" textLength="1600" font-size="35" font-weight="500">',
-                unicode"Gitcoin Alpha Round · 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 · January 31, 2023",
-                '<animate attributeName="startOffset" values="0; 1700" dur="20s" repeatCount="indefinite"/> ',
+                '<path id="p" d="M0 0 L4800 0 Z"/>',
+                '<text id="t">',
+                '<textPath xlink:href="#p" textLength="2200" font-size="35">',
+                unicode"Donating 0.05 ETH · Gitcoin Alpha Round · 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 · January 31, 2023",
+                '<animate attributeName="startOffset" values="2400; 0" dur="9s" repeatCount="indefinite"/> ',
                 "</textPath>",
                 "</text>",
                 "</defs>"
             )
         );
 
-    string constant styles =
-        string(
-            abi.encodePacked(
-                "<style>",
-                "text {",
-                "font-family: Monaco;",
-                "font-size:100px;",
-                "font-weight:500;}",
-                "polygon {",
-                "stroke:black; stroke-width:1;}",
-                ".a{",
-                "fill:#57b592;}",
-                ".b{",
-                "fill:#bde4df;}",
-                "</style>"
-            )
-        );
+    string constant styles = '<style>text{font-family:Monaco;font-size:100px}svg{stroke:black;stroke-width:1}.a{fill:#57b592}.b{fill:#bde4df}.c{fill:#f8ce47}.d{fill:#fcf2b1}</style>';
 
     string constant cardPattern =
         string(
             abi.encodePacked(
                 '<pattern id="bg" width="0.111111111111" height="0.333333333333">',
-                '<polygon points="0,0 0,200 200,200" style="fill:#57b592; stroke:black; stroke-width:1"/>',
-                '<polygon points="0,0 200,0 200,200" style="fill:#f8ce47; stroke:black; stroke-width:1"/>',
-                '<rect id="x" x="20" y="20" width="160" height="160" style="fill: #fcf2b1; stroke:black ; stroke-width:1"/>'
+                '<polygon class="a" points="0,0 0,200 200,200"/>',
+                '<polygon class="c" points="0,0 200,0 200,200"/>',
+                '<rect class="d" x="20" y="20" width="160" height="160"/>'
                 "</pattern>"
             )
         );
@@ -79,10 +63,10 @@ contract RegenBingoSVG is IRegenBingoSVG {
         string(
             abi.encodePacked(
                 '<polygon class="b" points="200,500 200,800 2000,800 2000,500" />',
-                '<polygon class="a" points="200,500 200,800 350,650" style="fill:#f8ce47"/>',
-                '<polygon class="a" points="2000,500 2000,800 1850,650" style="fill:#f8ce47"/>',
-                '<rect id="x" x="220" y="520" width="1760" height="260" style="fill: #fcf2b1; stroke:black; stroke-width:1"/>',
-                '<text x="700" y="710" style="font-size:150">Regen Bingo</text>'
+                '<polygon class="c" points="200,500 200,800 350,650"/>',
+                '<polygon class="c" points="2000,500 2000,800 1850,650"/>',
+                '<rect class="d" x="220" y="520" width="1760" height="260"/>',
+                '<text x="1100" y="650" dominant-baseline="middle" text-anchor="middle" style="font-size:150">Regen Bingo</text>'
             )
         );
 
@@ -92,13 +76,13 @@ contract RegenBingoSVG is IRegenBingoSVG {
                 '<polygon class="b" points="200,1400 200,1500 2000,1500 2000,1400"/>',
                 '<polygon class="a" points="200,1400 200,1500 250,1450"/>',
                 '<polygon class="a" points="2000,1400 2000,1500 1950,1450"/>',
-                '<rect id="x" x="220" y="1420" width="1760" height="60" style="fill: #fcf2b1; stroke:black; stroke-width:1"/>',
+                '<rect class="d" x="220" y="1420" width="1760" height="60"/>',
                 '<clipPath id="clip">',
                 '<rect x="230" y="1420" width="1740" height="60"/>',
                 "</clipPath>",
                 '<g clip-path="url(#clip)">',
-                '<use x="-1400" y="1460" href="#rolling-text-right"/>',
-                '<use x="300" y="1460" href="#rolling-text-right"/>',
+                '<use x="-1900" y="1460" href="#t"/>',
+                '<use x="500" y="1460" href="#t"/>',
                 "</g>"
             )
         );
@@ -108,36 +92,23 @@ contract RegenBingoSVG is IRegenBingoSVG {
         uint256[9][3] calldata numbers,
         bool[9][3] calldata covered
     ) external view returns (string memory) {
-        string memory background;
-        string memory bgColor = backgroundColors[tokenId % backgroundColors.length];
-
-        background = string(
-            abi.encodePacked(
-                "<rect fill=",
-                '"',
-                bgColor,
-                '"',
-                'x="0" y="0" width="2200" height="2200"/>'
-            )
-        );
-
         return (
             string(
                 abi.encodePacked(
-                    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2200 2200">',
+                    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2200 2200" style="background-color:',
+                    backgroundColors[tokenId % backgroundColors.length],
+                    '">',
                     defs,
                     styles,
-                    background,
                     cardPattern,
-                    "<g>",
+                    '<g><polygon style="stroke-width: 15;" points="200,500 200,1500 2000,1500 2000,500" />'
                     '<rect fill="url(#bg)" x="200" y="800" width="1800" height="600"/>',
-                    '<animateTransform attributeName="transform" attributeType="XML" type="rotate" values="1;-1;1" dur="19s" repeatCount="indefinite"/>',
-                    '<animateMotion dur="27s" repeatCount="indefinite" path="M20,50 C20,-50 180,150 180,50 C180-50 20,150 20,50 z"/>',
+                    '<animateTransform dur="8s" repeatCount="indefinite" attributeName="transform" attributeType="XML" type="rotate" values="1;-1;1"/>',
+                    '<animateMotion dur="9s" repeatCount="indefinite" path="M-50,0 C-50,-200 50,200 50,0 C50,-200 -50,200 -50,0"/>',
                     _generateNumbers(numbers, covered),
                     header,
                     footer,
-                    "</g>",
-                    "</svg>"
+                    '</g></svg>'
                 )
             )
         );
@@ -190,15 +161,11 @@ contract RegenBingoSVG is IRegenBingoSVG {
         if (covered) {
             output = string(
                 abi.encodePacked(
-                    '<circle fill="#ee2d25" cx=',
-                    '"',
+                    '<circle fill="#ee2d25" cx="',
                     circleX,
-                    '"',
-                    "cy=",
-                    '"',
+                    '"cy="',
                     circleY,
-                    '"',
-                    'r="75"></circle>'
+                    '"r="75"></circle>'
                 )
             );
         }
@@ -206,17 +173,13 @@ contract RegenBingoSVG is IRegenBingoSVG {
         output = string(
             abi.encodePacked(
                 output,
-                "<text x=",
-                '"',
+                '<text x="',
                 xCordinate,
-                '"',
-                "y=",
-                '"',
+                '"y="',
                 yCordinate,
-                '"',
-                ">",
+                '">',
                 Strings.toString(number),
-                "</text>"
+                '</text>'
             )
         );
 
