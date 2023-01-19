@@ -5,7 +5,7 @@
       "chainId": "5",
       "contracts": {
         "RegenBingo": {
-          "address": "0xff5B93188Cc29a8883049702b3871D3eB50fe3EE",
+          "address": "0xFB9dc0A8858F802C90453C776C3Be2cE85197A90",
           "abi": [
             {
               "inputs": [
@@ -37,6 +37,11 @@
                 {
                   "internalType": "address payable",
                   "name": "_donationAddress",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "_metadataGenerator",
                   "type": "address"
                 }
               ],
@@ -223,7 +228,7 @@
               "inputs": [
                 {
                   "internalType": "uint256",
-                  "name": "id",
+                  "name": "tokenId",
                   "type": "uint256"
                 }
               ],
@@ -348,7 +353,7 @@
                   "type": "uint256"
                 }
               ],
-              "stateMutability": "view",
+              "stateMutability": "pure",
               "type": "function"
             },
             {
@@ -697,6 +702,98 @@
                 }
               ],
               "stateMutability": "pure",
+              "type": "function"
+            }
+          ]
+        },
+        "RegenBingoSVG": {
+          "address": "0x0EDfe499b3bC84A9c83967EF881298Bf21280Cab",
+          "abi": [
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256[9][3]",
+                  "name": "numbers",
+                  "type": "uint256[9][3]"
+                },
+                {
+                  "internalType": "bool[9][3]",
+                  "name": "covered",
+                  "type": "bool[9][3]"
+                }
+              ],
+              "name": "generateTokenSVG",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            }
+          ]
+        },
+        "RegenBingoMetadata": {
+          "address": "0x7AE85e9FB1DF8B73b3A43A015218E3aB6901060b",
+          "abi": [
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "_svgGeneratorAddress",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "constructor"
+            },
+            {
+              "inputs": [],
+              "name": "generateContractURI",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256[9][3]",
+                  "name": "numbers",
+                  "type": "uint256[9][3]"
+                },
+                {
+                  "internalType": "bool[9][3]",
+                  "name": "covered",
+                  "type": "bool[9][3]"
+                }
+              ],
+              "name": "generateTokenURI",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "view",
               "type": "function"
             }
           ]
