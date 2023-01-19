@@ -24,9 +24,15 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     console.log(tokenId);
     
     let tokenURI = await regenBingoContract.tokenURI(tokenId);
+    let decodedTokenURI = JSON.parse(Buffer.from(tokenURI.split(',')[1], 'base64').toString());
 
     console.log("\nDecoded tokenURI(tokenId):");
-    console.log(JSON.parse(Buffer.from(tokenURI.split(',')[1], 'base64').toString()));
+    console.log(decodedTokenURI);
+
+    let decodedImage = Buffer.from(decodedTokenURI['image'].split(',')[1], 'base64').toString();
+
+    console.log("\nDecoded image:");
+    console.log(decodedImage);
   }
 };
 
