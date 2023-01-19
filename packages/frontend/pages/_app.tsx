@@ -14,6 +14,7 @@ import { useIsMounted } from "../hooks";
 import Layout from "@/components/Layout";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, Slide } from "react-toastify";
+import { green } from 'tailwindcss/colors';
 
 const { connectors } = getDefaultWallets({
   appName: "regen-bingo",
@@ -34,7 +35,7 @@ const App = ({ Component, pageProps }: AppProps) => {
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider
         theme={lightTheme({
-          accentColor: "#02e2aead",
+          accentColor: green[500],
           accentColorForeground: "#fff",
           borderRadius: "large",
         })}
