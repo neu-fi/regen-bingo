@@ -5,17 +5,18 @@ import { regenBingoArgs } from '../config';
 const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   if (hre.network.name !== 'localhost') {
     const {deployments} = hre;
-    let uri = await deployments.get("URI");
+    let regenBingoSVG = await deployments.get("RegenBingoSVG");
+    let regenBingoMetadata = await deployments.get("RegenBingoMetadata");
     let regenBingo = await deployments.get("RegenBingo");
 
-    console.log("Verifiying...");
+    console.log("Verifiying RegenBingoSVG...");
     let skip0 = false;
     let counter0 = 0;
     while(!skip0 && counter0 < 10){
       try {
         counter0++;
         await hre.run("verify:verify", {
-          address: uri.address,
+          address: regenBingoSVG.address,
         });
         skip0 = true;
         console.log("Verified!");
@@ -30,15 +31,15 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       }
     }
 
-    console.log("Verifiying...");
+    console.log("Verifiying RegenBingoMetadata...");
     let skip1 = false;
     let counter1 = 0;
     while(!skip1 && counter1 < 10){
       try {
         counter1++;
         await hre.run("verify:verify", {
-          address: regenBingo.address,
-          constructorArguments: regenBingoArgs
+          address: regenBingoMetadata.address,
+          constructorArguments: [regenBingoSVG.address]
         });
         skip1 = true;
         console.log("Verified!");
@@ -47,6 +48,29 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         console.error(e.message);
         if (e.name === "NomicLabsHardhatPluginError" && e.message.toLowerCase().includes("already verified")) {
           skip1 = true;
+        } else {
+          console.log("Exception catched while verifying. Trying again.");
+        }
+      }
+    }
+
+    console.log("Verifiying RegenBingo...");
+    let skip2 = false;
+    let counter2 = 0;
+    while(!skip2 && counter2 < 10){
+      try {
+        counter2++;
+        await hre.run("verify:verify", {
+          address: regenBingo.address,
+          constructorArguments: [...regenBingoArgs, regenBingoMetadata.address]
+        });
+        skip2 = true;
+        console.log("Verified!");
+      } catch (e: any) {
+        console.error(e.name);
+        console.error(e.message);
+        if (e.name === "NomicLabsHardhatPluginError" && e.message.toLowerCase().includes("already verified")) {
+          skip2 = true;
         } else {
           console.log("Exception catched while verifying. Trying again.");
         }
