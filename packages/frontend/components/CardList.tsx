@@ -5,7 +5,6 @@ import { Contract } from "ethers";
 import { PropsWithChildren, useEffect, useState, useContext } from "react";
 import { useSigner, useAccount } from "wagmi";
 import { toast } from "react-toastify";
-import { toastOptions } from "../utils/utils";
 import { NetworkContext } from "@/components/Layout";
 
 type CardListProps = {
@@ -53,11 +52,11 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
 
     async function fetchCardsOwnedByUser() {
       if (!account.isConnected) {
-        toast.error("Please connect your wallet!", toastOptions);
+        toast.error("Please connect your wallet!");
         return;
       }
       if (!contract) {
-        toast.error("Contract not found!", toastOptions);
+        toast.error("Contract not found!");
         return;
       }
 
@@ -83,7 +82,7 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
       } catch (err: any) {
         console.log(err);
         if (!(err instanceof TypeError)) {
-          toast.error(`${errorSlicing(err.reason)}!`, toastOptions);
+          toast.error(`${errorSlicing(err.reason)}!`);
         } else {
           window.setTimeout(() => {
             setRetry(true);

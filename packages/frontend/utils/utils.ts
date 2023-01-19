@@ -1,8 +1,5 @@
 import { ICard } from "@/components/Card";
 import { Contract } from "ethers";
-import { ToastOptions } from "react-toastify";
-import { getNetwork } from "@wagmi/core";
-import { CHAIN_ID, CHAIN_NAME } from "@/config";
 
 export function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
@@ -56,15 +53,6 @@ export function timestampToCountdown(timeDifferenceAsSeconds: number): string {
     ${seconds ? `${seconds} Seconds` : ""}
     `;
 }
-
-export const toastOptions: ToastOptions = {
-  position: "top-right",
-  autoClose: 3000,
-  hideProgressBar: true,
-  closeOnClick: true,
-  pauseOnHover: true,
-  theme: "light",
-};
 
 export function errorSlicing(error: string) {
   try {

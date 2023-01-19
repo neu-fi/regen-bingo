@@ -13,7 +13,7 @@ import {
 import { useIsMounted } from "../hooks";
 import Layout from "@/components/Layout";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, Slide } from "react-toastify";
 
 const { connectors } = getDefaultWallets({
   appName: "regen-bingo",
@@ -35,12 +35,24 @@ const App = ({ Component, pageProps }: AppProps) => {
       <RainbowKitProvider
         theme={lightTheme({
           accentColor: "#02e2aead",
-          accentColorForeground: "#000",
+          accentColorForeground: "#fff",
           borderRadius: "large",
         })}
         chains={CHAINS}
       >
-        <ToastContainer />
+        <ToastContainer
+          position="bottom-center"
+          transition={Slide}
+          autoClose={2500}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable={false}
+          pauseOnHover
+          theme="light"
+        />
         <NextHead>
           <title>Regen Bingo</title>
         </NextHead>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAccount, useSigner } from "wagmi";
 import { useBingoContract } from "@/hooks/useBingoContract";
 import { toast } from "react-toastify";
-import { errorSlicing, toastOptions } from "@/utils/utils";
+import { errorSlicing } from "@/utils/utils";
 
 export const ClaimThePrizeButton = (props: {
   tokenId: string
@@ -33,12 +33,9 @@ export const ClaimThePrizeButton = (props: {
         await tx.wait();
         setLoading("");
         setError("Succesfully minted");
-        toast.success(
-          "Succesfully minted, please check My Cards page to see!",
-          toastOptions
-        );
+        toast.success("Minted a new Regen Bingo Card!");
       } catch (err: any) {
-        toast.error(`${errorSlicing(err.reason)}!`, toastOptions);
+        toast.error(`${errorSlicing(err.reason)}!`);
         setError("An error occured");
       }
       await window.setTimeout(() => {

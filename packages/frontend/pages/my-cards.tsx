@@ -4,7 +4,6 @@ import CardList from "@/components/CardList";
 import { useProvider } from "wagmi";
 import { BigNumber, Contract } from "ethers";
 import { useBingoContract } from "@/hooks/useBingoContract";
-import { toastOptions } from "@/utils/utils";
 import { toast } from "react-toastify";
 
 type MyCardsProps = {};
@@ -27,7 +26,7 @@ export default function MyCards(props: PropsWithChildren<MyCardsProps>) {
   const eventHandler = async (number: BigNumber, event: Event) => {
     const luckyNumber = number.toNumber();
     if (luckyNumber === undefined) return;
-    toast.info(`New number drawn: ${luckyNumber}`, toastOptions);
+    toast.info(`New number drawn: ${luckyNumber}`);
     setTrigger((trigger) => new Event("fetchCards"));
   };
 

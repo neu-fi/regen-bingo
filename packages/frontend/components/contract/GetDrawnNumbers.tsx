@@ -4,7 +4,7 @@ import DrawnNumbersTable from "@/components/DrawnNumbersTable";
 import { useBingoContract } from "@/hooks/useBingoContract";
 import { BigNumber, Event, Contract } from "ethers";
 import { toast } from "react-toastify";
-import { errorSlicing, toastOptions } from "@/utils/utils";
+import { errorSlicing } from "@/utils/utils";
 import { NetworkContext } from "@/components/Layout";
 
 type GetDrawnNumbersProps = {};
@@ -41,7 +41,7 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
         );
         return drawnNumbersAsNumber;
       } catch (err: any) {
-        toast.error(`${errorSlicing(err.reason)}!`, toastOptions);
+        toast.error(`${errorSlicing(err.reason)}!`);
         setLoading("");
         return [];
       }
@@ -54,7 +54,7 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
       });
       return;
     }
-    toast.error(`Unexpected Error!`, toastOptions);
+    toast.error(`Unexpected Error!`);
   }, [networkState]);
 
   useEffect(() => {
@@ -72,7 +72,7 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
     const luckyNumber = number.toNumber();
     if (!drawnNumbers.includes(luckyNumber)) {
       setDrawnNumbers((prev) => [...prev, luckyNumber]);
-      toast.info(`New number drawn: ${luckyNumber}`, toastOptions);
+      toast.info(`New number drawn: ${luckyNumber}`);
     }
   };
 

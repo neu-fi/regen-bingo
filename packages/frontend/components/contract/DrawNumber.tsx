@@ -2,7 +2,7 @@ import { BingoState, useBingoContract } from "@/hooks/useBingoContract";
 import { useAccount, useSigner } from "wagmi";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { errorSlicing, toastOptions } from "@/utils/utils";
+import { errorSlicing } from "@/utils/utils";
 import { Contract } from "ethers";
 
 export const DrawNumber = () => {
@@ -28,7 +28,7 @@ export const DrawNumber = () => {
         const state = await contract.bingoState();
         if (state === BingoState.FINISHED) {
           setError("Bingo is finished");
-          toast.error(`Draw is finished!`, toastOptions);
+          toast.error(`Draw is finished!`);
           return;
         }
         if (state === BingoState.MINT) {
@@ -40,12 +40,8 @@ export const DrawNumber = () => {
         setLoading("Waiting for the transaction...");
         await tx.wait();
         setLoading("");
-        toast.success(
-          "Number drawn successfully, please check your cards!",
-          toastOptions
-        );
       } catch (err: any) {
-        toast.error(`${errorSlicing(err.reason)}!`, toastOptions);
+        toast.error(`${errorSlicing(err.reason)}!`);
         setLoading("");
         setError("An error occured");
       }

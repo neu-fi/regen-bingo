@@ -5,8 +5,6 @@ import Link from "next/link";
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useProvider } from "wagmi";
-import { toastOptions } from "@/utils/utils";
-import { CHAIN_ID, CHAIN_NAME } from "@/config";
 import { getNetwork, GetNetworkResult, watchNetwork } from "@wagmi/core";
 
 type LayoutProps = {};
@@ -37,10 +35,6 @@ function Layout(props: PropsWithChildren<LayoutProps>) {
   });
 
   useEffect(() => {
-    if (network.chain?.id !== CHAIN_ID) {
-      toast.error(`Please switch to ${CHAIN_NAME}`, toastOptions);
-      return;
-    }
     const contractState = async () => {
       try {
         const state = await contract!.bingoState();

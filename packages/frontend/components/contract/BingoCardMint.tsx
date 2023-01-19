@@ -3,7 +3,7 @@ import { useAccount, useSigner } from "wagmi";
 import { useBingoContract } from "@/hooks/useBingoContract";
 import { ethers } from "ethers";
 import { toast } from "react-toastify";
-import { errorSlicing, toastOptions } from "@/utils/utils";
+import { errorSlicing } from "@/utils/utils";
 import { NetworkContext } from "@/components/Layout";
 
 export const BingoCardMint = () => {
@@ -52,9 +52,9 @@ export const BingoCardMint = () => {
         await tx.wait();
         setLoading("");
         setError("Succesfully minted");
-        toast.success("Minted a new Regen Bingo Card!", toastOptions);
+        toast.success("Minted a new Regen Bingo Card!");
       } catch (err: any) {
-        toast.error(`${errorSlicing(err.reason)}!`, toastOptions);
+        toast.error(`${errorSlicing(err.reason)}!`);
         setError("An error occured");
       }
       await window.setTimeout(() => {

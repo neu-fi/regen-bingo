@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useProvider } from "wagmi";
 import { useBingoContract } from "@/hooks/useBingoContract";
-import { timestampToCountdown, toastOptions } from "@/utils/utils";
+import { timestampToCountdown } from "@/utils/utils";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { errorSlicing } from "@/utils/utils";
@@ -39,7 +39,7 @@ export const DrawnCountDown = () => {
         setTimeStamp(drawTime);
       } catch (err: any) {
         console.log(err);
-        toast.error(`${errorSlicing(err.reason)}!`, toastOptions);
+        toast.error(`${errorSlicing(err.reason)}!`);
       }
     }
 
