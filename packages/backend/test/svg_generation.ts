@@ -24,10 +24,11 @@ describe("RegenBingoSVG", function () {
     it("Image SVG test: 9 number 3 of them lucky", async function () {
       const { regenBingoSVG } = await loadFixture(deployRegenBingoSVGFixture);
 
+      const tokenId = 0;
       const numbers = [[1,2,3,0,0,0,0,0,0],[0,0,0,1,2,3,0,0,0],[0,0,0,0,0,0,1,2,3]];
       const covered = [[1,0,0,0,0,0,0,0,0],[0,0,0,0,1,0,0,0,0],[0,0,0,0,0,0,0,0,1]];
 
-      const svg = await regenBingoSVG.generateTokenSVG(numbers, covered);
+      const svg = await regenBingoSVG.generateTokenSVG(tokenId, numbers, covered);
       console.log("Token svg is: ", svg);
     })
     it("Image SVG test: 9 two digits number 3 of them lucky", async function () {
@@ -36,7 +37,7 @@ describe("RegenBingoSVG", function () {
         const numbers = [[11,12,13,0,0,0,0,0,0],[0,0,0,11,12,13,0,0,0],[0,0,0,0,0,0,11,12,13]];
         const covered = [[1,0,0,0,0,0,0,0,0],[0,0,0,0,1,0,0,0,0],[0,0,0,0,0,0,0,0,1]];
   
-        const svg = await regenBingoSVG.generateTokenSVG(numbers, covered);
+        const svg = await regenBingoSVG.generateTokenSVG(tokenId, numbers, covered);
         console.log("Token svg is: ", svg);
       })
       it("Image SVG test: 9 number all of them lucky", async function () {
@@ -45,7 +46,7 @@ describe("RegenBingoSVG", function () {
         const numbers = [[11,12,13,0,0,0,0,0,0],[0,0,0,11,12,13,0,0,0],[0,0,0,0,0,0,11,12,13]];
         const covered = [[1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1]];
   
-        const svg = await regenBingoSVG.generateTokenSVG(numbers, covered);
+        const svg = await regenBingoSVG.generateTokenSVG(tokenId, numbers, covered);
         console.log("Token svg is: ", svg);
       })
       it("Image SVG test: No number but all of them lucky", async function () {
@@ -54,7 +55,7 @@ describe("RegenBingoSVG", function () {
         const numbers = [[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0]];
         const covered = [[1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1]];
   
-        const svg = await regenBingoSVG.generateTokenSVG(numbers, covered);
+        const svg = await regenBingoSVG.generateTokenSVG(tokenId, numbers, covered);
         console.log("Token svg is: ", svg);
       })
   })

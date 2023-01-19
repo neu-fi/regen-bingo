@@ -91,20 +91,12 @@ contract RegenBingoSVG is IRegenBingoSVG {
         );
 
     function generateTokenSVG(
+        uint256 tokenId,
         uint256[9][3] calldata numbers,
         bool[9][3] calldata covered
     ) external view returns (string memory) {
         string memory background;
-        uint256 colorIndex = uint256(
-            keccak256(
-                abi.encodePacked(
-                    blockhash(block.number - 1),
-                    block.timestamp,
-                    msg.sender
-                )
-            )
-        ) % 5;
-        string memory bgColor = backgroundColors[colorIndex];
+        string memory bgColor = backgroundColors[tokenId % backgroundColors.length];
 
         background = string(
             abi.encodePacked(

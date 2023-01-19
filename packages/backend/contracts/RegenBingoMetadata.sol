@@ -18,7 +18,7 @@ contract RegenBingoMetadata is IRegenBingoMetadata {
         uint256[9][3] calldata numbers,
         bool[9][3] calldata covered
     ) external view virtual returns (string memory) {
-        string memory svg = svgGenerator.generateTokenSVG(numbers, covered);
+        string memory svg = svgGenerator.generateTokenSVG(tokenId, numbers, covered);
         string memory image = string(
             abi.encodePacked(
                 "data:image/svg+xml;base64,",
