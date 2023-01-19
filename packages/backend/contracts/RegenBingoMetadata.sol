@@ -3,19 +3,14 @@
 pragma solidity ^0.8.16;
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
+import "./interfaces/IRegenBingoSVG.sol";
+import "./interfaces/IRegenBingoMetadata.sol";
 
-interface RegenBingoSVG {
-    function generateTokenSVG(
-        uint256[9][3] calldata numbers,
-        bool[9][3] calldata covered
-    ) external view returns (string memory);
-}
-
-contract RegenBingoMetadata {
-    RegenBingoSVG svgGenerator;
+contract RegenBingoMetadata is IRegenBingoMetadata {
+    IRegenBingoSVG svgGenerator;
 
     constructor(address _svgGeneratorAddress) {
-        svgGenerator = RegenBingoSVG(_svgGeneratorAddress);
+        svgGenerator = IRegenBingoSVG(_svgGeneratorAddress);
     }
 
     function generateTokenURI(

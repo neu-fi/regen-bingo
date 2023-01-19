@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
-import {URI} from "./libraries/URI.sol";
+import "./interfaces/IRegenBingoMetadata.sol";
 
 contract RegenBingo is ERC721Enumerable {
     using Strings for uint256;
@@ -39,6 +39,8 @@ contract RegenBingo is ERC721Enumerable {
                              STATE VARIABLES
     //////////////////////////////////////////////////////////////*/
 
+    IRegenBingoMetadata metadataGenerator;
+
     BingoState public bingoState;
     uint256 public mintPrice;
     uint256 public drawTimestamp;
@@ -65,12 +67,14 @@ contract RegenBingo is ERC721Enumerable {
         uint256 _mintPrice,
         uint256 _drawTimestamp,
         uint256 _drawNumberCooldownSeconds,
-        address payable _donationAddress
+        address payable _donationAddress,
+        address _metadataGenerator
     ) ERC721(_name, _symbol) {
         mintPrice = _mintPrice;
         drawTimestamp = _drawTimestamp;
         drawNumberCooldownSeconds = _drawNumberCooldownSeconds;
         donationAddress = _donationAddress;
+        metadataGenerator = IRegenBingoMetadata(_metadataGenerator);
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -130,29 +134,24 @@ contract RegenBingo is ERC721Enumerable {
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         require(ownerOf(tokenId) != address(0), "INVALID_TOKEN_ID");
 
-        string memory image = URI.tokenImage(tokenId);
-        string memory json = Base64.encode(
-            bytes(
-                string(
-                    abi.encodePacked(
-                        '{"name": "',
-                        name(),
-                        " #",
-                        tokenId.toString(),
-                        '", "description": "...", "image": "',
-                        image,
-                        '"}'
-                    )
-                )
-            )
-        );
-        return string(abi.encodePacked("data:application/json;base64,", json));
-    }
-
-    function coveredNumbers(uint256 id) public view returns (uint256 count) {
+        uint256[9][3] memory numbers;
+        bool[9][3] memory covered;
         for (uint256 row = 0; row < 3; row++) {
             for (uint256 column = 0; column < 9; column++) {
-                if (drawnNumbers.contains(getNumberByCoordinates(id, row, column))) {
+                numbers[row][column] = getNumberByCoordinates(tokenId, row, column);
+                if (drawnNumbers.contains(numbers[row][column])) {
+                    covered[row][column] = true;
+                }
+            }
+        }
+
+        return metadataGenerator.generateTokenURI(tokenId, numbers, covered);
+    }
+
+    function coveredNumbers(uint256 tokenId) public view returns (uint256 count) {
+        for (uint256 row = 0; row < 3; row++) {
+            for (uint256 column = 0; column < 9; column++) {
+                if (drawnNumbers.contains(getNumberByCoordinates(tokenId, row, column))) {
                     count++;
                 }
             }

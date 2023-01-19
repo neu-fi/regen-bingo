@@ -3,8 +3,9 @@
 pragma solidity ^0.8.16;
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
+import "./interfaces/IRegenBingoSVG.sol";
 
-contract RegenBingoSVG {
+contract RegenBingoSVG is IRegenBingoSVG {
     uint256 constant xOffset = 250;
     uint256 constant yOffset = 935;
     uint256 constant circleXOffset = 300;

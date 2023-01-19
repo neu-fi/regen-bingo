@@ -7,15 +7,25 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
 
-  let uri = await deploy('URI', {from: deployer, log: true});
-
-  await deploy('RegenBingo', {
-    args: regenBingoArgs,
+  let regenBingoSVG = await deploy('RegenBingoSVG', {
     from: deployer,
     log: true,
-    libraries: {
-      URI: uri.address,
-    }
+  });
+
+  let regenBingoMetadata = await deploy('RegenBingoMetadata', {
+    args: [regenBingoSVG.address],
+    from: deployer,
+    log: true,
+  });
+
+  console.log("[...regenBingoArgs, regenBingoMetadata.address]");
+  console.log([...regenBingoArgs, regenBingoMetadata.address]);
+  console.log("[...regenBingoArgs, regenBingoMetadata.address]");
+
+  await deploy('RegenBingo', {
+    args: [...regenBingoArgs, regenBingoMetadata.address],
+    from: deployer,
+    log: true,
   });
 };
 
