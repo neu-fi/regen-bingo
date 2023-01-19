@@ -807,7 +807,7 @@
       "chainId": "31337",
       "contracts": {
         "RegenBingo": {
-          "address": "0xe8D2A1E88c91DCd5433208d4152Cc4F399a7e91d",
+          "address": "0x18E317A7D70d8fBf8e6E893616b52390EbBdb629",
           "abi": [
             {
               "inputs": [
@@ -1155,7 +1155,7 @@
                   "type": "uint256"
                 }
               ],
-              "stateMutability": "pure",
+              "stateMutability": "view",
               "type": "function"
             },
             {

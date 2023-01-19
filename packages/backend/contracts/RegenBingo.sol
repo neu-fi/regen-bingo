@@ -17,23 +17,30 @@ contract RegenBingo is ERC721Enumerable {
         FINISHED
     }
 
+    // Bingo Card layouts.
+    // Cells have the following format: [lowest_available_number, possible_options]
+    // Given a seed, a number in the cell could be calculated as: 
+    // lowest_available_number + (seed % possible_options)
+    // Following these rules: https://en.wikipedia.org/wiki/Bingo_card#90-ball_bingo_cards
+    // Using these as templates: https://www.scribd.com/document/325121782/1-90-British-Bingo-Cards
     uint256 constant LAYOUTS_COUNT = 3;
-
-    uint256 constant PRIME_1 = 345748237736302043954346415468961719667;
-    uint256 constant PRIME_2 = 346898908343340269085095797543225285067;
-    uint256 constant PRIME_3 = 349436888172124469953802313936204793639;
-    uint256 constant PRIME_4 = 350775825975224662536471623247112070683;
-    uint256 constant PRIME_5 = 351826028875514156289400300739130052693;
-    uint256 constant PRIME_6 = 352412280970268348994551642119472945107;
-    uint256 constant PRIME_7 = 352481965297794116322788845643729736229;
-    uint256 constant PRIME_8 = 355662614806814143955140513875615460687;
-    uint256 constant PRIME_9 = 359319764875976259388138010914940262119;
-    uint256 constant PRIME_10 = 364474025646518244225535015089205405063;
-    uint256 constant PRIME_11 = 365535512377247765880241266596284033459;
-    uint256 constant PRIME_12 = 366207651054021111846380872598610590333;
-    uint256 constant PRIME_13 = 370011511959930685076007398472051834473;
-    uint256 constant PRIME_14 = 375675342105268259527879793250735537607;
-    uint256 constant PRIME_15 = 385276465729037003106999007892189232991;
+    uint8[2][9][3][LAYOUTS_COUNT] LAYOUTS = [
+        [
+            [[ 1, 9], [ 0, 0], [ 0, 0], [ 0, 0], [40, 5], [56, 4], [60,10], [77, 3], [ 0, 0]],
+            [[ 0, 0], [ 0, 0], [ 0, 0], [30,10], [45, 5], [53, 3], [ 0, 0], [74, 3], [80, 6]],
+            [[ 0, 0], [10,10], [20,10], [ 0, 0], [ 0, 0], [50, 3], [ 0, 0], [70, 4], [86, 5]]
+        ],
+        [
+            [[ 6, 4], [10, 5], [ 0, 0], [ 0, 0], [ 0, 0], [ 0, 0], [66, 4], [75, 5], [80,11]],
+            [[ 0, 0], [ 0, 0], [25, 5], [30,10], [40,10], [50,10], [63, 3], [ 0, 0], [ 0, 0]],
+            [[ 1, 5], [15, 5], [20, 5], [ 0, 0], [ 0, 0], [ 0, 0], [60, 3], [70, 5], [ 0, 0]]
+        ],
+        [
+            [[ 1, 5], [ 0, 0], [25, 5], [ 0, 0], [ 0, 0], [50,10], [ 0, 0], [70, 5], [88, 3]],
+            [[ 0, 0], [10,10], [20, 5], [30,10], [ 0, 0], [ 0, 0], [65, 5], [ 0, 0], [84, 4]],
+            [[ 6, 4], [ 0, 0], [ 0, 0], [ 0, 0], [40,10], [ 0, 0], [60, 5], [75, 5], [80, 4]]
+        ]
+    ];
 
     /*//////////////////////////////////////////////////////////////
                              STATE VARIABLES
@@ -86,7 +93,6 @@ contract RegenBingo is ERC721Enumerable {
         require(msg.value == mintPrice, "Incorrect payment amount");
         // Using totalSupply() so that one can mint multiple different cards in a block
         uint256 tokenId = uint256(keccak256(abi.encodePacked(totalSupply(), msg.sender, block.timestamp)));
-        require(!_containsDuplicates(tokenId), "This card has duplicate numbers");
         _mint(msg.sender, tokenId);
     }
 
@@ -158,67 +164,16 @@ contract RegenBingo is ERC721Enumerable {
         }
     }
 
-    function getNumberByCoordinates(uint256 tokenId, uint256 row, uint256 column) public pure returns (uint256) {
-        uint256[9][3] memory layout = _getLayout(tokenId % LAYOUTS_COUNT);
-        if (layout[row][column] == 0) {
+    function getNumberByCoordinates(uint256 tokenId, uint256 row, uint256 column) public view returns (uint256) {
+        uint8[2][9][3] memory layout = LAYOUTS[tokenId % LAYOUTS_COUNT];
+        if (layout[row][column][0] == 0) {
             return 0;
         } else {
-            return 1 + (column * 10) + ((tokenId % layout[row][column]) % 10);
+            return layout[row][column][0] + (tokenId % layout[row][column][1]);
         }
     }
 
     function getDrawnNumbers() public view returns (uint256[] memory) {
         return drawnNumbers.values();
-    }
-
-    /*//////////////////////////////////////////////////////////////
-                           INTERNAL FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-
-    function _getLayout(uint256 index) internal pure returns (uint256[9][3] memory) {
-        return [
-            [
-                [PRIME_1, 0, PRIME_2, PRIME_3, 0, PRIME_4, 0, 0, PRIME_5],
-                [PRIME_6, 0, 0, PRIME_7, PRIME_8, 0, 0, PRIME_9, PRIME_10],
-                [0, PRIME_11, 0, PRIME_12, 0, PRIME_13, PRIME_14, 0, PRIME_15]
-            ],
-            [
-                [0, PRIME_10, PRIME_14, 0, 0, 0, PRIME_9, PRIME_11, PRIME_8],
-                [PRIME_15, 0, PRIME_5, 0, PRIME_12, 0, 0, PRIME_4, PRIME_13],
-                [0, 0, PRIME_1, PRIME_6, 0, PRIME_2, 0, PRIME_7, PRIME_3]
-            ],
-            [
-                [PRIME_13, 0, 0, PRIME_15, PRIME_6, 0, PRIME_7, 0, PRIME_12],
-                [0, PRIME_1, PRIME_14, 0, PRIME_2, PRIME_3, PRIME_11, 0, 0],
-                [0, PRIME_5, PRIME_4, 0, 0, PRIME_10, PRIME_8, PRIME_9, 0]
-            ]
-        ][index];
-    }
-
-    function _toNonZeroString(uint256 number) internal pure returns (string memory) {
-        if (number != 0) {
-            return Strings.toString(number);
-        } else {
-            return "";
-        }
-    }
-
-    function _containsDuplicates(uint256 tokenId) internal pure returns (bool) {
-        for (uint256 row = 0; row < 3; row++) {
-            bytes memory numbers = new bytes(90);
-            for (uint256 column = 0; column < 9; column++) {
-                uint256 numberInCoordinate = getNumberByCoordinates(tokenId, row, column);
-                if (numberInCoordinate == 0) {
-                    continue;
-                } else {
-                    if (numbers[numberInCoordinate - 1] == 0) {
-                        numbers[numberInCoordinate - 1] = 0x01;
-                    } else {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
     }
 }
