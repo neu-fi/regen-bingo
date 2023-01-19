@@ -10,12 +10,25 @@ contract RegenBingoSVG is IRegenBingoSVG {
     uint256 constant yOffset = 935;
     uint256 constant circleXOffset = 300;
     uint256 constant circleYOffset = 900;
-    string[5] backgroundColors = [
-        "#FF7F50",
-        "#CCCCFF",
-        "#40E0D0",
-        "#6495ED",
-        "#9FE2BF"
+    string[18] backgroundColors = [
+        "#297739",
+        "#4B9074",
+        "#496851",
+        "#7C7451",
+        "#E0BB44",
+        "#A0B59E",
+        "#A4A57A",
+        "#ffe5b4",
+        "#5f9ea0",
+        "#d2b48c",
+        "#D0C4AB",
+        "#f5f5dc",
+        "#ffefd5",
+        "#BAB86C",
+        "#ffdab9",
+        "#dcae96",
+        "#b57170",
+        "#A0522D"
     ];
 
     string constant defs =
