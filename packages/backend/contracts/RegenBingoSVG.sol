@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/utils/Base64.sol";
 import "./interfaces/IRegenBingoSVG.sol";
 
 contract RegenBingoSVG is IRegenBingoSVG {
-    uint256 constant xOffset = 250;
+    uint256 constant xOffset = 240;
     uint256 constant yOffset = 935;
     uint256 constant circleXOffset = 300;
     uint256 constant circleYOffset = 900;
@@ -176,7 +176,7 @@ contract RegenBingoSVG is IRegenBingoSVG {
         string memory circleY = Strings.toString(y * 200 + circleYOffset);
 
         if (number < 10) {
-            xCordinate = Strings.toString(x * 200 + xOffset + 25);
+            xCordinate = Strings.toString(x * 200 + xOffset + 35);
         } else {
             xCordinate = Strings.toString(x * 200 + xOffset);
         }
