@@ -71,15 +71,18 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
         }
 
         setIsNoCardsMinted(false);
-        let fetchedCards: ICard[] = [];
         for (let i = 0; i < balanceOfUser; i++) {
           const tokenId: string = (
             await contract!.tokenOfOwnerByIndex(account.address, i)
           )._hex.toString();
           const card: ICard = await getToken(contract, tokenId);
-          fetchedCards.push(card);
+          setCards((cards) => {
+            if (cards) {
+              return sortCards([...cards, card]);
+            }
+            return [card];
+          });
         }
-        return fetchedCards;
       } catch (err: any) {
         console.log(err);
         if (!(err instanceof TypeError)) {
@@ -93,13 +96,7 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
     }
     setRetry(false);
     if (isConnected && contract) {
-      fetchCardsOwnedByUser().then((fetchedCards) => {
-        if (fetchedCards && fetchedCards.length > 0) {
-          setCards(sortCards(fetchedCards!));
-        } else {
-          setIsNoCardsMinted(true);
-        }
-      });
+      fetchCardsOwnedByUser();
     }
   }, [networkState, retry, trigger]);
 
