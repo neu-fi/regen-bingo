@@ -1,11 +1,12 @@
 import Card, { ICard } from "@/components/Card";
 import { useBingoContract } from "@/hooks/useBingoContract";
-import { isNetworkCorrect, errorSlicing, getToken, svg } from "@/utils/utils";
+import { errorSlicing, getToken, svg } from "@/utils/utils";
 import { Contract } from "ethers";
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useState, useContext } from "react";
 import { useSigner, useAccount } from "wagmi";
 import { toast } from "react-toastify";
 import { toastOptions } from "../utils/utils";
+import { NetworkContext } from "@/components/Layout";
 
 type CardListProps = {
   trigger?: Event;
@@ -38,13 +39,15 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
   const [isNoCardsMinted, setIsNoCardsMinted] = useState<boolean>(true);
   const [sort, setSort] = useState<SortType>({ sort: "desc", key: "matches" });
 
+  const networkState: boolean = useContext(NetworkContext);
+
   const account = useAccount();
   const { isConnected } = useAccount();
   const signer = useSigner();
   const contract: Contract | undefined = useBingoContract(signer.data);
 
   useEffect(() => {
-    if (!isNetworkCorrect()) {
+    if (!networkState) {
       return;
     }
 
@@ -102,30 +105,72 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
 
   return (
     <>
-      {isNoCardsMinted ? (
-        <p className="mt-6 text-lg leading-8 text-gray-600 sm:text-center">
-          You don't have any Regen Bingo Cards.
+      {!networkState ? (
+        <p className="mt-6 text-lg leading-8 font-bold text-gray-600 sm:text-center">
+          Please switch network!
         </p>
       ) : (
-        <div className="bg-white rounded-2xl shadow-2xl my-4">
-          <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8 lg:py-12 ">
-            <div className="space-y-12 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0">
-              <div className="lg:col-span-2">
-                <ul
-                  role="list"
-                  className="space-y-12 sm:-mt-8 sm:space-y-0 divide-y divide-gray-200 lg:gap-x-8 lg:space-y-0"
+        <>
+          {isNoCardsMinted ? (
+            <p className="mt-6 text-lg leading-8 text-gray-600 sm:text-center">
+              You don't have any Regen Bingo Cards.
+            </p>
+          ) : (
+            <>
+              {cards ? (
+                <div className="bg-white rounded-2xl shadow-2xl my-4">
+                  <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8 lg:py-12 ">
+                    <div className="space-y-12 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0">
+                      <div className="lg:col-span-2">
+                        <ul
+                          role="list"
+                          className="space-y-12 sm:-mt-8 sm:space-y-0 divide-y divide-gray-200 lg:gap-x-8 lg:space-y-0"
+                        >
+                          {cards &&
+                            cards!.map((card) => (
+                              <li key={card.id} className="sm:py-4">
+                                <Card card={card}></Card>
+                              </li>
+                            ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlnsXlink="http://www.w3.org/1999/xlink"
+                  style={{
+                    margin: "auto",
+
+                    display: "block",
+                  }}
+                  shapeRendering="auto"
+                  width="200px"
+                  height="200px"
+                  viewBox="0 0 100 100"
+                  preserveAspectRatio="xMidYMid"
                 >
-                  {cards &&
-                    cards!.map((card) => (
-                      <li key={card.id} className="sm:py-4">
-                        <Card card={card}></Card>
-                      </li>
-                    ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
+                  <path
+                    d="M10 50A40 40 0 0 0 90 50A40 43.4 0 0 1 10 50"
+                    fill="#d4ecc9"
+                    stroke="none"
+                  >
+                    <animateTransform
+                      attributeName="transform"
+                      type="rotate"
+                      dur="1.1764705882352942s"
+                      repeatCount="indefinite"
+                      keyTimes="0;1"
+                      values="0 50 51.7;360 50 51.7"
+                    ></animateTransform>
+                  </path>
+                </svg>
+              )}
+            </>
+          )}
+        </>
       )}
     </>
   );

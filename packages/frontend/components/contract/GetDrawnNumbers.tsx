@@ -1,54 +1,61 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useProvider } from "wagmi";
 import DrawnNumbersTable from "@/components/DrawnNumbersTable";
 import { useBingoContract } from "@/hooks/useBingoContract";
 import { BigNumber, Event, Contract } from "ethers";
 import { toast } from "react-toastify";
-import { errorSlicing, toastOptions, isNetworkCorrect } from "@/utils/utils";
+import { errorSlicing, toastOptions } from "@/utils/utils";
+import { NetworkContext } from "@/components/Layout";
 
 type GetDrawnNumbersProps = {};
 
 export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
   const [drawnNumbers, setDrawnNumbers] = useState<number[]>([]);
-  const [initialFetchCompleted, setInitialFetchCompleted] = useState(false); // [1
-  const [loading, setLoading] = useState("");
+  const [initialFetchCompleted, setInitialFetchCompleted] = useState(false);
+  const [loading, setLoading] = useState("Loading...");
+
+  const networkState: boolean = useContext(NetworkContext);
 
   const provider = useProvider();
   const contract: Contract | undefined = useBingoContract(provider);
 
   useEffect(() => {
-    if (!isNetworkCorrect()) {
+    if (!networkState) {
+      setDrawnNumbers((prev) => []);
+      setInitialFetchCompleted(false);
+      setLoading("Please switch network!");
       return;
     }
-
-    if (!initialFetchCompleted) {
-      (async () => {
-        if (!contract) {
-          toast.error(`Unexpected Error!`, toastOptions);
+    const getDrawnNumbers = async () => {
+      setLoading("Loading...");
+      try {
+        const drawnNumbers: BigNumber[] = await contract!.getDrawnNumbers();
+        if (drawnNumbers.length === 0) {
+          setLoading("No numbers drawn yet.");
           return;
-        }
-        setLoading("Loading...");
-        try {
-          const drawnNumbers: BigNumber[] = await contract.getDrawnNumbers();
-          if (drawnNumbers.length === 0) {
-            setLoading("No numbers drawn yet.");
-            return;
-          } else {
-            setLoading("");
-          }
-          const drawnNumbersAsNumber: number[] = drawnNumbers.map((number) =>
-            number.toNumber()
-          );
-          setDrawnNumbers((prev) => drawnNumbersAsNumber);
-          setInitialFetchCompleted(true); // [1]
-        } catch (err: any) {
-          toast.error(`${errorSlicing(err.reason)}!`, toastOptions);
-          setDrawnNumbers((prev) => []);
+        } else {
           setLoading("");
         }
-      })();
+        const drawnNumbersAsNumber: number[] = drawnNumbers.map((number) =>
+          number.toNumber()
+        );
+        return drawnNumbersAsNumber;
+      } catch (err: any) {
+        toast.error(`${errorSlicing(err.reason)}!`, toastOptions);
+        setLoading("");
+        return [];
+      }
+    };
+    if (contract && !initialFetchCompleted) {
+      getDrawnNumbers().then((drawnNumbersAsNumber) => {
+        if (drawnNumbersAsNumber === undefined) return;
+        setDrawnNumbers(drawnNumbersAsNumber);
+        setInitialFetchCompleted(true); // [1]
+      });
+      return;
     }
-  }, []);
+    toast.error(`Unexpected Error!`, toastOptions);
+  }, [networkState]);
 
   useEffect(() => {
     if (contract && initialFetchCompleted) {
