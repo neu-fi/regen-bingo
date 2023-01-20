@@ -18,10 +18,6 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     log: true,
   });
 
-  console.log("[...regenBingoArgs, regenBingoMetadata.address]");
-  console.log([...regenBingoArgs, regenBingoMetadata.address]);
-  console.log("[...regenBingoArgs, regenBingoMetadata.address]");
-
   await deploy('RegenBingo', {
     args: [...regenBingoArgs, regenBingoMetadata.address],
     from: deployer,
