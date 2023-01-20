@@ -4,6 +4,7 @@ pragma solidity ^0.8.16;
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 import "./interfaces/IRegenBingoSVG.sol";
+import "./interfaces/IDateTime.sol";
 
 contract RegenBingoSVG is IRegenBingoSVG {
     uint256 constant xOffset = 240;
@@ -30,15 +31,40 @@ contract RegenBingoSVG is IRegenBingoSVG {
         "#b57170",
         "#A0522D"
     ];
+    string[12] months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+    ];
 
-    string constant defs =
+    IDateTime dateTimeContract;
+
+    constructor(address _dateTimeContractAddress) {
+        dateTimeContract = IDateTime(_dateTimeContractAddress);
+    }
+
+    string constant defs1 =
         string(
             abi.encodePacked(
                 "<defs>",
                 '<path id="p" d="M0 0 L4800 0 Z"/>',
                 '<text id="t">',
-                '<textPath xlink:href="#p" textLength="2200" font-size="35">',
-                unicode"Donating 0.05 ETH · Gitcoin Alpha Round · 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 · January 31, 2023",
+                '<textPath xlink:href="#p" textLength="2200" font-size="35">'
+            )
+        );
+
+    string constant defs2 =
+        string(
+            abi.encodePacked(
                 '<animate attributeName="startOffset" values="2400; 0" dur="9s" repeatCount="indefinite"/> ',
                 "</textPath>",
                 "</text>",
@@ -46,7 +72,8 @@ contract RegenBingoSVG is IRegenBingoSVG {
             )
         );
 
-    string constant styles = '<style>text{font-family:Monaco;font-size:100px}svg{stroke:black;stroke-width:1}.a{fill:#57b592}.b{fill:#bde4df}.c{fill:#f8ce47}.d{fill:#fcf2b1}</style>';
+    string constant styles =
+        "<style>text{font-family:Monaco;font-size:100px}svg{stroke:black;stroke-width:1}.a{fill:#57b592}.b{fill:#bde4df}.c{fill:#f8ce47}.d{fill:#fcf2b1}</style>";
 
     string constant cardPattern =
         string(
@@ -90,7 +117,12 @@ contract RegenBingoSVG is IRegenBingoSVG {
     function generateTokenSVG(
         uint256 tokenId,
         uint256[9][3] calldata numbers,
-        bool[9][3] calldata covered
+        bool[9][3] calldata covered,
+        uint256 donationAmount,
+        string memory donationName,
+        address donationAddress,
+        bool isBingoFinished,
+        uint256 drawTimestamp
     ) external view returns (string memory) {
         return (
             string(
@@ -98,7 +130,15 @@ contract RegenBingoSVG is IRegenBingoSVG {
                     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2200 2200" style="background-color:',
                     backgroundColors[tokenId % backgroundColors.length],
                     '">',
-                    defs,
+                    defs1,
+                    _generateRollingText(
+                        donationAmount,
+                        donationName,
+                        donationAddress,
+                        isBingoFinished,
+                        drawTimestamp
+                    ),
+                    defs2,
                     styles,
                     cardPattern,
                     '<g><polygon style="stroke-width: 15;" points="200,500 200,1500 2000,1500 2000,500" />'
@@ -108,10 +148,89 @@ contract RegenBingoSVG is IRegenBingoSVG {
                     _generateNumbers(numbers, covered),
                     header,
                     footer,
-                    '</g></svg>'
+                    "</g></svg>"
                 )
             )
         );
+    }
+
+    function _generateRollingText(
+        uint256 donationAmount,
+        string memory donationName,
+        address donationAddress,
+        bool isBingoFinished,
+        uint256 drawTimestamp
+    ) internal view returns (string memory) {
+        // temp = unicode("Donating 0.05 ETH · Gitcoin Alpha Round · 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 · January 31, 2023")
+        return (
+            string(
+                abi.encodePacked(
+                    isBingoFinished ? "Donated " : "Donating ",
+                    _convertWEIToEtherInString(donationAmount),
+                    unicode" · ",
+                    donationName,
+                    unicode" · ",
+                    Strings.toHexString(uint256(uint160(donationAddress)), 20),
+                    unicode" · ",
+                    _generateDate(drawTimestamp)
+                )
+            )
+        );
+    }
+
+    function _generateDate(uint256 timestamp)
+        internal
+        view
+        returns (string memory)
+    {
+        uint256 year;
+        uint256 month;
+        uint256 day;
+        uint256 hour;
+        uint256 minute;
+
+        (year, month, day, hour, minute, ) = dateTimeContract
+            .timestampToDateTime(timestamp);
+
+        return (
+            string(
+                abi.encodePacked(
+                    months[month - 1],
+                    " ",
+                    Strings.toString(day),
+                    ", ",
+                    Strings.toString(year),
+                    " ",
+                    Strings.toString(hour),
+                    ":",
+                    Strings.toString(minute),
+                    " UTC"
+                )
+            )
+        );
+    }
+
+    function _convertWEIToEtherInString(uint256 amount)
+        internal
+        pure
+        returns (string memory)
+    {
+        string memory decimalPart;
+        string memory floatingPart;
+
+        if (amount % 1 ether == 0) {
+            decimalPart = Strings.toString(amount / 1 ether);
+            floatingPart = ".00 ETH";
+        } else {
+            decimalPart = Strings.toString(amount / 1 ether);
+            string memory fpart = Strings.toString((amount % 1 ether) / 1e16);
+            if (bytes(fpart).length == 1) {
+                floatingPart = string(abi.encodePacked(".0", fpart, " ETH"));
+            } else {
+                floatingPart = string(abi.encodePacked(".", fpart, " ETH"));
+            }
+        }
+        return string(abi.encodePacked(decimalPart, floatingPart));
     }
 
     function _generateNumbers(
@@ -179,7 +298,7 @@ contract RegenBingoSVG is IRegenBingoSVG {
                 yCordinate,
                 '">',
                 Strings.toString(number),
-                '</text>'
+                "</text>"
             )
         );
 
