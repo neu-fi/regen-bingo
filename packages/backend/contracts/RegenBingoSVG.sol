@@ -192,18 +192,42 @@ contract RegenBingoSVG is IRegenBingoSVG {
         (year, month, day, hour, minute, ) = dateTimeContract
             .timestampToDateTime(timestamp);
 
+        string memory minuteString;
+        string memory hourString;
+        string memory dayString;
+
+        if (minute < 10) {
+            minuteString = string(
+                abi.encodePacked("0", Strings.toString(minute))
+            );
+        } else {
+            minuteString = Strings.toString(minute);
+        }
+
+        if (hour < 10) {
+            hourString = string(abi.encodePacked("0", Strings.toString(hour)));
+        } else {
+            hourString = Strings.toString(hour);
+        }
+
+        if (day < 10) {
+            dayString = string(abi.encodePacked("0", Strings.toString(day)));
+        } else {
+            dayString = Strings.toString(day);
+        }
+
         return (
             string(
                 abi.encodePacked(
                     months[month - 1],
                     " ",
-                    Strings.toString(day),
+                    dayString,
                     ", ",
                     Strings.toString(year),
                     " ",
-                    Strings.toString(hour),
+                    hourString,
                     ":",
-                    Strings.toString(minute),
+                    minuteString,
                     " UTC"
                 )
             )
