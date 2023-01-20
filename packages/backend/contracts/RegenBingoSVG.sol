@@ -141,7 +141,7 @@ contract RegenBingoSVG is IRegenBingoSVG {
                     defs2,
                     styles,
                     cardPattern,
-                    '<g><polygon style="stroke-width: 15;" points="200,500 200,1500 2000,1500 2000,500" />'
+                    '<g><polygon style="stroke-width: 15" points="200,500 200,1500 2000,1500 2000,500" />'
                     '<rect fill="url(#bg)" x="200" y="800" width="1800" height="600"/>',
                     '<animateTransform dur="8s" repeatCount="indefinite" attributeName="transform" attributeType="XML" type="rotate" values="1;-1;1"/>',
                     '<animateMotion dur="9s" repeatCount="indefinite" path="M-50,0 C-50,-200 50,200 50,0 C50,-200 -50,200 -50,0"/>',
@@ -306,9 +306,9 @@ contract RegenBingoSVG is IRegenBingoSVG {
                 abi.encodePacked(
                     '<circle fill="#ee2d25" cx="',
                     circleX,
-                    '"cy="',
+                    '" cy="',
                     circleY,
-                    '"r="75"></circle>'
+                    ' "r="75"></circle>'
                 )
             );
         }
@@ -318,7 +318,7 @@ contract RegenBingoSVG is IRegenBingoSVG {
                 output,
                 '<text x="',
                 xCordinate,
-                '"y="',
+                '" y="',
                 yCordinate,
                 '">',
                 Strings.toString(number),
