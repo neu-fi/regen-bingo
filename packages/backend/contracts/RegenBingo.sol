@@ -96,6 +96,16 @@ contract RegenBingo is ERC721Enumerable {
         _mint(msg.sender, tokenId);
     }
 
+    function mintMultiple(uint256 mintCount) external payable {
+        require(bingoState == BingoState.MINT, "It is not mint period");
+        require(msg.value == mintPrice * mintCount, "Incorrect payment amount");
+        for (uint256 i = 0; i < mintCount; i++) {
+            // Using totalSupply() so that one can mint multiple different cards in a block
+            uint256 tokenId = uint256(keccak256(abi.encodePacked(totalSupply(), msg.sender, block.timestamp)));
+            _mint(msg.sender, tokenId);
+        }
+    }
+
     function drawNumber() external returns (uint256) {
         require(bingoState == BingoState.DRAW, "It is not draw period");
         require(block.timestamp > lastDrawTime + drawNumberCooldownSeconds, "Draw too soon");
