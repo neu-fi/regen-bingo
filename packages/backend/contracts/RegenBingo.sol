@@ -139,22 +139,30 @@ contract RegenBingo is ERC721Enumerable {
 
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         require(ownerOf(tokenId) != address(0), "INVALID_TOKEN_ID");
+        return metadataGenerator.generateTokenURI(tokenId, numbers(tokenId), covered(tokenId));
+    }
 
-        uint256[9][3] memory numbers;
-        bool[9][3] memory covered;
+    function numbers(uint256 tokenId) public view returns (uint256[9][3] memory numbers) {
         for (uint256 row = 0; row < 3; row++) {
             for (uint256 column = 0; column < 9; column++) {
                 numbers[row][column] = getNumberByCoordinates(tokenId, row, column);
-                if (drawnNumbers.contains(numbers[row][column])) {
+            }
+        }
+    }
+
+    function covered(uint256 tokenId) public view returns (bool[9][3] memory covered) {
+        require(ownerOf(tokenId) != address(0), "INVALID_TOKEN_ID");
+        for (uint256 row = 0; row < 3; row++) {
+            for (uint256 column = 0; column < 9; column++) {
+                if (drawnNumbers.contains(getNumberByCoordinates(tokenId, row, column))) {
                     covered[row][column] = true;
                 }
             }
         }
-
-        return metadataGenerator.generateTokenURI(tokenId, numbers, covered);
     }
 
     function coveredNumbers(uint256 tokenId) public view returns (uint256 count) {
+        require(ownerOf(tokenId) != address(0), "INVALID_TOKEN_ID");
         for (uint256 row = 0; row < 3; row++) {
             for (uint256 column = 0; column < 9; column++) {
                 if (drawnNumbers.contains(getNumberByCoordinates(tokenId, row, column))) {

@@ -806,100 +806,8 @@
       "name": "localhost",
       "chainId": "31337",
       "contracts": {
-        "RegenBingoSVG": {
-          "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-          "abi": [
-            {
-              "inputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "tokenId",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "uint256[9][3]",
-                  "name": "numbers",
-                  "type": "uint256[9][3]"
-                },
-                {
-                  "internalType": "bool[9][3]",
-                  "name": "covered",
-                  "type": "bool[9][3]"
-                }
-              ],
-              "name": "generateTokenSVG",
-              "outputs": [
-                {
-                  "internalType": "string",
-                  "name": "",
-                  "type": "string"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            }
-          ]
-        },
-        "RegenBingoMetadata": {
-          "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-          "abi": [
-            {
-              "inputs": [
-                {
-                  "internalType": "address",
-                  "name": "_svgGeneratorAddress",
-                  "type": "address"
-                }
-              ],
-              "stateMutability": "nonpayable",
-              "type": "constructor"
-            },
-            {
-              "inputs": [],
-              "name": "generateContractURI",
-              "outputs": [
-                {
-                  "internalType": "string",
-                  "name": "",
-                  "type": "string"
-                }
-              ],
-              "stateMutability": "pure",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "tokenId",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "uint256[9][3]",
-                  "name": "numbers",
-                  "type": "uint256[9][3]"
-                },
-                {
-                  "internalType": "bool[9][3]",
-                  "name": "covered",
-                  "type": "bool[9][3]"
-                }
-              ],
-              "name": "generateTokenURI",
-              "outputs": [
-                {
-                  "internalType": "string",
-                  "name": "",
-                  "type": "string"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            }
-          ]
-        },
         "RegenBingo": {
-          "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+          "address": "0x4735b6AEe529640b265D50d1409c4503e4Ef2c23",
           "abi": [
             {
               "inputs": [
@@ -1543,6 +1451,111 @@
               "name": "transferFrom",
               "outputs": [],
               "stateMutability": "nonpayable",
+              "type": "function"
+            }
+          ]
+        },
+        "RegenBingoMetadata": {
+          "address": "0xbD69D89BD54d08B82D642DeB1293Ee380D93BBD8",
+          "abi": [
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "_svgGeneratorAddress",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "constructor"
+            },
+            {
+              "inputs": [],
+              "name": "generateContractURI",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256[9][3]",
+                  "name": "numbers",
+                  "type": "uint256[9][3]"
+                },
+                {
+                  "internalType": "bool[9][3]",
+                  "name": "covered",
+                  "type": "bool[9][3]"
+                }
+              ],
+              "name": "generateTokenURI",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "svgGenerator",
+              "outputs": [
+                {
+                  "internalType": "contract IRegenBingoSVG",
+                  "name": "",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            }
+          ]
+        },
+        "RegenBingoSVG": {
+          "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+          "abi": [
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256[9][3]",
+                  "name": "numbers",
+                  "type": "uint256[9][3]"
+                },
+                {
+                  "internalType": "bool[9][3]",
+                  "name": "covered",
+                  "type": "bool[9][3]"
+                }
+              ],
+              "name": "generateTokenSVG",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "view",
               "type": "function"
             }
           ]

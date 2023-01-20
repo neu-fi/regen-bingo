@@ -7,7 +7,7 @@ import "./interfaces/IRegenBingoSVG.sol";
 import "./interfaces/IRegenBingoMetadata.sol";
 
 contract RegenBingoMetadata is IRegenBingoMetadata {
-    IRegenBingoSVG svgGenerator;
+    IRegenBingoSVG public svgGenerator;
 
     constructor(address _svgGeneratorAddress) {
         svgGenerator = IRegenBingoSVG(_svgGeneratorAddress);
@@ -17,25 +17,15 @@ contract RegenBingoMetadata is IRegenBingoMetadata {
         uint256 tokenId,
         uint256[9][3] calldata numbers,
         bool[9][3] calldata covered
-    ) external view virtual returns (string memory) {
-        string memory svg = svgGenerator.generateTokenSVG(tokenId, numbers, covered);
-        string memory image = string(
-            abi.encodePacked(
-                "data:image/svg+xml;base64,",
-                Base64.encode(bytes(svg))
-            )
-        );
-
+    ) external view returns (string memory) {
         string memory json = Base64.encode(
             bytes(
                 string(
                     abi.encodePacked(
-                        '{"name": "',
-                        "RegenBingo",
-                        " #",
+                        '{"name":"RegenBingo #',
                         Strings.toString(tokenId),
-                        '", "description": "...", "image": "',
-                        image,
+                        '","description":"...","image":"',
+                        _generateImageStringFraction(tokenId, numbers, covered),
                         '"}'
                     )
                 )
@@ -50,14 +40,22 @@ contract RegenBingoMetadata is IRegenBingoMetadata {
                 abi.encodePacked(
                     "data:application/json;base64,",
                     Base64.encode(
-                        abi.encodePacked(
-                            '{"name":"RegenBingo"'
-                            '","description":"RegenBingo is a simple experimental game to raise ETH for public goods funding while entertaining us greenpilled regens.","image":"'
-                            ""
-                            '","external_url":"https://www.regen.bingo"}'
-                        )
+                        '{"name":"RegenBingo","description":"RegenBingo is a simple experimental game to raise ETH for public goods funding while entertaining us greenpilled regens.","image":"...","external_url":"https://www.regen.bingo"}'
                     )
                 )
             );
+    }
+    function _generateImageStringFraction(
+        uint256 tokenId,
+        uint256[9][3] calldata numbers,
+        bool[9][3] calldata covered
+    ) internal view returns (string memory) {
+        string memory svg = svgGenerator.generateTokenSVG(tokenId, numbers, covered);
+        return string(
+            abi.encodePacked(
+                "data:image/svg+xml;base64,",
+                Base64.encode(bytes(svg))
+            )
+        );
     }
 }
