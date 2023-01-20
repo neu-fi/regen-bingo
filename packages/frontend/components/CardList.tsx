@@ -1,10 +1,9 @@
 import Card, { ICard } from "@/components/Card";
 import { useBingoContract } from "@/hooks/useBingoContract";
-import { errorSlicing, getToken, svg } from "@/utils/utils";
-import { Contract } from "ethers";
+import { getToken } from "@/utils/utils";
+import { BigNumber, Contract } from "ethers";
 import { PropsWithChildren, useEffect, useState, useContext } from "react";
 import { useSigner, useAccount } from "wagmi";
-import { toast } from "react-toastify";
 import { NetworkContext } from "@/components/Layout";
 
 type CardListProps = {
@@ -33,10 +32,8 @@ function sortCards(
 
 export default function CardList(props: PropsWithChildren<CardListProps>) {
   const { trigger } = props;
-  const [cards, setCards] = useState<ICard[]>();
-  const [retry, setRetry] = useState<boolean>(false);
-  const [isNoCardsMinted, setIsNoCardsMinted] = useState<boolean>(true);
-  const [sort, setSort] = useState<SortType>({ sort: "desc", key: "matches" });
+  const [cardsCount, setCardsCount] = useState(0);
+  const [cardsMap, setCardsMap] = useState(new Map<string, ICard>());
 
   const networkState: boolean = useContext(NetworkContext);
 
@@ -46,61 +43,26 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
   const contract: Contract | undefined = useBingoContract(signer.data);
 
   useEffect(() => {
-    if (!networkState) {
-      return;
+    if (networkState && isConnected && contract?.provider && account?.address) {
+      contract.balanceOf(account.address).then((balance: BigNumber) => {
+        setCardsCount(Number(balance));
+      })
+    }
+  }, [contract, isConnected, networkState, trigger]);
+
+  useEffect(() => {
+    for (let i = 0; i < cardsCount; i++) {
+      console.log("looking index:", i)
+      contract!.tokenOfOwnerByIndex(account.address, i).then((bigNumber: BigNumber) => {
+        const tokenId: string = bigNumber._hex.toString();
+        if (!cardsMap.get(tokenId)) {
+          console.log("setting i:", i)
+          getToken(contract!, tokenId).then((card) => setCardsMap(cardsMap => new Map(cardsMap.set(tokenId, card))));
+        }
+      })
     }
 
-    async function fetchCardsOwnedByUser() {
-      if (!account.isConnected) {
-        toast.error("Please connect your wallet!");
-        return;
-      }
-      if (!contract) {
-        toast.error("Contract not found!");
-        return;
-      }
-
-      try {
-        const balance = await contract!.balanceOf(account.address!);
-        const balanceOfUser: Number = Number(balance);
-
-        if (balanceOfUser === 0) {
-          setIsNoCardsMinted(true);
-          return;
-        }
-
-        setIsNoCardsMinted(false);
-        let fetchedCards: ICard[] = [];
-        for (let i = 0; i < balanceOfUser; i++) {
-          const tokenId: string = (
-            await contract!.tokenOfOwnerByIndex(account.address, i)
-          )._hex.toString();
-          const card: ICard = await getToken(contract, tokenId);
-          fetchedCards.push(card);
-        }
-        return fetchedCards;
-      } catch (err: any) {
-        console.log(err);
-        if (!(err instanceof TypeError)) {
-          toast.error(`${errorSlicing(err.reason)}!`);
-        } else {
-          window.setTimeout(() => {
-            setRetry(true);
-          }, 1);
-        }
-      }
-    }
-    setRetry(false);
-    if (isConnected && contract) {
-      fetchCardsOwnedByUser().then((fetchedCards) => {
-        if (fetchedCards && fetchedCards.length > 0) {
-          setCards(sortCards(fetchedCards!));
-        } else {
-          setIsNoCardsMinted(true);
-        }
-      });
-    }
-  }, [networkState, retry, trigger]);
+  }, [cardsCount]);
 
   return (
     <>
@@ -110,63 +72,35 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
         </p>
       ) : (
         <>
-          {isNoCardsMinted ? (
-            <p className="mt-6 text-lg leading-8 text-gray-600 sm:text-center">
+          {cardsMap.size == 0 ? (
+            <p className="mb-6 text-lg leading-8 text-gray-600 sm:text-center">
               You don't have any Regen Bingo Cards.
             </p>
           ) : (
             <>
-              {cards ? (
-                <div className="bg-white rounded-2xl shadow-2xl my-4">
-                  <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8 lg:py-12 ">
-                    <div className="space-y-12 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0">
-                      <div className="lg:col-span-2">
-                        <ul
-                          role="list"
-                          className="space-y-12 sm:-mt-8 sm:space-y-0 divide-y divide-gray-200 lg:gap-x-8 lg:space-y-0"
-                        >
-                          {cards &&
-                            cards!.map((card) => (
-                              <li key={card.id} className="sm:py-4">
-                                <Card card={card}></Card>
-                              </li>
-                            ))}
-                        </ul>
-                      </div>
+              <p className="mb-6 text-lg leading-8 text-gray-600 sm:text-center">
+                Displaying {cardsMap.size} out of {cardsCount} cards.
+              </p>
+              <div className="bg-white rounded-2xl shadow-2xl my-4">
+                <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8 lg:py-12 ">
+                  <div className="space-y-12 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0">
+                    <div className="lg:col-span-2">
+                      <ul
+                        role="list"
+                        className="space-y-12 sm:-mt-8 sm:space-y-0 divide-y divide-gray-200 lg:gap-x-8 lg:space-y-0"
+                      >
+                        {
+                          [...cardsMap.values()].map((card, index) => (
+                            <li key={card.id} className="sm:py-4">
+                              <Card card={card}></Card>
+                            </li>
+                          ))
+                        }
+                      </ul>
                     </div>
                   </div>
                 </div>
-              ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlnsXlink="http://www.w3.org/1999/xlink"
-                  style={{
-                    margin: "auto",
-
-                    display: "block",
-                  }}
-                  shapeRendering="auto"
-                  width="200px"
-                  height="200px"
-                  viewBox="0 0 100 100"
-                  preserveAspectRatio="xMidYMid"
-                >
-                  <path
-                    d="M10 50A40 40 0 0 0 90 50A40 43.4 0 0 1 10 50"
-                    fill="#d4ecc9"
-                    stroke="none"
-                  >
-                    <animateTransform
-                      attributeName="transform"
-                      type="rotate"
-                      dur="1.1764705882352942s"
-                      repeatCount="indefinite"
-                      keyTimes="0;1"
-                      values="0 50 51.7;360 50 51.7"
-                    ></animateTransform>
-                  </path>
-                </svg>
-              )}
+              </div>
             </>
           )}
         </>
