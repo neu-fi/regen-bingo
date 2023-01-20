@@ -806,8 +806,1172 @@
       "name": "localhost",
       "chainId": "31337",
       "contracts": {
+        "DateTime": {
+          "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+          "abi": []
+        },
+        "DateTimeContract": {
+          "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+          "abi": [
+            {
+              "inputs": [],
+              "name": "DOW_FRI",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "DOW_MON",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "DOW_SAT",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "DOW_SUN",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "DOW_THU",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "DOW_TUE",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "DOW_WED",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "OFFSET19700101",
+              "outputs": [
+                {
+                  "internalType": "int256",
+                  "name": "",
+                  "type": "int256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "SECONDS_PER_DAY",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "SECONDS_PER_HOUR",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "SECONDS_PER_MINUTE",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "month",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "day",
+                  "type": "uint256"
+                }
+              ],
+              "name": "_daysFromDate",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_days",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_days",
+                  "type": "uint256"
+                }
+              ],
+              "name": "_daysToDate",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "month",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "day",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "month",
+                  "type": "uint256"
+                }
+              ],
+              "name": "_getDaysInMonth",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "daysInMonth",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                }
+              ],
+              "name": "_isLeapYear",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "leapYear",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "_now",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "_nowDateTime",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "month",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "day",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "hour",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "minute",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "second",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_days",
+                  "type": "uint256"
+                }
+              ],
+              "name": "addDays",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_hours",
+                  "type": "uint256"
+                }
+              ],
+              "name": "addHours",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_minutes",
+                  "type": "uint256"
+                }
+              ],
+              "name": "addMinutes",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_months",
+                  "type": "uint256"
+                }
+              ],
+              "name": "addMonths",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_seconds",
+                  "type": "uint256"
+                }
+              ],
+              "name": "addSeconds",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_years",
+                  "type": "uint256"
+                }
+              ],
+              "name": "addYears",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "fromTimestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "toTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "diffDays",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_days",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "fromTimestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "toTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "diffHours",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_hours",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "fromTimestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "toTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "diffMinutes",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_minutes",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "fromTimestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "toTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "diffMonths",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_months",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "fromTimestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "toTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "diffSeconds",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_seconds",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "fromTimestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "toTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "diffYears",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_years",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "getDay",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "day",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "getDayOfWeek",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "dayOfWeek",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "getDaysInMonth",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "daysInMonth",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "getHour",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "hour",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "getMinute",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "minute",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "getMonth",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "month",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "getSecond",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "second",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "getYear",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "isLeapYear",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "leapYear",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "month",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "day",
+                  "type": "uint256"
+                }
+              ],
+              "name": "isValidDate",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "valid",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "month",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "day",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "hour",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "minute",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "second",
+                  "type": "uint256"
+                }
+              ],
+              "name": "isValidDateTime",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "valid",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "isWeekDay",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "weekDay",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "isWeekEnd",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "weekEnd",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_days",
+                  "type": "uint256"
+                }
+              ],
+              "name": "subDays",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_hours",
+                  "type": "uint256"
+                }
+              ],
+              "name": "subHours",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_minutes",
+                  "type": "uint256"
+                }
+              ],
+              "name": "subMinutes",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_months",
+                  "type": "uint256"
+                }
+              ],
+              "name": "subMonths",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_seconds",
+                  "type": "uint256"
+                }
+              ],
+              "name": "subSeconds",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_years",
+                  "type": "uint256"
+                }
+              ],
+              "name": "subYears",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "month",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "day",
+                  "type": "uint256"
+                }
+              ],
+              "name": "timestampFromDate",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "month",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "day",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "hour",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "minute",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "second",
+                  "type": "uint256"
+                }
+              ],
+              "name": "timestampFromDateTime",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "timestampToDate",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "month",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "day",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "timestampToDateTime",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "month",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "day",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "hour",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "minute",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "second",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            }
+          ]
+        },
         "RegenBingo": {
-          "address": "0x4735b6AEe529640b265D50d1409c4503e4Ef2c23",
+          "address": "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1",
           "abi": [
             {
               "inputs": [
@@ -835,6 +1999,11 @@
                   "internalType": "uint256",
                   "name": "_drawNumberCooldownSeconds",
                   "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "_donationName",
+                  "type": "string"
                 },
                 {
                   "internalType": "address payable",
@@ -1034,6 +2203,25 @@
                   "type": "uint256"
                 }
               ],
+              "name": "covered",
+              "outputs": [
+                {
+                  "internalType": "bool[9][3]",
+                  "name": "covered",
+                  "type": "bool[9][3]"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                }
+              ],
               "name": "coveredNumbers",
               "outputs": [
                 {
@@ -1053,6 +2241,19 @@
                   "internalType": "address payable",
                   "name": "",
                   "type": "address"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "donationName",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
                 }
               ],
               "stateMutability": "view",
@@ -1203,6 +2404,19 @@
               "type": "function"
             },
             {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "mintCount",
+                  "type": "uint256"
+                }
+              ],
+              "name": "mintMultiple",
+              "outputs": [],
+              "stateMutability": "payable",
+              "type": "function"
+            },
+            {
               "inputs": [],
               "name": "mintPrice",
               "outputs": [
@@ -1223,6 +2437,25 @@
                   "internalType": "string",
                   "name": "",
                   "type": "string"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                }
+              ],
+              "name": "numbers",
+              "outputs": [
+                {
+                  "internalType": "uint256[9][3]",
+                  "name": "numbers",
+                  "type": "uint256[9][3]"
                 }
               ],
               "stateMutability": "view",
@@ -1456,7 +2689,7 @@
           ]
         },
         "RegenBingoMetadata": {
-          "address": "0xbD69D89BD54d08B82D642DeB1293Ee380D93BBD8",
+          "address": "0x0B306BF915C4d645ff596e518fAf3F9669b97016",
           "abi": [
             {
               "inputs": [
@@ -1498,6 +2731,31 @@
                   "internalType": "bool[9][3]",
                   "name": "covered",
                   "type": "bool[9][3]"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "donationAmount",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "donationName",
+                  "type": "string"
+                },
+                {
+                  "internalType": "address",
+                  "name": "donationAddress",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "isBingoFinished",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "drawTimestamp",
+                  "type": "uint256"
                 }
               ],
               "name": "generateTokenURI",
@@ -1527,8 +2785,19 @@
           ]
         },
         "RegenBingoSVG": {
-          "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+          "address": "0x9A676e781A523b5d0C0e43731313A708CB607508",
           "abi": [
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "_dateTimeContractAddress",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "constructor"
+            },
             {
               "inputs": [
                 {
@@ -1545,6 +2814,31 @@
                   "internalType": "bool[9][3]",
                   "name": "covered",
                   "type": "bool[9][3]"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "donationAmount",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "donationName",
+                  "type": "string"
+                },
+                {
+                  "internalType": "address",
+                  "name": "donationAddress",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "isBingoFinished",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "drawTimestamp",
+                  "type": "uint256"
                 }
               ],
               "name": "generateTokenSVG",

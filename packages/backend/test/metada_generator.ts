@@ -35,7 +35,7 @@ describe("RegenBingoMetadata", function () {
   
         const numbers = [[1,2,3,0,0,0,0,0,0],[0,0,0,1,2,3,0,0,0],[0,0,0,0,0,0,1,2,3]];
         const covered = [[1,0,0,0,0,0,0,0,0],[0,0,0,0,1,0,0,0,0],[0,0,0,0,0,0,0,0,1]];
-          const tokenId = 1;
+        const tokenId = 1;
   
         const uri = await regenBingoMetadata.generateTokenURI(tokenId, numbers, covered);
         console.log("Token uri is: ", uri);

@@ -33,7 +33,8 @@ describe("RegenBingoSVG", function () {
     })
     it("Image SVG test: 9 two digits number 3 of them lucky", async function () {
         const { regenBingoSVG } = await loadFixture(deployRegenBingoSVGFixture);
-  
+
+        const tokenId = 1;
         const numbers = [[11,12,13,0,0,0,0,0,0],[0,0,0,11,12,13,0,0,0],[0,0,0,0,0,0,11,12,13]];
         const covered = [[1,0,0,0,0,0,0,0,0],[0,0,0,0,1,0,0,0,0],[0,0,0,0,0,0,0,0,1]];
   
@@ -42,7 +43,8 @@ describe("RegenBingoSVG", function () {
       })
       it("Image SVG test: 9 number all of them lucky", async function () {
         const { regenBingoSVG } = await loadFixture(deployRegenBingoSVGFixture);
-  
+        
+        const tokenId = 2;
         const numbers = [[11,12,13,0,0,0,0,0,0],[0,0,0,11,12,13,0,0,0],[0,0,0,0,0,0,11,12,13]];
         const covered = [[1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1]];
   
@@ -52,6 +54,7 @@ describe("RegenBingoSVG", function () {
       it("Image SVG test: No number but all of them lucky", async function () {
         const { regenBingoSVG } = await loadFixture(deployRegenBingoSVGFixture);
   
+        const tokenId = 3;
         const numbers = [[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0]];
         const covered = [[1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1]];
   
