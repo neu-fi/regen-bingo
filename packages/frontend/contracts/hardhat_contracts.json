@@ -5,7 +5,7 @@
       "chainId": "5",
       "contracts": {
         "RegenBingo": {
-          "address": "0x534cf617A40440C13F8feA7bCAaA7fC4c45a791c",
+          "address": "0xE15e8e8D54D94657e158c30c6c78522dBa732318",
           "abi": [
             {
               "inputs": [
@@ -232,6 +232,25 @@
                   "type": "uint256"
                 }
               ],
+              "name": "covered",
+              "outputs": [
+                {
+                  "internalType": "bool[9][3]",
+                  "name": "covered",
+                  "type": "bool[9][3]"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                }
+              ],
               "name": "coveredNumbers",
               "outputs": [
                 {
@@ -353,7 +372,7 @@
                   "type": "uint256"
                 }
               ],
-              "stateMutability": "pure",
+              "stateMutability": "view",
               "type": "function"
             },
             {
@@ -401,6 +420,19 @@
               "type": "function"
             },
             {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "mintCount",
+                  "type": "uint256"
+                }
+              ],
+              "name": "mintMultiple",
+              "outputs": [],
+              "stateMutability": "payable",
+              "type": "function"
+            },
+            {
               "inputs": [],
               "name": "mintPrice",
               "outputs": [
@@ -421,6 +453,25 @@
                   "internalType": "string",
                   "name": "",
                   "type": "string"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                }
+              ],
+              "name": "numbers",
+              "outputs": [
+                {
+                  "internalType": "uint256[9][3]",
+                  "name": "numbers",
+                  "type": "uint256[9][3]"
                 }
               ],
               "stateMutability": "view",
@@ -654,7 +705,7 @@
           ]
         },
         "RegenBingoMetadata": {
-          "address": "0x7AE85e9FB1DF8B73b3A43A015218E3aB6901060b",
+          "address": "0x550e2c1C1dAaF33366FCea885Ec5710858654995",
           "abi": [
             {
               "inputs": [
@@ -708,11 +759,24 @@
               ],
               "stateMutability": "view",
               "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "svgGenerator",
+              "outputs": [
+                {
+                  "internalType": "contract IRegenBingoSVG",
+                  "name": "",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
             }
           ]
         },
         "RegenBingoSVG": {
-          "address": "0x0EDfe499b3bC84A9c83967EF881298Bf21280Cab",
+          "address": "0x738f9F7F1916219dE3BEF85694584d2815d19219",
           "abi": [
             {
               "inputs": [
@@ -807,7 +871,7 @@
       "chainId": "31337",
       "contracts": {
         "RegenBingo": {
-          "address": "0x4735b6AEe529640b265D50d1409c4503e4Ef2c23",
+          "address": "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c",
           "abi": [
             {
               "inputs": [
@@ -1034,6 +1098,25 @@
                   "type": "uint256"
                 }
               ],
+              "name": "covered",
+              "outputs": [
+                {
+                  "internalType": "bool[9][3]",
+                  "name": "covered",
+                  "type": "bool[9][3]"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                }
+              ],
               "name": "coveredNumbers",
               "outputs": [
                 {
@@ -1203,6 +1286,19 @@
               "type": "function"
             },
             {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "mintCount",
+                  "type": "uint256"
+                }
+              ],
+              "name": "mintMultiple",
+              "outputs": [],
+              "stateMutability": "payable",
+              "type": "function"
+            },
+            {
               "inputs": [],
               "name": "mintPrice",
               "outputs": [
@@ -1223,6 +1319,25 @@
                   "internalType": "string",
                   "name": "",
                   "type": "string"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                }
+              ],
+              "name": "numbers",
+              "outputs": [
+                {
+                  "internalType": "uint256[9][3]",
+                  "name": "numbers",
+                  "type": "uint256[9][3]"
                 }
               ],
               "stateMutability": "view",
@@ -1456,7 +1571,7 @@
           ]
         },
         "RegenBingoMetadata": {
-          "address": "0xbD69D89BD54d08B82D642DeB1293Ee380D93BBD8",
+          "address": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
           "abi": [
             {
               "inputs": [
@@ -1527,7 +1642,7 @@
           ]
         },
         "RegenBingoSVG": {
-          "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+          "address": "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
           "abi": [
             {
               "inputs": [
