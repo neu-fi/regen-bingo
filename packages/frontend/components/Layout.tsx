@@ -6,6 +6,7 @@ import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useProvider } from "wagmi";
 import { getNetwork, GetNetworkResult, watchNetwork } from "@wagmi/core";
+import { CHAIN_ID } from "@/config";
 
 type LayoutProps = {};
 
@@ -35,6 +36,10 @@ function Layout(props: PropsWithChildren<LayoutProps>) {
   });
 
   useEffect(() => {
+    if (network.chain?.id == CHAIN_ID) {
+      setIsOnCorrectNetwork(true);
+    }
+
     const contractState = async () => {
       try {
         const state = await contract!.bingoState();
