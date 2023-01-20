@@ -12,9 +12,8 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     console.log(await regenBingoContract.totalSupply());
     
     console.log("\nMinting...");
-    await regenBingoContract.mint({ value: mintPrice })
-    await regenBingoContract.mintMultiple(91, { value: mintPrice.mul(91) })
-    let tx = await regenBingoContract.mint({ value: mintPrice })
+    await regenBingoContract.mintMultiple(3, { value: mintPrice.mul(3) });
+    let tx = await regenBingoContract.mint({ value: mintPrice });
     await tx.wait();
     
     console.log("\ntotalSupply():");
@@ -35,10 +34,6 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     console.log("\nDecoded image:");
     console.log(decodedImage);
-
-    console.log("\nBalance of RegenBingo Contract:");
-    let balanceOfRegenBingo = Number(await hre.ethers.provider.getBalance(regenBingoContract.address))
-    console.log(balanceOfRegenBingo, "as wei")
   }
 };
 

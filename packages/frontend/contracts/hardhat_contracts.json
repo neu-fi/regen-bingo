@@ -2035,7 +2035,7 @@
           ]
         },
         "RegenBingo": {
-          "address": "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c",
+          "address": "0x1291Be112d480055DaFd8a610b7d1e203891C274",
           "abi": [
             {
               "inputs": [
@@ -2753,7 +2753,7 @@
           ]
         },
         "RegenBingoMetadata": {
-          "address": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
+          "address": "0x4c5859f0F772848b2D91F1D83E2Fe57935348029",
           "abi": [
             {
               "inputs": [
@@ -2849,7 +2849,7 @@
           ]
         },
         "RegenBingoSVG": {
-          "address": "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
+          "address": "0x809d550fca64d94Bd9F66E60752A544199cfAC3D",
           "abi": [
             {
               "inputs": [
