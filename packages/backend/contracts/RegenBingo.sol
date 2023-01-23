@@ -279,7 +279,7 @@ contract RegenBingo is ERC721Enumerable {
                 tokenId,
                 numbers(tokenId),
                 covered(tokenId),
-                address(this).balance / 2,
+                mintPrice / 2,
                 donationName,
                 donationAddress,
                 bingoState == BingoState.FINISHED,
