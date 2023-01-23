@@ -870,12 +870,8 @@
       "name": "localhost",
       "chainId": "31337",
       "contracts": {
-        "DateTime": {
-          "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-          "abi": []
-        },
         "DateTimeContract": {
-          "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+          "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
           "abi": [
             {
               "inputs": [],
@@ -2034,8 +2030,174 @@
             }
           ]
         },
+        "RegenBingoSVG": {
+          "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+          "abi": [
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "_dateTimeContractAddress",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "constructor"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256[9][3]",
+                  "name": "numbers",
+                  "type": "uint256[9][3]"
+                },
+                {
+                  "internalType": "bool[9][3]",
+                  "name": "covered",
+                  "type": "bool[9][3]"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "donationAmount",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "donationName",
+                  "type": "string"
+                },
+                {
+                  "internalType": "address",
+                  "name": "donationAddress",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "isBingoFinished",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "drawTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "generateTokenSVG",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            }
+          ]
+        },
+        "RegenBingoMetadata": {
+          "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+          "abi": [
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "_svgGeneratorAddress",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "constructor"
+            },
+            {
+              "inputs": [],
+              "name": "generateContractURI",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256[9][3]",
+                  "name": "numbers",
+                  "type": "uint256[9][3]"
+                },
+                {
+                  "internalType": "bool[9][3]",
+                  "name": "covered",
+                  "type": "bool[9][3]"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "donationAmount",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "donationName",
+                  "type": "string"
+                },
+                {
+                  "internalType": "address",
+                  "name": "donationAddress",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "isBingoFinished",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "drawTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "generateTokenURI",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "svgGenerator",
+              "outputs": [
+                {
+                  "internalType": "contract IRegenBingoSVG",
+                  "name": "",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            }
+          ]
+        },
         "RegenBingo": {
-          "address": "0x1291Be112d480055DaFd8a610b7d1e203891C274",
+          "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
           "abi": [
             {
               "inputs": [
@@ -2748,172 +2910,6 @@
               "name": "transferFrom",
               "outputs": [],
               "stateMutability": "nonpayable",
-              "type": "function"
-            }
-          ]
-        },
-        "RegenBingoMetadata": {
-          "address": "0x4c5859f0F772848b2D91F1D83E2Fe57935348029",
-          "abi": [
-            {
-              "inputs": [
-                {
-                  "internalType": "address",
-                  "name": "_svgGeneratorAddress",
-                  "type": "address"
-                }
-              ],
-              "stateMutability": "nonpayable",
-              "type": "constructor"
-            },
-            {
-              "inputs": [],
-              "name": "generateContractURI",
-              "outputs": [
-                {
-                  "internalType": "string",
-                  "name": "",
-                  "type": "string"
-                }
-              ],
-              "stateMutability": "pure",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "tokenId",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "uint256[9][3]",
-                  "name": "numbers",
-                  "type": "uint256[9][3]"
-                },
-                {
-                  "internalType": "bool[9][3]",
-                  "name": "covered",
-                  "type": "bool[9][3]"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "donationAmount",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "string",
-                  "name": "donationName",
-                  "type": "string"
-                },
-                {
-                  "internalType": "address",
-                  "name": "donationAddress",
-                  "type": "address"
-                },
-                {
-                  "internalType": "bool",
-                  "name": "isBingoFinished",
-                  "type": "bool"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "drawTimestamp",
-                  "type": "uint256"
-                }
-              ],
-              "name": "generateTokenURI",
-              "outputs": [
-                {
-                  "internalType": "string",
-                  "name": "",
-                  "type": "string"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [],
-              "name": "svgGenerator",
-              "outputs": [
-                {
-                  "internalType": "contract IRegenBingoSVG",
-                  "name": "",
-                  "type": "address"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            }
-          ]
-        },
-        "RegenBingoSVG": {
-          "address": "0x809d550fca64d94Bd9F66E60752A544199cfAC3D",
-          "abi": [
-            {
-              "inputs": [
-                {
-                  "internalType": "address",
-                  "name": "_dateTimeContractAddress",
-                  "type": "address"
-                }
-              ],
-              "stateMutability": "nonpayable",
-              "type": "constructor"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "tokenId",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "uint256[9][3]",
-                  "name": "numbers",
-                  "type": "uint256[9][3]"
-                },
-                {
-                  "internalType": "bool[9][3]",
-                  "name": "covered",
-                  "type": "bool[9][3]"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "donationAmount",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "string",
-                  "name": "donationName",
-                  "type": "string"
-                },
-                {
-                  "internalType": "address",
-                  "name": "donationAddress",
-                  "type": "address"
-                },
-                {
-                  "internalType": "bool",
-                  "name": "isBingoFinished",
-                  "type": "bool"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "drawTimestamp",
-                  "type": "uint256"
-                }
-              ],
-              "name": "generateTokenSVG",
-              "outputs": [
-                {
-                  "internalType": "string",
-                  "name": "",
-                  "type": "string"
-                }
-              ],
-              "stateMutability": "view",
               "type": "function"
             }
           ]
