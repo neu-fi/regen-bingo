@@ -260,7 +260,7 @@ contract RegenBingoSVG is IRegenBingoSVG {
         decimalPart = Strings.toString(amount / 1 ether);
 
         if (amount % 1 ether == 0) {
-            floatingPart = ".00 ETH";
+            floatingPart = ".00";
         } else {
             bytes memory fpart = bytes(Strings.toString(amount % 1 ether));
             uint256 numberOfZeroes = 18 - fpart.length;
