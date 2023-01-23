@@ -1,13 +1,13 @@
 import {HardhatRuntimeEnvironment} from 'hardhat/types';
 import {DeployFunction} from 'hardhat-deploy/types';
-import { DateTimeContractAddress, regenBingoArgs } from '../config';
+import { DateTimeContractAddress, LinkAddress, WrapperAddress, regenBingoArgs } from '../config';
 
 const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const {getNamedAccounts, deployments} = hre;
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
 
-  let dateTimeContractAddress:any = DateTimeContractAddress();
+  let dateTimeContractAddress = DateTimeContractAddress;
   
   if(dateTimeContractAddress == null){
     let dateTimeContract = await deploy('DateTimeContract', {
@@ -16,6 +16,16 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     })
     dateTimeContractAddress = dateTimeContract.address;
   };
+
+  let linkAddress = LinkAddress;
+  if(linkAddress == null){
+    //deploy link token to hardhat
+  }
+
+  let wrapperAddress = WrapperAddress;
+  if(wrapperAddress == null){
+    //deploy wrapper to hardhat
+  }
 
   let regenBingoSVG = await deploy('RegenBingoSVG', {
     args: [dateTimeContractAddress],
@@ -30,7 +40,7 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   });
 
   await deploy('RegenBingo', {
-    args: [...regenBingoArgs, regenBingoMetadata.address],
+    args: [...regenBingoArgs, regenBingoMetadata.address, linkAddress, wrapperAddress],
     from: deployer,
     log: true,
   });
