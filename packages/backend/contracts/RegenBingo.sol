@@ -6,8 +6,9 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "./interfaces/IRegenBingoMetadata.sol";
+import "@chainlink/contracts/src/v0.8/VRFV2WrapperConsumerBase.sol";
 
-contract RegenBingo is ERC721Enumerable {
+contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
     using Strings for uint256;
     using EnumerableSet for EnumerableSet.UintSet;
 
@@ -147,6 +148,14 @@ contract RegenBingo is ERC721Enumerable {
     address payable public donationAddress;
     EnumerableSet.UintSet private drawnNumbers;
 
+    //RandomRequest ID = 0
+    bool public isRandomSeedFulfilled = false;
+    uint256 public randomSeed;
+    uint32 callbackGasLimit = 100000;
+    uint16 requestConfirmations = 3;
+    uint32 numWords = 1;
+    uint256 public requestBlockNumber;
+
     /*//////////////////////////////////////////////////////////////
                                  EVENTS
     //////////////////////////////////////////////////////////////*/
@@ -167,8 +176,13 @@ contract RegenBingo is ERC721Enumerable {
         uint256 _drawNumberCooldownSeconds,
         string memory _donationName,
         address payable _donationAddress,
-        address _metadataGenerator
-    ) ERC721(_name, _symbol) {
+        address _metadataGenerator,
+        address _linkAddress,
+        address _wrapperAddress
+    )
+        ERC721(_name, _symbol)
+        VRFV2WrapperConsumerBase(_linkAddress, _wrapperAddress)
+    {
         mintPrice = _mintPrice;
         drawTimestamp = _drawTimestamp;
         drawNumberCooldownSeconds = _drawNumberCooldownSeconds;
@@ -213,13 +227,21 @@ contract RegenBingo is ERC721Enumerable {
             block.timestamp > lastDrawTime + drawNumberCooldownSeconds,
             "Draw too soon"
         );
-        // TODO: Use VRF
+        require(
+            block.number > requestBlockNumber + requestConfirmations + 1,
+            "Waiting for random seed"
+        );
 
         uint256 nonce = 0;
         uint256 number = 1 +
             (uint256(
                 keccak256(
-                    abi.encodePacked(block.timestamp, block.difficulty, nonce)
+                    abi.encodePacked(
+                        block.timestamp,
+                        block.difficulty,
+                        randomSeed,
+                        nonce
+                    )
                 )
             ) % 90);
 
@@ -232,6 +254,7 @@ contract RegenBingo is ERC721Enumerable {
                             number,
                             block.timestamp,
                             block.difficulty,
+                            randomSeed,
                             nonce
                         )
                     )
@@ -259,8 +282,20 @@ contract RegenBingo is ERC721Enumerable {
     function startDrawPeriod() external {
         require(bingoState == BingoState.MINT);
         require(block.timestamp > drawTimestamp, "It is not draw period yet");
+        requestRandomness(callbackGasLimit, requestConfirmations, numWords);
+        requestBlockNumber = block.number;
         bingoState = BingoState.DRAW;
         emit DrawStarted();
+    }
+
+    function fulfillRandomWords(
+        uint256 _requestId,
+        uint256[] memory _randomWords
+    ) internal override {
+        require(bingoState == BingoState.DRAW, "It is not draw period yet");
+        require(isRandomSeedFulfilled == false, "Seed has already fulfilled");
+        randomSeed = _randomWords[0];
+        isRandomSeedFulfilled = true;
     }
 
     /*//////////////////////////////////////////////////////////////
