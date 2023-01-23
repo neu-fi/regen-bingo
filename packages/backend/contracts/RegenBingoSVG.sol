@@ -53,7 +53,7 @@ contract RegenBingoSVG is IRegenBingoSVG {
         "#ffe5b4",
         "#ffefd5"
     ];
-    string[12] months = [
+    string[12] Months = [
         "January",
         "February",
         "March",
@@ -216,7 +216,6 @@ contract RegenBingoSVG is IRegenBingoSVG {
 
         string memory minuteString;
         string memory hourString;
-        string memory dayString;
 
         if (minute < 10) {
             minuteString = string(
@@ -232,18 +231,12 @@ contract RegenBingoSVG is IRegenBingoSVG {
             hourString = Strings.toString(hour);
         }
 
-        if (day < 10) {
-            dayString = string(abi.encodePacked("0", Strings.toString(day)));
-        } else {
-            dayString = Strings.toString(day);
-        }
-
         return (
             string(
                 abi.encodePacked(
-                    months[month - 1],
+                    Months[month - 1],
                     " ",
-                    dayString,
+                    Strings.toString(day),
                     ", ",
                     Strings.toString(year),
                     " ",
@@ -264,19 +257,33 @@ contract RegenBingoSVG is IRegenBingoSVG {
         string memory decimalPart;
         string memory floatingPart;
 
+        decimalPart = Strings.toString(amount / 1 ether);
+
         if (amount % 1 ether == 0) {
-            decimalPart = Strings.toString(amount / 1 ether);
             floatingPart = ".00 ETH";
         } else {
-            decimalPart = Strings.toString(amount / 1 ether);
-            string memory fpart = Strings.toString((amount % 1 ether) / 1e16);
-            if (bytes(fpart).length == 1) {
-                floatingPart = string(abi.encodePacked(".0", fpart, " ETH"));
-            } else {
-                floatingPart = string(abi.encodePacked(".", fpart, " ETH"));
+            bytes memory fpart = bytes(Strings.toString(amount % 1 ether));
+            uint256 numberOfZeroes = 18 - fpart.length;
+
+            bool isFirstNonZeroSeen = false;
+
+            for (uint256 i = fpart.length; i > 0; i--) {
+                if (fpart[i - 1] != bytes1("0")) {
+                    isFirstNonZeroSeen = true;
+                }
+                if (isFirstNonZeroSeen) {
+                    floatingPart = string(
+                        abi.encodePacked(fpart[i - 1], floatingPart)
+                    );
+                }
             }
+
+            for (uint256 i = 0; i < numberOfZeroes; i++) {
+                floatingPart = string(abi.encodePacked("0", floatingPart));
+            }
+            floatingPart = string(abi.encodePacked(".", floatingPart));
         }
-        return string(abi.encodePacked(decimalPart, floatingPart));
+        return string(abi.encodePacked(decimalPart, floatingPart, " ETH"));
     }
 
     function _generateNumbers(
@@ -351,15 +358,20 @@ contract RegenBingoSVG is IRegenBingoSVG {
         return output;
     }
 
-    function _generatePillPattern(
-        uint256 tokenId
-    ) internal pure returns (string memory) {
-        return string(
-            abi.encodePacked(
-                '<use href="#pbg" class="rotate" transform="rotate(',
-                Strings.toString(uint256(keccak256(abi.encodePacked(tokenId))) % 360),
-                ' 1100 1100)"/>'
-            )
-        );
+    function _generatePillPattern(uint256 tokenId)
+        internal
+        pure
+        returns (string memory)
+    {
+        return
+            string(
+                abi.encodePacked(
+                    '<use href="#pbg" class="rotate" transform="rotate(',
+                    Strings.toString(
+                        uint256(keccak256(abi.encodePacked(tokenId))) % 360
+                    ),
+                    ' 1100 1100)"/>'
+                )
+            );
     }
 }
