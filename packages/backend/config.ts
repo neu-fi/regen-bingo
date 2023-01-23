@@ -4,6 +4,7 @@ import { parseEther } from 'ethers/lib/utils';
 
 dotenv.config({ path: '.env' });
 const network = process.env.NEXT_PUBLIC_NETWORK || 'localhost';
+console.log(process.env.NEXT_PUBLIC_NETWORK)
 
 const drawTimestamp = process.env.DRAW_TIMESTAMP || Math.floor(Date.now() / 1000) + 120;
 
@@ -20,11 +21,14 @@ export const regenBingoArgs: (string | number | BigNumber)[] = (() => {switch(ne
         return localhostArgs;
 }})();
 
-export const regenBingoSVGArgs: (string | number | BigNumber)[] = (() => {switch(network) {
-    case 'ethereum':
-        return ['0x23d23d8F243e57d0b924bff3A3191078Af325101']; //Deployed and verified DateTime contract by creators
-    case 'goerli':
-        return ['0x85CC560EfebA375959B0FBA451cF4eBD1c8E6FA6']; //Deployed and verified DateTime contract by Muhittin
-    default:
-        return [""];
-}})();
+export const DateTimeContractAddress = ():any => {
+    switch(network) {
+        case 'ethereum':
+            return '0x23d23d8F243e57d0b924bff3A3191078Af325101';
+        case 'goerli':
+            return '0x85CC560EfebA375959B0FBA451cF4eBD1c8E6FA6';
+        default:
+            return null;
+    }
+}
+
