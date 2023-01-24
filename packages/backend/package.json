@@ -25,6 +25,7 @@
     "hardhat": "^2.9.9",
     "hardhat-contract-sizer": "^2.6.1",
     "hardhat-deploy": "^0.11.10",
+    "hardhat-exposed": "^0.3.0",
     "ts-node": "^10.8.1",
     "typescript": "^4.8.4"
   },

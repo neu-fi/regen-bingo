@@ -12,9 +12,8 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     console.log(await regenBingoContract.totalSupply());
     
     console.log("\nMinting...");
-    await regenBingoContract.mint({ value: mintPrice })
-    await regenBingoContract.mintMultiple(3, { value: mintPrice.mul(3) })
-    let tx = await regenBingoContract.mint({ value: mintPrice })
+    await regenBingoContract.mintMultiple(3, { value: mintPrice.mul(3) });
+    let tx = await regenBingoContract.mint({ value: mintPrice });
     await tx.wait();
     
     console.log("\ntotalSupply():");

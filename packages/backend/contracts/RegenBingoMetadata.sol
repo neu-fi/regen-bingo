@@ -16,8 +16,13 @@ contract RegenBingoMetadata is IRegenBingoMetadata {
     function generateTokenURI(
         uint256 tokenId,
         uint256[9][3] calldata numbers,
-        bool[9][3] calldata covered
-    ) external view returns (string memory) {
+        bool[9][3] calldata covered,
+        uint256 donationAmount,
+        string memory donationName,
+        address donationAddress,
+        bool isBingoFinished,
+        uint256 drawTimestamp
+    ) external view virtual returns (string memory) {
         string memory json = Base64.encode(
             bytes(
                 string(
@@ -25,7 +30,16 @@ contract RegenBingoMetadata is IRegenBingoMetadata {
                         '{"name":"RegenBingo #',
                         Strings.toString(tokenId),
                         '","description":"...","image":"',
-                        _generateImageStringFraction(tokenId, numbers, covered),
+                        _generateImageStringFraction(
+                            tokenId,
+                            numbers,
+                            covered,
+                            donationAmount,
+                            donationName,
+                            donationAddress,
+                            isBingoFinished,
+                            drawTimestamp
+                        ),
                         '"}'
                     )
                 )
@@ -45,17 +59,33 @@ contract RegenBingoMetadata is IRegenBingoMetadata {
                 )
             );
     }
+
     function _generateImageStringFraction(
         uint256 tokenId,
         uint256[9][3] calldata numbers,
-        bool[9][3] calldata covered
+        bool[9][3] calldata covered,
+        uint256 donationAmount,
+        string memory donationName,
+        address donationAddress,
+        bool isBingoFinished,
+        uint256 drawTimestamp
     ) internal view returns (string memory) {
-        string memory svg = svgGenerator.generateTokenSVG(tokenId, numbers, covered);
-        return string(
-            abi.encodePacked(
-                "data:image/svg+xml;base64,",
-                Base64.encode(bytes(svg))
-            )
+        string memory svg = svgGenerator.generateTokenSVG(
+            tokenId,
+            numbers,
+            covered,
+            donationAmount,
+            donationName,
+            donationAddress,
+            isBingoFinished,
+            drawTimestamp
         );
+        return
+            string(
+                abi.encodePacked(
+                    "data:image/svg+xml;base64,",
+                    Base64.encode(bytes(svg))
+                )
+            );
     }
 }

@@ -5,6 +5,7 @@ import 'hardhat-deploy';
 import 'hardhat-contract-sizer';
 import '@nomiclabs/hardhat-ethers';
 import '@nomiclabs/hardhat-etherscan';
+import 'hardhat-exposed';
 
 dotenv.config({ path: '.env' });
 const defaultNetwork = process.env.NEXT_PUBLIC_NETWORK || 'localhost';
