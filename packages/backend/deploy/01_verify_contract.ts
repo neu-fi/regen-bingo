@@ -1,10 +1,10 @@
-import {HardhatRuntimeEnvironment} from 'hardhat/types';
-import {DeployFunction} from 'hardhat-deploy/types';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { DeployFunction } from 'hardhat-deploy/types';
 import { regenBingoArgs, DateTimeContractAddress, LinkAddress, WrapperAddress } from '../config';
 
 const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   if (hre.network.name !== 'localhost') {
-    const {deployments} = hre;
+    const { deployments } = hre;
 
     let dateTimeContractAddress = DateTimeContractAddress;
     if(dateTimeContractAddress == null){

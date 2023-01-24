@@ -53,7 +53,7 @@ export const regenBingoArgs: (string | number | BigNumber)[] = (() => {
   }
 })();
 
-export const LinkAddress: (string | any) = (() => {
+export const LinkAddress: (string | null) = (() => {
   switch (network) {
     case 'ethereum':
       return '0x514910771AF9Ca656af840dff83E8264EcF986CA';
@@ -64,7 +64,7 @@ export const LinkAddress: (string | any) = (() => {
   }
 })();
 
-export const WrapperAddress: (string | any) = (() => {
+export const WrapperAddress: (string | null) = (() => {
   switch (network) {
     case 'ethereum':
       return '0x5A861794B927983406fCE1D062e00b9368d97Df6';
@@ -75,7 +75,7 @@ export const WrapperAddress: (string | any) = (() => {
   }
 })();
 
-export const DateTimeContractAddress: (string | any) = (() => {
+export const DateTimeContractAddress: (string | null) = (() => {
   switch (network) {
     case 'ethereum':
       return '0x23d23d8F243e57d0b924bff3A3191078Af325101';

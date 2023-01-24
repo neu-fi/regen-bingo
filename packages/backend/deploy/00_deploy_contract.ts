@@ -1,15 +1,16 @@
-import {HardhatRuntimeEnvironment} from 'hardhat/types';
-import {DeployFunction} from 'hardhat-deploy/types';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { DeployFunction } from 'hardhat-deploy/types';
 import { DateTimeContractAddress, LinkAddress, WrapperAddress, regenBingoArgs } from '../config';
+import { BigNumber } from 'ethers';
 
 const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  const { getNamedAccounts, deployments } = hre;
+  const { deployer } = await hre.getNamedAccounts();
+  const { deployments } = hre;
   const { deploy } = deployments;
-  const { deployer } = await getNamedAccounts();
 
   let dateTimeContractAddress = DateTimeContractAddress;
   
-  if(dateTimeContractAddress == null){
+  if(dateTimeContractAddress == null) {
     let dateTimeContract = await deploy('DateTimeContract', {
       from: deployer,
       log: true,
@@ -18,13 +19,25 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   }
 
   let linkAddress = LinkAddress;
-  if(linkAddress == null){
-    //deploy link token to hardhat
+  if(linkAddress == null) {
+    let linkToken = await deploy("LinkToken", {
+      from: deployer,
+      log: true,
+    });
+    linkAddress = linkToken.address;
   }
 
   let wrapperAddress = WrapperAddress;
-  if(wrapperAddress == null){
-    //deploy wrapper to hardhat
+  if(wrapperAddress == null) {
+    let vrfCoordinatorV2Mock = await deploy("VRFCoordinatorV2Mock", {
+      args: [
+        BigNumber.from('100000000000000000'), // 0.1 LINK
+        1e9, // 0.000000001 LINK per gas
+      ],
+      from: deployer,
+      log: true,
+    });
+    wrapperAddress = vrfCoordinatorV2Mock.address;
   }
 
   let regenBingoSVG = await deploy('RegenBingoSVG', {
