@@ -20,7 +20,7 @@ export const regenBingoArgs: (string | number | BigNumber)[] = (() => {switch(ne
         return localhostArgs;
 }})();
 
-export const dateTimeContractAddress : (string | any) = (() => {
+export const dateTimeContractAddress : (string | null) = (() => {
     switch(network) {
         case 'ethereum':
             return '0x23d23d8F243e57d0b924bff3A3191078Af325101';
