@@ -11,7 +11,9 @@ import { NetworkContext } from "@/components/Layout";
 
 export const DrawnCountDown = () => {
   const [remainingTime, setRemainingTime] = useState<number>();
-  const [drawTimestamp, setTimeStamp] = useState<number>(0);
+  const [drawTimestamp, setDrawTimestamp] = useState<number | undefined>(
+    undefined
+  );
 
   const networkState = useContext(NetworkContext);
 
@@ -22,7 +24,7 @@ export const DrawnCountDown = () => {
   watchNetwork((network) => setNetwork(network));
 
   function changeRemaining() {
-    const diff = drawTimestamp - Math.floor(Date.now() / 1000);
+    const diff = drawTimestamp! - Math.floor(Date.now() / 1000);
     setRemainingTime(diff);
   }
 
@@ -30,31 +32,39 @@ export const DrawnCountDown = () => {
     if (!networkState) {
       return;
     }
-    async function getDrawTime() {
+    const getDrawTime = async () => {
       try {
         if (!contract) {
           return;
         }
         const drawTime = Number(await contract.drawTimestamp());
-        setTimeStamp(drawTime);
+        return drawTime;
       } catch (err: any) {
         console.log(err);
         toast.error(`${errorSlicing(err.reason)}!`);
       }
-    }
+    };
 
     if (!network.chain) {
       return;
     }
 
     if (!drawTimestamp) {
-      getDrawTime();
+      getDrawTime().then((timeStamp) => {
+        setDrawTimestamp(timeStamp);
+      });
     }
-    const interval = setInterval(() => {
-      changeRemaining();
-    }, 1000);
-    return () => clearInterval(interval);
   }, [networkState]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (drawTimestamp !== undefined) {
+      interval = setInterval(() => {
+        changeRemaining();
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [drawTimestamp]);
 
   return (
     <>
