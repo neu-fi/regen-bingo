@@ -1491,7 +1491,7 @@
           ]
         },
         "RegenBingo": {
-          "address": "0x27d5244b0507dF445c5f110BaeD726d8adF47Bf8",
+          "address": "0xa6959Ad6517854E1399b02d8FbAa1b7B0b8B46d0",
           "abi": [
             {
               "inputs": [
@@ -1915,19 +1915,6 @@
             },
             {
               "inputs": [],
-              "name": "isRandomSeedFulfilled",
-              "outputs": [
-                {
-                  "internalType": "bool",
-                  "name": "",
-                  "type": "bool"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [],
               "name": "lastDrawTime",
               "outputs": [
                 {
@@ -2056,15 +2043,9 @@
             },
             {
               "inputs": [],
-              "name": "requestBlockNumber",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
-              "stateMutability": "view",
+              "name": "rerequestSeed",
+              "outputs": [],
+              "stateMutability": "nonpayable",
               "type": "function"
             },
             {

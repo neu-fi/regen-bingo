@@ -43,6 +43,11 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
         ]
     ];
 
+    uint32 constant VRF_CALLBACK_GAS_LIMIT = 100000;
+    uint16 constant VRF_REQUEST_CONFIRMATIONS = 3;
+    uint32 constant VRF_NUMBER_OF_WORDS = 1;
+    uint256 constant VRF_REREQUEST_COOLDOWN_BLOCKS = 1000;
+
     /*//////////////////////////////////////////////////////////////
                              STATE VARIABLES
     //////////////////////////////////////////////////////////////*/
@@ -58,13 +63,10 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
     address payable public donationAddress;
     EnumerableSet.UintSet private drawnNumbers;
 
-    //RandomRequest ID = 0
-    bool public isRandomSeedFulfilled = false;
+    // Chainlink VRF
+    uint256 lastRequestBlockNumber;
+    uint256 lastRequestId;
     uint256 public randomSeed;
-    uint32 callbackGasLimit = 100000;
-    uint16 requestConfirmations = 3;
-    uint32 numWords = 1;
-    uint256 public requestBlockNumber;
 
     /*//////////////////////////////////////////////////////////////
                                  EVENTS
@@ -133,22 +135,13 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
 
     function drawNumber() external returns (uint256) {
         require(bingoState == BingoState.DRAW, "Draw has not started");
-        require(
-            lastDrawTime + drawNumberCooldownSeconds <= block.timestamp,
-            "Draw too soon"
-        );
-        require(
-            block.number > requestBlockNumber + requestConfirmations + 1,
-            "Waiting for random seed"
-        );
+        require(randomSeed != 0, "Waiting for the random seed");
 
         uint256 nonce = 0;
         uint256 number = 1 +
             (uint256(
                 keccak256(
                     abi.encodePacked(
-                        block.timestamp,
-                        block.difficulty,
                         randomSeed,
                         nonce
                     )
@@ -161,9 +154,6 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
                 (uint256(
                     keccak256(
                         abi.encodePacked(
-                            number,
-                            block.timestamp,
-                            block.difficulty,
                             randomSeed,
                             nonce
                         )
@@ -191,21 +181,17 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
 
     function startDrawPeriod() external {
         require(bingoState == BingoState.MINT);
-        require(block.timestamp > drawTimestamp, "It is not draw period yet");
-        requestRandomness(callbackGasLimit, requestConfirmations, numWords);
-        requestBlockNumber = block.number;
+        require(drawTimestamp <= block.timestamp, "It is not draw period yet");
+
         bingoState = BingoState.DRAW;
         emit DrawStarted();
+        _requestSeed();
     }
 
-    function fulfillRandomWords(
-        uint256 _requestId,
-        uint256[] memory _randomWords
-    ) internal override {
-        require(bingoState == BingoState.DRAW, "It is not draw period yet");
-        require(isRandomSeedFulfilled == false, "Seed has already fulfilled");
-        randomSeed = _randomWords[0];
-        isRandomSeedFulfilled = true;
+    function rerequestSeed() external {
+        if (randomSeed == 0 && lastRequestBlockNumber + VRF_REREQUEST_COOLDOWN_BLOCKS <= block.number) {
+            _requestSeed();
+        }
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -301,5 +287,27 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
 
     function getDrawnNumbers() public view returns (uint256[] memory) {
         return drawnNumbers.values();
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                          INTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+    function fulfillRandomWords(
+        uint256 _requestId,
+        uint256[] memory _randomWords
+    ) internal override {
+        if (randomSeed == 0 && _requestId == lastRequestId) {
+            randomSeed = _randomWords[0];
+        }
+    }
+
+    function _requestSeed() internal {
+        lastRequestBlockNumber = block.number;
+        uint256 requestId = requestRandomness(
+            VRF_CALLBACK_GAS_LIMIT,
+            VRF_REQUEST_CONFIRMATIONS,
+            VRF_NUMBER_OF_WORDS
+        );
+        lastRequestId = requestId;
     }
 }
