@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
+import { ethers, deployments } from "hardhat";
 import { loadFixture, time } from "@nomicfoundation/hardhat-network-helpers";
 import { BigNumber } from "ethers";
 
@@ -15,6 +15,17 @@ describe("RegenBingo", function () {
         const drawTimestamp = (await time.latest()) + drawCooldownSeconds;
         const donationName = "Donation Name";
         const donationAddress = signer3.address;
+
+        const LinkToken = await ethers.getContractFactory("LinkToken");
+        const linkToken = await LinkToken.deploy();
+        await linkToken.deployed();
+
+        const VRFCoordinatorV2Mock = await ethers.getContractFactory("VRFCoordinatorV2Mock");
+        const vrfCoordinatorV2Mock = await VRFCoordinatorV2Mock.deploy(
+            BigNumber.from('100000000000000000'), // 0.1 LINK
+            1e9, // 0.000000001 LINK per gas
+        );
+        await vrfCoordinatorV2Mock.deployed();
 
         const DateTimeContract = await ethers.getContractFactory("DateTimeContract");
         const dateTimeContract = await DateTimeContract.deploy();
@@ -37,7 +48,9 @@ describe("RegenBingo", function () {
             drawNumberCooldownSeconds,
             donationName,
             donationAddress,
-            regenBingoMetadata.address
+            regenBingoMetadata.address,
+            linkToken.address,
+            vrfCoordinatorV2Mock.address
         );
         await regenBingo.deployed();
 
