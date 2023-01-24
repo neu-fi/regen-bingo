@@ -53,7 +53,7 @@ contract RegenBingoSVG is IRegenBingoSVG {
         "#ffe5b4",
         "#ffefd5"
     ];
-    string[12] Months = [
+    string[12] MONTHS = [
         "January",
         "February",
         "March",
@@ -234,7 +234,7 @@ contract RegenBingoSVG is IRegenBingoSVG {
         return (
             string(
                 abi.encodePacked(
-                    Months[month - 1],
+                    MONTHS[month - 1],
                     " ",
                     Strings.toString(day),
                     ", ",

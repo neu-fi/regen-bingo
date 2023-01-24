@@ -27,109 +27,19 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
     uint256 constant LAYOUTS_COUNT = 3;
     uint8[2][9][3][LAYOUTS_COUNT] LAYOUTS = [
         [
-            [
-                [1, 9],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [40, 5],
-                [56, 4],
-                [60, 10],
-                [77, 3],
-                [0, 0]
-            ],
-            [
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [30, 10],
-                [45, 5],
-                [53, 3],
-                [0, 0],
-                [74, 3],
-                [80, 6]
-            ],
-            [
-                [0, 0],
-                [10, 10],
-                [20, 10],
-                [0, 0],
-                [0, 0],
-                [50, 3],
-                [0, 0],
-                [70, 4],
-                [86, 5]
-            ]
+            [[ 1, 9], [ 0, 0], [ 0, 0], [ 0, 0], [40, 5], [56, 4], [60,10], [77, 3], [ 0, 0]],
+            [[ 0, 0], [ 0, 0], [ 0, 0], [30,10], [45, 5], [53, 3], [ 0, 0], [74, 3], [80, 6]],
+            [[ 0, 0], [10,10], [20,10], [ 0, 0], [ 0, 0], [50, 3], [ 0, 0], [70, 4], [86, 5]]
         ],
         [
-            [
-                [6, 4],
-                [10, 5],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [66, 4],
-                [75, 5],
-                [80, 11]
-            ],
-            [
-                [0, 0],
-                [0, 0],
-                [25, 5],
-                [30, 10],
-                [40, 10],
-                [50, 10],
-                [63, 3],
-                [0, 0],
-                [0, 0]
-            ],
-            [
-                [1, 5],
-                [15, 5],
-                [20, 5],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [60, 3],
-                [70, 5],
-                [0, 0]
-            ]
+            [[ 6, 4], [10, 5], [ 0, 0], [ 0, 0], [ 0, 0], [ 0, 0], [66, 4], [75, 5], [80,11]],
+            [[ 0, 0], [ 0, 0], [25, 5], [30,10], [40,10], [50,10], [63, 3], [ 0, 0], [ 0, 0]],
+            [[ 1, 5], [15, 5], [20, 5], [ 0, 0], [ 0, 0], [ 0, 0], [60, 3], [70, 5], [ 0, 0]]
         ],
         [
-            [
-                [1, 5],
-                [0, 0],
-                [25, 5],
-                [0, 0],
-                [0, 0],
-                [50, 10],
-                [0, 0],
-                [70, 5],
-                [88, 3]
-            ],
-            [
-                [0, 0],
-                [10, 10],
-                [20, 5],
-                [30, 10],
-                [0, 0],
-                [0, 0],
-                [65, 5],
-                [0, 0],
-                [84, 4]
-            ],
-            [
-                [6, 4],
-                [0, 0],
-                [0, 0],
-                [0, 0],
-                [40, 10],
-                [0, 0],
-                [60, 5],
-                [75, 5],
-                [80, 4]
-            ]
+            [[ 1, 5], [ 0, 0], [25, 5], [ 0, 0], [ 0, 0], [50,10], [ 0, 0], [70, 5], [88, 3]],
+            [[ 0, 0], [10,10], [20, 5], [30,10], [ 0, 0], [ 0, 0], [65, 5], [ 0, 0], [84, 4]],
+            [[ 6, 4], [ 0, 0], [ 0, 0], [ 0, 0], [40,10], [ 0, 0], [60, 5], [75, 5], [80, 4]]
         ]
     ];
 
@@ -196,7 +106,7 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
     //////////////////////////////////////////////////////////////*/
 
     function mint() external payable {
-        require(bingoState == BingoState.MINT, "It is not mint period");
+        require(bingoState == BingoState.MINT, "Minting has ended");
         require(msg.value == mintPrice, "Incorrect payment amount");
         // Using totalSupply() so that one can mint multiple different cards in a block
         uint256 tokenId = uint256(
@@ -208,7 +118,7 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
     }
 
     function mintMultiple(uint256 mintCount) external payable {
-        require(bingoState == BingoState.MINT, "It is not mint period");
+        require(bingoState == BingoState.MINT, "Minting has ended");
         require(msg.value == mintPrice * mintCount, "Incorrect payment amount");
         for (uint256 i = 0; i < mintCount; i++) {
             // Using totalSupply() so that one can mint multiple different cards in a block
@@ -222,9 +132,9 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
     }
 
     function drawNumber() external returns (uint256) {
-        require(bingoState == BingoState.DRAW, "It is not draw period");
+        require(bingoState == BingoState.DRAW, "Draw has not started");
         require(
-            block.timestamp > lastDrawTime + drawNumberCooldownSeconds,
+            lastDrawTime + drawNumberCooldownSeconds <= block.timestamp,
             "Draw too soon"
         );
         require(

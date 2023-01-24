@@ -3,7 +3,7 @@ import {DeployFunction} from 'hardhat-deploy/types';
 import { DateTimeContractAddress, LinkAddress, WrapperAddress, regenBingoArgs } from '../config';
 
 const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  const {getNamedAccounts, deployments} = hre;
+  const { getNamedAccounts, deployments } = hre;
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
 
@@ -13,9 +13,9 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     let dateTimeContract = await deploy('DateTimeContract', {
       from: deployer,
       log: true,
-    })
+    });
     dateTimeContractAddress = dateTimeContract.address;
-  };
+  }
 
   let linkAddress = LinkAddress;
   if(linkAddress == null){
@@ -33,7 +33,7 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     log: true,
   });
 
-  let regenBingoMetadata = await deploy('RegenBingoMetadata', {
+  let regenBingoMetadata = await deploy("RegenBingoMetadata", {
     args: [regenBingoSVG.address],
     from: deployer,
     log: true,
@@ -47,5 +47,5 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 };
 
 export default main;
- 
-export const tags = ['all', 'regen-bingo'];
+
+export const tags = ["all", "regen-bingo"];
