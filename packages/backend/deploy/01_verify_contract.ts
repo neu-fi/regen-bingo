@@ -1,15 +1,15 @@
 import {HardhatRuntimeEnvironment} from 'hardhat/types';
 import {DeployFunction} from 'hardhat-deploy/types';
-import { regenBingoArgs, DateTimeContractAddress } from '../config';
+import { regenBingoArgs, dateTimeContractAddress } from '../config';
 
 const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   if (hre.network.name !== 'localhost') {
     const {deployments} = hre;
 
-    let dateTimeContractAddress = DateTimeContractAddress()
-    if(dateTimeContractAddress == null){
+    let dateTimeAddress = dateTimeContractAddress;
+    if(dateTimeAddress == null){
       const dateTime = await deployments.get("RegenBingoSVG");
-      dateTimeContractAddress = dateTime.address;
+      dateTimeAddress = dateTime.address;
     }
 
     let regenBingoSVG = await deployments.get("RegenBingoSVG");
@@ -24,7 +24,7 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         counter0++;
         await hre.run("verify:verify", {
           address: regenBingoSVG.address,
-          constructorArguments : [dateTimeContractAddress]
+          constructorArguments : [dateTimeAddress]
         });
         skip0 = true;
         console.log("Verified!");

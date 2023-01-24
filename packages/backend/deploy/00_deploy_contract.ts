@@ -1,20 +1,20 @@
 import {HardhatRuntimeEnvironment} from 'hardhat/types';
 import {DeployFunction} from 'hardhat-deploy/types';
-import { DateTimeContractAddress, regenBingoArgs } from '../config';
+import { dateTimeContractAddress, regenBingoArgs } from '../config';
 
 const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const {getNamedAccounts, deployments} = hre;
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
 
-  let dateTimeContractAddress:any = DateTimeContractAddress();
+  let dateTimeAddress = dateTimeContractAddress;
   
   if(dateTimeContractAddress == null){
     let dateTimeContract = await deploy('DateTimeContract', {
       from: deployer,
       log: true,
     })
-    dateTimeContractAddress = dateTimeContract.address;
+    dateTimeAddress = dateTimeContract.address;
   };
 
   let regenBingoSVG = await deploy('RegenBingoSVG', {
