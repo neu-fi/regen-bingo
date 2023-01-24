@@ -18,7 +18,7 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   };
 
   let regenBingoSVG = await deploy('RegenBingoSVG', {
-    args: [dateTimeContractAddress],
+    args: [dateTimeAddress],
     from: deployer,
     log: true,
   });
