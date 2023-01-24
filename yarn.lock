@@ -1391,6 +1391,7 @@ __metadata:
     "@types/mocha": ^9.1.1
     "@types/node": ^18.0.0
     chai: ^4.3.6
+    chai-bignumber: ^3.1.0
     dotenv: ^16.0.0
     ethereum-waffle: ^3.4.4
     ethers: ^5.7.2
@@ -4470,6 +4471,13 @@ __metadata:
   dependencies:
     nofilter: ^3.1.0
   checksum: a90338435dc7b45cc01461af979e3bb6ddd4f2a08584c437586039cd5f2235014c06e49d664295debbfb3514d87b2f06728092ab6aa6175e2e85e9cd7dc0c1fd
+  languageName: node
+  linkType: hard
+
+"chai-bignumber@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "chai-bignumber@npm:3.1.0"
+  checksum: cbdd8a713c1c1a55a4c52ca08cf0d482c62712c32c79140373b65464b8b93f785bbd2c2e4da20d9b8e342f6548c4445999d2e3450858fbbe7dae82b0309247b2
   languageName: node
   linkType: hard
 

@@ -6,6 +6,11 @@ import 'hardhat-contract-sizer';
 import '@nomiclabs/hardhat-ethers';
 import '@nomiclabs/hardhat-etherscan';
 import 'hardhat-exposed';
+import chai from "chai";
+import { solidity } from "ethereum-waffle";
+
+chai.use(solidity);
+chai.use(require('chai-bignumber')());
 
 dotenv.config({ path: '.env' });
 const defaultNetwork = process.env.NEXT_PUBLIC_NETWORK || 'localhost';
