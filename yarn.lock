@@ -1397,6 +1397,7 @@ __metadata:
     hardhat: ^2.9.9
     hardhat-contract-sizer: ^2.6.1
     hardhat-deploy: ^0.11.10
+    hardhat-exposed: ^0.3.0
     ts-node: ^10.8.1
     typescript: ^4.8.4
   languageName: unknown
@@ -7790,6 +7791,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"hardhat-exposed@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "hardhat-exposed@npm:0.3.0"
+  dependencies:
+    micromatch: ^4.0.4
+    solidity-ast: ^0.4.25
+  peerDependencies:
+    hardhat: ^2.3.0
+  checksum: 7ccd0796809d5e3870c9a1a7bce2ddabf4fc9cc4b61630e78de74dcd4f4b017e7ff970da9f0dbc8128c8f4b376b3030217e6040a0bbaa75d73dfe68b5a10144b
+  languageName: node
+  linkType: hard
+
 "hardhat@npm:^2.9.9":
   version: 2.12.5
   resolution: "hardhat@npm:2.12.5"
@@ -12700,6 +12713,13 @@ __metadata:
   bin:
     solcjs: solcjs
   checksum: 1e2bf927f3ef4f3b195b7619ff64f715916d94dc59091a8a710e47bdd4b18e0bd92b55ea43a04ce7fabce9ad7a3e4e73ccaf127a50ebbf963a9de9046576e3b6
+  languageName: node
+  linkType: hard
+
+"solidity-ast@npm:^0.4.25":
+  version: 0.4.43
+  resolution: "solidity-ast@npm:0.4.43"
+  checksum: e002d09e0b2a033cd6eed8effa13de926a8525c9eb8634c83e3ac61354fbf9adde43b124e90ef567e6a877bdee9566d3fa686145205695f8ed20706a943d56c0
   languageName: node
   linkType: hard
 

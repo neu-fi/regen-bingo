@@ -14,7 +14,7 @@ import { useIsMounted } from "../hooks";
 import Layout from "@/components/Layout";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, Slide } from "react-toastify";
-import { green } from 'tailwindcss/colors';
+import { green } from "tailwindcss/colors";
 
 const { connectors } = getDefaultWallets({
   appName: "regen-bingo",
