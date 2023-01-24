@@ -10,18 +10,16 @@ const drawNumberCooldownSeconds = 60 * 5; // 5 minutes
 
 describe("RegenBingo", function () {
     async function deployBingoFixture() {
-
-        const DateTime = await ethers.getContractFactory("contracts/DateTimeContract.sol:DateTimeContract");
-        const dateTime = await DateTime.deploy();
-        await dateTime.deployed();
-
         const [signer1, signer2, signer3] = await ethers.getSigners();
         const drawTimestamp = (await time.latest()) + 3600;
         const donationAddress = signer3.address;
-        const donationName = 'The Gitcoin Alpha Round';
+
+        const DateTimeContract = await ethers.getContractFactory("DateTimeContract");
+        const dateTimeContract = await DateTimeContract.deploy();
+        await dateTimeContract.deployed();
 
         const RegenBingoSVG = await ethers.getContractFactory("RegenBingoSVG");
-        const regenBingoSVG = await RegenBingoSVG.deploy(dateTime.address);
+        const regenBingoSVG = await RegenBingoSVG.deploy(dateTimeContract.address);
         await regenBingoSVG.deployed();
 
         const RegenBingoMetadata = await ethers.getContractFactory("RegenBingoMetadata");
@@ -35,18 +33,17 @@ describe("RegenBingo", function () {
             mintPrice,
             drawTimestamp,
             drawNumberCooldownSeconds,
-            donationName,
             donationAddress,
             regenBingoMetadata.address
         );
         await regenBingo.deployed();
 
-        return { regenBingo, signer1, signer2, donationAddress, donationName, drawTimestamp };
+        return { regenBingo, signer1, signer2, donationAddress, drawTimestamp };
     }
 
     describe("Deployment", function () {
         it("Should set constructor arguments correctly", async function () {
-            const { regenBingo, donationAddress, donationName, drawTimestamp } = await loadFixture(deployBingoFixture);
+            const { regenBingo, donationAddress, drawTimestamp } = await loadFixture(deployBingoFixture);
 
             expect(await regenBingo.name()).to.equal(name);
             expect(await regenBingo.symbol()).to.equal(symbol);
@@ -54,7 +51,6 @@ describe("RegenBingo", function () {
             expect(await regenBingo.drawTimestamp()).to.equal(drawTimestamp);
             expect(await regenBingo.drawNumberCooldownSeconds()).to.equal(drawNumberCooldownSeconds);
             expect(await regenBingo.donationAddress()).to.equal(donationAddress);
-            expect(await regenBingo.donationName()).to.equal(donationName);
         });
     });
 
