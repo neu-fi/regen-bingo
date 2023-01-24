@@ -1,9 +1,15 @@
 import * as dotenv from "dotenv";
-import { BigNumber } from "ethers";
-import { parseEther } from "ethers/lib/utils";
+import {
+  BigNumber
+} from "ethers";
+import {
+  parseEther
+} from "ethers/lib/utils";
 
-dotenv.config({ path: ".env" });
-const network = process.env.NEXT_PUBLIC_NETWORK || "localhost";
+dotenv.config({
+  path: '.env'
+});
+const network = process.env.NEXT_PUBLIC_NETWORK || 'localhost';
 
 const drawTimestamp =
   process.env.DRAW_TIMESTAMP || Math.floor(Date.now() / 1000) + 300;
@@ -44,6 +50,39 @@ export const regenBingoArgs: (string | number | BigNumber)[] = (() => {
       return goerliArgs;
     default:
       return localhostArgs;
+  }
+})();
+
+export const LinkAddress: (string | null) = (() => {
+  switch (network) {
+    case 'ethereum':
+      return '0x514910771AF9Ca656af840dff83E8264EcF986CA';
+    case 'goerli':
+      return '0x326C977E6efc84E512bB9C30f76E30c160eD06FB';
+    default:
+      return null;
+  }
+})();
+
+export const WrapperAddress: (string | null) = (() => {
+  switch (network) {
+    case 'ethereum':
+      return '0x5A861794B927983406fCE1D062e00b9368d97Df6';
+    case 'goerli':
+      return '0x708701a1DfF4f478de54383E49a627eD4852C816';
+    default:
+      return null;
+  }
+})();
+
+export const DateTimeContractAddress: (string | null) = (() => {
+  switch (network) {
+    case 'ethereum':
+      return '0x23d23d8F243e57d0b924bff3A3191078Af325101';
+    case 'goerli':
+      return '0x85CC560EfebA375959B0FBA451cF4eBD1c8E6FA6';
+    default:
+      return null;
   }
 })();
 

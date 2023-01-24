@@ -6,8 +6,9 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "./interfaces/IRegenBingoMetadata.sol";
+import "@chainlink/contracts/src/v0.8/VRFV2WrapperConsumerBase.sol";
 
-contract RegenBingo is ERC721Enumerable {
+contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
     using Strings for uint256;
     using EnumerableSet for EnumerableSet.UintSet;
 
@@ -42,6 +43,11 @@ contract RegenBingo is ERC721Enumerable {
         ]
     ];
 
+    uint32 constant VRF_CALLBACK_GAS_LIMIT = 100000;
+    uint16 constant VRF_REQUEST_CONFIRMATIONS = 3;
+    uint32 constant VRF_NUMBER_OF_WORDS = 1;
+    uint256 constant VRF_REREQUEST_COOLDOWN_BLOCKS = 1000;
+
     /*//////////////////////////////////////////////////////////////
                              STATE VARIABLES
     //////////////////////////////////////////////////////////////*/
@@ -56,6 +62,11 @@ contract RegenBingo is ERC721Enumerable {
     string public donationName;
     address payable public donationAddress;
     EnumerableSet.UintSet private drawnNumbers;
+
+    // Chainlink VRF
+    uint256 lastRequestBlockNumber;
+    uint256 lastRequestId;
+    uint256 public randomSeed;
 
     /*//////////////////////////////////////////////////////////////
                                  EVENTS
@@ -77,8 +88,13 @@ contract RegenBingo is ERC721Enumerable {
         uint256 _drawNumberCooldownSeconds,
         string memory _donationName,
         address payable _donationAddress,
-        address _metadataGenerator
-    ) ERC721(_name, _symbol) {
+        address _metadataGenerator,
+        address _linkAddress,
+        address _wrapperAddress
+    )
+        ERC721(_name, _symbol)
+        VRFV2WrapperConsumerBase(_linkAddress, _wrapperAddress)
+    {
         mintPrice = _mintPrice;
         drawTimestamp = _drawTimestamp;
         drawNumberCooldownSeconds = _drawNumberCooldownSeconds;
@@ -119,17 +135,16 @@ contract RegenBingo is ERC721Enumerable {
 
     function drawNumber() external returns (uint256) {
         require(bingoState == BingoState.DRAW, "Draw has not started");
-        require(
-            lastDrawTime + drawNumberCooldownSeconds <= block.timestamp,
-            "Draw too soon"
-        );
-        // TODO: Use VRF
+        require(randomSeed != 0, "Waiting for the random seed");
 
         uint256 nonce = 0;
         uint256 number = 1 +
             (uint256(
                 keccak256(
-                    abi.encodePacked(block.timestamp, block.difficulty, nonce)
+                    abi.encodePacked(
+                        randomSeed,
+                        nonce
+                    )
                 )
             ) % 90);
 
@@ -139,9 +154,7 @@ contract RegenBingo is ERC721Enumerable {
                 (uint256(
                     keccak256(
                         abi.encodePacked(
-                            number,
-                            block.timestamp,
-                            block.difficulty,
+                            randomSeed,
                             nonce
                         )
                     )
@@ -168,9 +181,17 @@ contract RegenBingo is ERC721Enumerable {
 
     function startDrawPeriod() external {
         require(bingoState == BingoState.MINT);
-        require(drawTimestamp <= block.timestamp, "Draw has not started yet");
+        require(drawTimestamp <= block.timestamp, "It is not draw period yet");
+
         bingoState = BingoState.DRAW;
         emit DrawStarted();
+        _requestSeed();
+    }
+
+    function rerequestSeed() external {
+        if (randomSeed == 0 && lastRequestBlockNumber + VRF_REREQUEST_COOLDOWN_BLOCKS <= block.number) {
+            _requestSeed();
+        }
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -266,5 +287,27 @@ contract RegenBingo is ERC721Enumerable {
 
     function getDrawnNumbers() public view returns (uint256[] memory) {
         return drawnNumbers.values();
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                          INTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+    function fulfillRandomWords(
+        uint256 _requestId,
+        uint256[] memory _randomWords
+    ) internal override {
+        if (randomSeed == 0 && _requestId == lastRequestId) {
+            randomSeed = _randomWords[0];
+        }
+    }
+
+    function _requestSeed() internal {
+        lastRequestBlockNumber = block.number;
+        uint256 requestId = requestRandomness(
+            VRF_CALLBACK_GAS_LIMIT,
+            VRF_REQUEST_CONFIRMATIONS,
+            VRF_NUMBER_OF_WORDS
+        );
+        lastRequestId = requestId;
     }
 }

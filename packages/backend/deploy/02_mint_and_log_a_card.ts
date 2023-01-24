@@ -1,39 +1,49 @@
-import {HardhatRuntimeEnvironment} from 'hardhat/types';
-import {DeployFunction} from 'hardhat-deploy/types';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { DeployFunction } from 'hardhat-deploy/types';
 
 const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   if (hre.network.name !== 'ethereum' ) {
     const signers = await hre.ethers.getSigners();
-    const signer = signers[0];
-    const regenBingoContract = await hre.ethers.getContract("RegenBingo", signer);
+    const deployer = signers[0];
+    const regenBingoContract = await hre.ethers.getContract("RegenBingo");
+    let totalSupply;
+
     const mintPrice = await regenBingoContract.mintPrice();
     
     console.log("\ntotalSupply():");
-    console.log(await regenBingoContract.totalSupply());
+    totalSupply = (await regenBingoContract.totalSupply());
+    console.log(totalSupply.toString());
     
-    console.log("\nMinting...");
-    await regenBingoContract.mintMultiple(3, { value: mintPrice.mul(3) });
-    let tx = await regenBingoContract.mint({ value: mintPrice });
-    await tx.wait();
-    
+    console.log("\nMinting a card...");
+    await (await regenBingoContract.connect(deployer).mint({ value: mintPrice })).wait();
+
+    let multipleMintCount = 2;
+    console.log("\nMinting", multipleMintCount, "cards...");
+    await (await regenBingoContract.connect(deployer).mintMultiple(multipleMintCount, { value: mintPrice.mul(multipleMintCount) })).wait();
+
     console.log("\ntotalSupply():");
-    console.log(await regenBingoContract.totalSupply());
+    totalSupply = (await regenBingoContract.totalSupply());
+    console.log(totalSupply.toString());
 
-    let tokenId = await regenBingoContract.tokenByIndex(0);
+    if ( 0 < totalSupply ) {
+      let tokenId = await regenBingoContract.tokenByIndex(totalSupply.sub(1));
 
-    console.log("\ntokenByIndex(0):");
-    console.log(tokenId);
-    
-    let tokenURI = await regenBingoContract.tokenURI(tokenId);
-    let decodedTokenURI = JSON.parse(Buffer.from(tokenURI.split(',')[1], 'base64').toString());
+      console.log("\nLatest token id:");
+      console.log(tokenId.toString());
+      
+      let tokenURI = await regenBingoContract.tokenURI(tokenId);
+      let decodedTokenURI = JSON.parse(Buffer.from(tokenURI.split(',')[1], 'base64').toString());
 
-    console.log("\nDecoded tokenURI(tokenId):");
-    console.log(decodedTokenURI);
+      console.log("\nDecoded tokenURI(tokenId):");
+      console.log(decodedTokenURI);
 
-    let decodedImage = Buffer.from(decodedTokenURI['image'].split(',')[1], 'base64').toString();
+      let decodedImage = Buffer.from(decodedTokenURI['image'].split(',')[1], 'base64').toString();
 
-    console.log("\nDecoded image:");
-    console.log(decodedImage);
+      console.log("\nDecoded image:");
+      console.log(decodedImage);
+    } else {
+      console.error("Cannot find tokens");
+    }
   }
 };
 
