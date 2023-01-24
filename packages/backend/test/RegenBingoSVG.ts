@@ -2,7 +2,7 @@ import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-describe("RegenBingoSVG", function () {
+describe('RegenBingoSVG', function () {
 
   async function deployRegenBingoSVGFixture() {
 
@@ -28,50 +28,81 @@ describe("RegenBingoSVG", function () {
     return { regenBingoSVG };
   }
 
-  describe("Deployment", function () {
-    it("Deployment test", async function () {
-      const { regenBingoSVG } = await loadFixture(deployRegenBingoSVGFixture);
-
-      console.log("regenBingoMetadata address is: ", regenBingoSVG.address);
-    });
-  });
-
-  describe("GenerateImageSVG", function () {
+  describe('ETH converter', function () {
       it('Ether to wei: 1 ether', async function () {
         const { regenBingoSVG } = await loadFixture(deployExposedRegenBingoSVGFixture);
 
         const wei = ethers.BigNumber.from(String(1e18));
         const ether = await regenBingoSVG.$_convertWEIToEtherInString(ethers.BigNumber.from(wei));
-        console.log("1e18 wei is: ", ether)
+        expect(ether).to.equal('1.00 ETH');
       })
       it('Ether to wei: 0.1 ether', async function () {
         const { regenBingoSVG } = await loadFixture(deployExposedRegenBingoSVGFixture);
 
         const wei = ethers.BigNumber.from(String(1e17));
         const ether = await regenBingoSVG.$_convertWEIToEtherInString(ethers.BigNumber.from(wei));
-        console.log("1e17 wei is: ", ether)
-      })
-      it('Ether to wei: 0.01 ether', async function () {
-        const { regenBingoSVG } = await loadFixture(deployExposedRegenBingoSVGFixture);
-
-        const wei = ethers.BigNumber.from(String(1e16));
-        const ether = await regenBingoSVG.$_convertWEIToEtherInString(ethers.BigNumber.from(wei));
-        console.log("1e16 wei is: ", ether)
-      })
-      it('Ether to wei: 0.001 ether', async function () {
-        const { regenBingoSVG } = await loadFixture(deployExposedRegenBingoSVGFixture);
-
-        const wei = ethers.BigNumber.from(String(1e15));
-        const ether = await regenBingoSVG.$_convertWEIToEtherInString(ethers.BigNumber.from(wei));
-        console.log("1e15 wei is: ", ether)
+        expect(ether).to.equal('0.1 ETH');
       })
       it('Ether to wei: 0.005 ether', async function () {
         const { regenBingoSVG } = await loadFixture(deployExposedRegenBingoSVGFixture);
 
         const wei = ethers.BigNumber.from(String(1e15 * 5));
         const ether = await regenBingoSVG.$_convertWEIToEtherInString(ethers.BigNumber.from(wei));
-        console.log("1e15 * 5 wei is: ", ether)
+        expect(ether).to.equal('0.005 ETH');
+      })
+      it('Ether to wei: 1 wei', async function () {
+        const { regenBingoSVG } = await loadFixture(deployExposedRegenBingoSVGFixture);
+
+        const wei = ethers.BigNumber.from(String(1));
+        const ether = await regenBingoSVG.$_convertWEIToEtherInString(ethers.BigNumber.from(wei));
+        expect(ether).to.equal('0.000000000000000001 ETH');
       })
   })
+
+  describe('Rolling Text Generator', function () {
+    it('Game is finished (Donated)', async function () {
+      const { regenBingoSVG } = await loadFixture(deployExposedRegenBingoSVGFixture);
+      
+      /*
+        uint256 donationAmount,
+        string memory donationName,
+        address donationAddress,
+        bool isBingoFinished,
+        uint256 drawTimestamp
+      */ 
+
+      const args = [
+        ethers.BigNumber.from(String(1e18)),
+        'Gitcoin Alpha Round',
+        '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+        true,
+        ethers.BigNumber.from(String(Number(Date.now())))
+      ]
+
+      const rollingText = await regenBingoSVG.$_generateRollingText(...args);
+      const donationStatusText = rollingText.split(' ')[0];
+
+      expect(donationStatusText).to.equal('Donated');
+    });
+    
+    it('Game is not finished (Donating)', async function () {
+      const { regenBingoSVG } = await loadFixture(deployExposedRegenBingoSVGFixture);
+
+      const args = [
+        ethers.BigNumber.from(String(1e18)),
+        'Gitcoin Alpha Round',
+        '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+        false,
+        ethers.BigNumber.from(String(Number(Date.now())))
+      ];
+
+      const rollingText = await regenBingoSVG.$_generateRollingText(...args);
+      const donationStatusText = rollingText.split(' ')[0];
+
+      expect(donationStatusText).to.equal('Donating');
+
+    });
+  });
+
 
 });

@@ -41,7 +41,7 @@ describe("RegenBingo", function () {
         );
         await regenBingo.deployed();
 
-        return { regenBingo, signer1, signer2, donationAddress, drawTimestamp };
+        return { regenBingo, signer1, signer2, donationName, donationAddress, drawTimestamp };
     }
 
     describe("Deployment", function () {
@@ -193,4 +193,40 @@ describe("RegenBingo", function () {
             await expect(regenBingo.claimPrize(await regenBingo.tokenByIndex(0))).to.be.revertedWith("INELIGIBLE");
         });
     });
+
+    describe("SVG Generation", function () {
+        it("Rolling text test (Donated)", async function() {
+            const { regenBingo, donationAddress, drawTimestamp, donationName } = await loadFixture(deployBingoFixture);
+            const donationAmount = String(ethers.utils.formatEther(String(Number(mintPrice) / 2)));
+            const MONTHS = [
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December"];
+
+            //Donating 0.1 ETH · Donation Name · 0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc · January 24, 2023 17:42 UTC
+
+            const tx = await regenBingo.mint({ value: mintPrice });
+            await tx.wait();
+
+            const tokenId = await regenBingo.tokenByIndex(0);
+            
+            const tokenURI = await regenBingo.tokenURI(tokenId);
+            const decodedTokenURI = JSON.parse(Buffer.from(tokenURI.split(',')[1], 'base64').toString());
+            const decodedImage = Buffer.from(decodedTokenURI['image'].split(',')[1], 'base64').toString();
+            
+            const date = new Date((drawTimestamp - 3 * 60 * 60) * 1000);
+            const dateString = MONTHS[date.getMonth()] + ' ' + date.getDate().toString() + ', ' + date.getFullYear().toString() + ' ' + date.getHours().toString() + ':' + date.getMinutes().toString() + ' UTC';
+
+            expect(decodedImage).to.include('Donating ' + donationAmount + ' ETH · ' + donationName + ' · ' + String(donationAddress).toLowerCase() + ' · ' + dateString);
+        })
+    })
 });
