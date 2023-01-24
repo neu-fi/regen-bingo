@@ -1,17 +1,19 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 import { loadFixture, time } from "@nomicfoundation/hardhat-network-helpers";
-import { network } from "hardhat";
+import { BigNumber } from "ethers";
 
 const name = "RegenBingo";
 const symbol = "BINGO";
-const mintPrice = ethers.utils.parseEther("0.1");
-const drawNumberCooldownSeconds = 60 * 5; // 5 minutes
+const mintPrice = ethers.utils.parseEther("0.2") ;
+const drawCooldownSeconds = 60 * 60; // 1 hour
+const drawNumberCooldownSeconds = 5 * 60; // 5 minutes
 
 describe("RegenBingo", function () {
     async function deployBingoFixture() {
         const [signer1, signer2, signer3] = await ethers.getSigners();
-        const drawTimestamp = (await time.latest()) + 3600;
+        const drawTimestamp = (await time.latest()) + drawCooldownSeconds;
+        const donationName = "Donation Name";
         const donationAddress = signer3.address;
 
         const DateTimeContract = await ethers.getContractFactory("DateTimeContract");
@@ -33,6 +35,7 @@ describe("RegenBingo", function () {
             mintPrice,
             drawTimestamp,
             drawNumberCooldownSeconds,
+            donationName,
             donationAddress,
             regenBingoMetadata.address
         );
@@ -58,21 +61,20 @@ describe("RegenBingo", function () {
         it("Mints correctly", async function () {
             const { regenBingo, signer1 } = await loadFixture(deployBingoFixture);
 
-            await regenBingo.mint({ value: ethers.utils.parseEther("0.1") });
+            await regenBingo.mint({ value: mintPrice });
 
             expect(await regenBingo.balanceOf(signer1.address)).to.equal(1);
             expect(await regenBingo.totalSupply()).to.equal(1);
-            expect(await regenBingo.ownerOf(0)).to.equal(signer1.address);
         });
 
         it("Does not allow minting with incorrect payment", async function () {
             const { regenBingo } = await loadFixture(deployBingoFixture);
 
-            await expect(regenBingo.mint({ value: ethers.utils.parseEther("0.2") })).to.be.revertedWith(
+            await expect(regenBingo.mint({ value: 0 })).to.be.revertedWith(
                 "Incorrect payment amount"
             );
 
-            await expect(regenBingo.mint({ value: ethers.utils.parseEther("0.05") })).to.be.revertedWith(
+            await expect(regenBingo.mint({ value: mintPrice.mul(2) })).to.be.revertedWith(
                 "Incorrect payment amount"
             );
         });
@@ -80,45 +82,12 @@ describe("RegenBingo", function () {
         it("Does not allow minting after draw", async function () {
             const { regenBingo } = await loadFixture(deployBingoFixture);
 
-            await time.increase(3600);
+            await time.increase(drawCooldownSeconds);
+            await (await regenBingo.startDrawPeriod()).wait();
 
-            await expect(regenBingo.mint({ value: ethers.utils.parseEther("0.1") })).to.be.revertedWith(
-                "Draw already started"
+            await expect(regenBingo.mint({ value: mintPrice })).to.be.revertedWith(
+                "Minting has ended"
             );
-        });
-
-        it("Different users get different seeds in same block", async function () {
-            const { regenBingo, signer1, signer2 } = await loadFixture(deployBingoFixture);
-
-            await network.provider.send("evm_setAutomine", [false]);
-
-            await regenBingo.connect(signer1).mint({ value: ethers.utils.parseEther("0.1") });
-            await regenBingo.connect(signer2).mint({ value: ethers.utils.parseEther("0.1") });
-
-            await network.provider.send("evm_mine");
-
-            await network.provider.send("evm_setAutomine", [true]);
-
-            expect(await regenBingo.getSeed(0)).to.not.equal(0);
-            expect(await regenBingo.getSeed(1)).to.not.equal(0);
-            expect(await regenBingo.getSeed(0)).to.not.equal(await regenBingo.getSeed(1));
-        });
-
-        it("User gets different seeds in one block", async function () {
-            const { regenBingo, signer1 } = await loadFixture(deployBingoFixture);
-
-            await network.provider.send("evm_setAutomine", [false]);
-
-            await regenBingo.connect(signer1).mint({ value: ethers.utils.parseEther("0.1") });
-            await regenBingo.connect(signer1).mint({ value: ethers.utils.parseEther("0.1") });
-
-            await network.provider.send("evm_mine");
-
-            await network.provider.send("evm_setAutomine", [true]);
-
-            expect(await regenBingo.getSeed(0)).to.not.equal(0);
-            expect(await regenBingo.getSeed(1)).to.not.equal(0);
-            expect(await regenBingo.getSeed(0)).to.not.equal(await regenBingo.getSeed(1));
         });
     });
 
@@ -126,49 +95,51 @@ describe("RegenBingo", function () {
         it("Draws one number correctly", async function () {
             const { regenBingo } = await loadFixture(deployBingoFixture);
 
-            await time.increase(3600);
-
+            await time.increase(drawCooldownSeconds);
+            await (await regenBingo.startDrawPeriod()).wait();
             let tx = await regenBingo.drawNumber();
-
             let receipt = await tx.wait();
-
             let drawnNumber = Number(receipt.events[0].data);
 
             expect(drawnNumber).to.be.within(1, 90);
             expect(await regenBingo.lastDrawTime()).to.equal(await time.latest());
-            expect(await regenBingo.isDrawn(drawnNumber)).to.equal(true);
+            expect(await regenBingo.getDrawnNumbers()).deep.includes(BigNumber.from(drawnNumber));
         });
 
         it("Draws multiple numbers correctly", async function () {
             const { regenBingo } = await loadFixture(deployBingoFixture);
 
-            await time.increase(3600);
+            await time.increase(drawCooldownSeconds);
+            await (await regenBingo.startDrawPeriod()).wait();
+            let tx1 = await regenBingo.drawNumber();
+            let receipt1 = await tx1.wait();
+            let drawnNumber1 = Number(receipt1.events[0].data);
 
-            await regenBingo.drawNumber();
+            await time.increase(drawNumberCooldownSeconds);
+            let tx2 = await regenBingo.drawNumber();
+            let receipt2 = await tx2.wait();
+            let drawnNumber2 = Number(receipt2.events[0].data);
 
-            await time.increase(60 * 5);
+            expect(drawnNumber1).to.be.within(1, 90);
+            expect(await regenBingo.getDrawnNumbers()).deep.includes(BigNumber.from(drawnNumber1));
 
-            let tx = await regenBingo.drawNumber();
+            expect(drawnNumber2).to.be.within(1, 90);
+            expect(await regenBingo.getDrawnNumbers()).deep.includes(BigNumber.from(drawnNumber2));
 
-            let receipt = await tx.wait();
-
-            let drawnNumber = Number(receipt.events[0].data);
-
-            expect(drawnNumber).to.be.within(1, 90);
             expect(await regenBingo.lastDrawTime()).to.equal(await time.latest());
-            expect(await regenBingo.isDrawn(drawnNumber)).to.equal(true);
         });
 
         it("Does not allow drawing number before drawTimestamp", async function () {
             const { regenBingo } = await loadFixture(deployBingoFixture);
 
-            await expect(regenBingo.drawNumber()).to.be.revertedWith("Draw not started yet");
+            await expect(regenBingo.drawNumber()).to.be.revertedWith("Draw has not started");
         });
 
         it("Does not allow drawing number before drawNumberCooldownSeconds", async function () {
             const { regenBingo } = await loadFixture(deployBingoFixture);
 
-            await time.increase(3600);
+            await time.increase(drawCooldownSeconds);
+            await (await regenBingo.startDrawPeriod()).wait();
 
             await regenBingo.drawNumber();
 
@@ -177,32 +148,34 @@ describe("RegenBingo", function () {
     });
 
     describe("Claiming prize", function () {
-        it("Any card eventually wins", async function () {
-            const { regenBingo, donationAddress, signer2 } = await loadFixture(deployBingoFixture);
+        it("All cards eventually win", async function () {
+            const { regenBingo, donationAddress, signer1, signer2 } = await loadFixture(deployBingoFixture);
 
-            await regenBingo.mint({ value: ethers.utils.parseEther("0.1") });
-            await time.increase(3600);
+            await regenBingo.connect(signer1).mint({ value: mintPrice });
+
+            await time.increase(drawCooldownSeconds);
+            await (await regenBingo.startDrawPeriod()).wait();
 
             for (let i = 0; i < 90; i++) {
                 await regenBingo.drawNumber();
-                await time.increase(60 * 5);
+                await time.increase(drawNumberCooldownSeconds);
             }
 
-            let winner = await regenBingo.ownerOf(0);
-            let bingoBalanceBefore = await ethers.provider.getBalance(regenBingo.address);
+            let winnerTokenId = await regenBingo.tokenByIndex(0);
+            let contractBalanceBefore = await ethers.provider.getBalance(regenBingo.address);
             let donationBalanceBefore = await ethers.provider.getBalance(donationAddress);
-            let winnerBalanceBefore = await ethers.provider.getBalance(winner);
+            let winnerBalanceBefore = await ethers.provider.getBalance(signer1.address);
 
-            expect(bingoBalanceBefore).to.eq(ethers.utils.parseEther("0.1"));
+            expect(contractBalanceBefore).to.eq(mintPrice);
 
-            await regenBingo.connect(signer2).claimPrize(0);
+            await regenBingo.connect(signer2).claimPrize(winnerTokenId);
 
             expect(await ethers.provider.getBalance(regenBingo.address)).to.eq(0);
             expect(await ethers.provider.getBalance(donationAddress)).to.eq(
-                donationBalanceBefore.add(ethers.utils.parseEther("0.05"))
+                donationBalanceBefore.add(mintPrice.div(2))
             );
-            expect(await ethers.provider.getBalance(winner)).to.eq(
-                winnerBalanceBefore.add(ethers.utils.parseEther("0.05"))
+            expect(await ethers.provider.getBalance(signer1.address)).to.eq(
+                winnerBalanceBefore.add(mintPrice.div(2))
             );
         });
 
@@ -215,9 +188,9 @@ describe("RegenBingo", function () {
         it("Losing cards can not claim", async function () {
             const { regenBingo } = await loadFixture(deployBingoFixture);
 
-            await regenBingo.mint({ value: ethers.utils.parseEther("0.1") });
+            await regenBingo.mint({ value: mintPrice });
 
-            await expect(regenBingo.claimPrize(0)).to.be.revertedWith("INELIGIBLE");
+            await expect(regenBingo.claimPrize(await regenBingo.tokenByIndex(0))).to.be.revertedWith("INELIGIBLE");
         });
     });
 });

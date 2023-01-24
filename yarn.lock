@@ -1391,12 +1391,14 @@ __metadata:
     "@types/mocha": ^9.1.1
     "@types/node": ^18.0.0
     chai: ^4.3.6
+    chai-bignumber: ^3.1.0
     dotenv: ^16.0.0
     ethereum-waffle: ^3.4.4
     ethers: ^5.7.2
     hardhat: ^2.9.9
     hardhat-contract-sizer: ^2.6.1
     hardhat-deploy: ^0.11.10
+    hardhat-exposed: ^0.3.0
     ts-node: ^10.8.1
     typescript: ^4.8.4
   languageName: unknown
@@ -4469,6 +4471,13 @@ __metadata:
   dependencies:
     nofilter: ^3.1.0
   checksum: a90338435dc7b45cc01461af979e3bb6ddd4f2a08584c437586039cd5f2235014c06e49d664295debbfb3514d87b2f06728092ab6aa6175e2e85e9cd7dc0c1fd
+  languageName: node
+  linkType: hard
+
+"chai-bignumber@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "chai-bignumber@npm:3.1.0"
+  checksum: cbdd8a713c1c1a55a4c52ca08cf0d482c62712c32c79140373b65464b8b93f785bbd2c2e4da20d9b8e342f6548c4445999d2e3450858fbbe7dae82b0309247b2
   languageName: node
   linkType: hard
 
@@ -7787,6 +7796,18 @@ __metadata:
     qs: ^6.9.4
     zksync-web3: ^0.8.1
   checksum: 4b91afd7d8f453e4b20725b0893b7b892ade4f5fcdfb768362fea0edcb066c2ba65649bbed4d8488363835d798fdfb6f1bbc5ecad2b452f40f08374b1438ab5e
+  languageName: node
+  linkType: hard
+
+"hardhat-exposed@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "hardhat-exposed@npm:0.3.0"
+  dependencies:
+    micromatch: ^4.0.4
+    solidity-ast: ^0.4.25
+  peerDependencies:
+    hardhat: ^2.3.0
+  checksum: 7ccd0796809d5e3870c9a1a7bce2ddabf4fc9cc4b61630e78de74dcd4f4b017e7ff970da9f0dbc8128c8f4b376b3030217e6040a0bbaa75d73dfe68b5a10144b
   languageName: node
   linkType: hard
 
@@ -12700,6 +12721,13 @@ __metadata:
   bin:
     solcjs: solcjs
   checksum: 1e2bf927f3ef4f3b195b7619ff64f715916d94dc59091a8a710e47bdd4b18e0bd92b55ea43a04ce7fabce9ad7a3e4e73ccaf127a50ebbf963a9de9046576e3b6
+  languageName: node
+  linkType: hard
+
+"solidity-ast@npm:^0.4.25":
+  version: 0.4.43
+  resolution: "solidity-ast@npm:0.4.43"
+  checksum: e002d09e0b2a033cd6eed8effa13de926a8525c9eb8634c83e3ac61354fbf9adde43b124e90ef567e6a877bdee9566d3fa686145205695f8ed20706a943d56c0
   languageName: node
   linkType: hard
 

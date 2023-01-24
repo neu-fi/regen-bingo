@@ -92,7 +92,7 @@ contract RegenBingo is ERC721Enumerable {
     //////////////////////////////////////////////////////////////*/
 
     function mint() external payable {
-        require(bingoState == BingoState.MINT, "It is not mint period");
+        require(bingoState == BingoState.MINT, "Minting has ended");
         require(msg.value == mintPrice, "Incorrect payment amount");
         // Using totalSupply() so that one can mint multiple different cards in a block
         uint256 tokenId = uint256(
@@ -104,7 +104,7 @@ contract RegenBingo is ERC721Enumerable {
     }
 
     function mintMultiple(uint256 mintCount) external payable {
-        require(bingoState == BingoState.MINT, "It is not mint period");
+        require(bingoState == BingoState.MINT, "Minting has ended");
         require(msg.value == mintPrice * mintCount, "Incorrect payment amount");
         for (uint256 i = 0; i < mintCount; i++) {
             // Using totalSupply() so that one can mint multiple different cards in a block
@@ -118,9 +118,9 @@ contract RegenBingo is ERC721Enumerable {
     }
 
     function drawNumber() external returns (uint256) {
-        require(bingoState == BingoState.DRAW, "It is not draw period");
+        require(bingoState == BingoState.DRAW, "Draw has not started");
         require(
-            block.timestamp > lastDrawTime + drawNumberCooldownSeconds,
+            lastDrawTime + drawNumberCooldownSeconds <= block.timestamp,
             "Draw too soon"
         );
         // TODO: Use VRF
@@ -168,7 +168,7 @@ contract RegenBingo is ERC721Enumerable {
 
     function startDrawPeriod() external {
         require(bingoState == BingoState.MINT);
-        require(block.timestamp > drawTimestamp, "It is not draw period yet");
+        require(drawTimestamp <= block.timestamp, "Draw has not started yet");
         bingoState = BingoState.DRAW;
         emit DrawStarted();
     }
