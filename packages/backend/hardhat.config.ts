@@ -9,6 +9,7 @@ import chai from "chai";
 import { solidity } from "ethereum-waffle";
 import { HardhatUserConfig } from "hardhat/types";
 import { network } from "hardhat";
+import "hardhat-gas-reporter"
 
 chai.use(solidity);
 chai.use(require("chai-bignumber")());
@@ -17,10 +18,10 @@ dotenv.config({ path: ".env" });
 const defaultNetwork = process.env.NEXT_PUBLIC_NETWORK || "localhost";
 
 const COMPILER_SETTINGS = {
+  viaIR: true,
   optimizer: {
-    // Gives the following error: CompilerError: Stack too deep.
-    // enabled: true,
-    // runs: 1000,
+    enabled: true,
+    runs: 200
   },
 };
 
@@ -37,9 +38,6 @@ const config: any = {
         settings: COMPILER_SETTINGS
       }
     ],
-    overrides: {
-      // Use 0.4 only for LinkToken
-    }
   },
   defaultNetwork,
   networks: {
@@ -73,6 +71,12 @@ const config: any = {
   },
   exposed: {
     exclude: ["development/**", "interfaces/**"]
+  },
+  gasReporter: {
+    currency: 'USD',
+    coinmarketcap: process.env.COINMARKETCAP_API_KEY,
+    gasPrice: 50,
+    excludeContracts: ["$RegenBingoSVG", "LinkToken", "DateTimeContract", "VRFCoordinatorV2Mock"]
   }
 };
 
