@@ -38,22 +38,6 @@ export function getTimeDifference(
   }
 }
 
-export function timestampToCountdown(timeDifferenceAsSeconds: number): string {
-  let difference = timeDifferenceAsSeconds;
-  const seconds = Math.floor(difference % 60);
-  difference /= 60;
-  const minutes = Math.floor(difference % 60);
-  difference /= 60;
-  const hours = Math.floor(difference % 24);
-  const days = Math.floor(difference / 24);
-  return `
-    ${days ? `${days} Days, ` : ""}
-    ${hours ? `${hours} Hours, ` : ""}
-    ${minutes ? `${minutes} Minutes, ` : ""}
-    ${seconds ? `${seconds} Seconds` : ""}
-    `;
-}
-
 export function errorSlicing(error: string) {
   try {
     const left = error.indexOf("'");
