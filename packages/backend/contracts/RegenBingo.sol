@@ -189,7 +189,7 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
     }
 
     function rerequestSeed() external {
-        if (randomSeed == 0 && lastRequestBlockNumber + VRF_REREQUEST_COOLDOWN_BLOCKS <= block.number) {
+        if (bingoState == BingoState.DRAW && randomSeed == 0 && lastRequestBlockNumber + VRF_REREQUEST_COOLDOWN_BLOCKS <= block.number) {
             _requestSeed();
         }
     }

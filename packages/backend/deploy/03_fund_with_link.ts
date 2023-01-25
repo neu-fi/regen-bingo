@@ -15,11 +15,11 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   
   let transaction = await linkContract.attach(deployer).transfer(regenBingoContract.address, linkAmount);
   try {
-    transaction.wait();
+    await transaction.wait();
     console.log(linkAmount, "LINK sent for funding regen-bingo contract");
   } catch(err) {
     console.error(transaction);
-    console.error(`Cannot funded the contract. Please send LINK to RegenBingo at: ${regenBingoContract.address}`)
+    console.error(`Cannot fund the contract. Please send LINK to: ${regenBingoContract.address}`)
   }
 };
 
