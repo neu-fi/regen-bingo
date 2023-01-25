@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { useAccount, useSigner } from "wagmi";
 import { useBingoContract } from "@/hooks/useBingoContract";
-import { toast } from "react-toastify";
+import { toast, ToastContentProps } from "react-toastify";
 import { errorSlicing } from "@/utils/utils";
 
-export const ClaimThePrizeButton = (props: {
-  tokenId: string
-}) => {
+export const ClaimThePrizeButton = (props: { tokenId: string }) => {
   const [loading, setLoading] = useState("");
   const [error, setError] = useState("");
 
@@ -27,18 +25,22 @@ export const ClaimThePrizeButton = (props: {
   async function mintBingoCard() {
     if (isConnected) {
       try {
-        setLoading("Approval waiting..");
+        setLoading("Waiting for approval...");
         const tx = await contract?.claimPrize(props.tokenId);
-        setLoading("Transaction waiting..");
-        await tx.wait();
-        setLoading("");
-        setError("Succesfully minted");
-        toast.success("Minted a new Regen Bingo Card!");
+        toast.promise(tx.wait, {
+          pending: "Waiting for transaction...",
+          success: "Prize claimed, congratulations!",
+          error: {
+            render({ data }: ToastContentProps<any>) {
+              return (<span>{errorSlicing(data.reason)}</span>) as any;
+            },
+          },
+        });
       } catch (err: any) {
         toast.error(`${errorSlicing(err.reason)}!`);
         setError("An error occured");
       }
-      await window.setTimeout(() => {
+      window.setTimeout(() => {
         setError("");
         setLoading("");
       }, 2000);

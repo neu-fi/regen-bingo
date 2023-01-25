@@ -1,7 +1,7 @@
 import { BingoState, useBingoContract } from "@/hooks/useBingoContract";
 import { useAccount, useSigner } from "wagmi";
 import { useState, useEffect } from "react";
-import { toast } from "react-toastify";
+import { toast, ToastContentProps } from "react-toastify";
 import { errorSlicing } from "@/utils/utils";
 import { Contract } from "ethers";
 
@@ -33,12 +33,27 @@ export const DrawNumber = () => {
         }
         if (state === BingoState.MINT) {
           const tx = await contract.startDrawPeriod();
-          await tx.wait();
+          toast.promise(tx.wait, {
+            pending: "Waiting for transaction",
+            success: "Draw is started!",
+            error: {
+              render({ data }: ToastContentProps<any>) {
+                return (<span>{errorSlicing(data.reason)}</span>) as any;
+              },
+            },
+          });
         }
         setLoading("Waiting for approval...");
-        const tx = await contract.drawNumber({gasLimit: 250000});
-        setLoading("Waiting for the transaction...");
-        await tx.wait();
+        const tx = await contract.drawNumber({ gasLimit: 250000 });
+        toast.promise(tx.wait, {
+          pending: "Waiting for transaction",
+          success: "Drawn a new number!",
+          error: {
+            render({ data }: ToastContentProps<any>) {
+              return (<span>{errorSlicing(data.reason)}</span>) as any;
+            },
+          },
+        });
         setLoading("");
       } catch (err: any) {
         toast.error(`${errorSlicing(err.reason)}!`);

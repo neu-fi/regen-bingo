@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { useAccount, useSigner } from "wagmi";
 import { useBingoContract } from "@/hooks/useBingoContract";
 import { ethers } from "ethers";
-import { toast } from "react-toastify";
+import { toast, ToastContentProps } from "react-toastify";
 import { errorSlicing } from "@/utils/utils";
 import { NetworkContext } from "@/components/Layout";
 
@@ -48,16 +48,21 @@ export const BingoCardMint = () => {
         const tx = await contract?.mint({
           value: mintPrice,
         });
-        setLoading("Transaction waiting..");
-        await tx.wait();
         setLoading("");
-        setError("Succesfully minted");
-        toast.success("Minted a new Regen Bingo Card!");
+        toast.promise(tx.wait, {
+          pending: "Waiting for transaction",
+          success: "Minted a new Regen Bingo Card!",
+          error: {
+            render({ data }: ToastContentProps<any>) {
+              return (<span>{errorSlicing(data.reason)}</span>) as any;
+            },
+          },
+        });
       } catch (err: any) {
         toast.error(`${errorSlicing(err.reason)}!`);
         setError("An error occured");
       }
-      await window.setTimeout(() => {
+      window.setTimeout(() => {
         setError("");
         setLoading("");
       }, 2000);
