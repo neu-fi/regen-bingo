@@ -105,9 +105,14 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
             </p>
           ) : (
             <>
-              <p className="mb-6 text-lg leading-8 text-gray-600 sm:text-center">
-                Displaying {cardsMap.size} out of {cardsCount} cards.
-              </p>
+              {cardsCount && (
+                <>
+                  <p className="mb-6 text-lg leading-8 text-gray-600 sm:text-center">
+                    Displaying {cardsMap.size} out of {cardsCount} cards.
+                  </p>
+                </>
+              )}
+
               <div className="bg-white rounded-2xl shadow-2xl my-4">
                 <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8 lg:py-12 ">
                   <div className="space-y-12 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0">
@@ -149,8 +154,7 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
                                 repeatCount="indefinite"
                                 keyTimes="0;1"
                                 values="0 50 51.7;360 50 51.7"
-                              >
-                              </animateTransform>
+                              ></animateTransform>
                             </path>
                           </svg>
                         </div>
