@@ -14,13 +14,13 @@ type LayoutProps = {};
 export const ContractStateContext = createContext<BingoState | undefined>(
   undefined
 );
-export const WinnerCardContext = createContext<string | undefined>(undefined);
+export const WinnerCardContext = createContext<number | undefined>(undefined);
 export const NetworkContext = createContext<boolean>(false);
 
 function Layout(props: PropsWithChildren<LayoutProps>) {
   // States
   const [bingoState, setBingoState] = useState<BingoState>();
-  const [winnerCardId, setWinnerCardId] = useState<string>();
+  const [winnerCardId, setWinnerCardId] = useState<number>();
   const [isOnCorrectNetwork, setIsOnCorrectNetwork] = useState<boolean>(false);
   const [initialFetchCompleted, setInitialFetchCompleted] = useState(false);
   const [trigger, setTrigger] = useState<Event>();
@@ -104,7 +104,7 @@ function Layout(props: PropsWithChildren<LayoutProps>) {
         </div>
       );
     };
-    setWinnerCardId(id._hex.toString());
+    setWinnerCardId(Number(id));
     toast.info(CustomToastWithLink(id));
     setTrigger((trigger) => event);
   }

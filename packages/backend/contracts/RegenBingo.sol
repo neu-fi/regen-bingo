@@ -66,7 +66,7 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
     // Chainlink VRF
     uint256 lastRequestBlockNumber;
     uint256 lastRequestId;
-    uint256 public randomSeed;
+    uint256 public drawSeed;
 
     /*//////////////////////////////////////////////////////////////
                                  EVENTS
@@ -110,39 +110,27 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
     function mint() external payable {
         require(bingoState == BingoState.MINT, "Minting has ended");
         require(msg.value == mintPrice, "Incorrect payment amount");
-        // Using totalSupply() so that one can mint multiple different cards in a block
-        uint256 tokenId = uint256(
-            keccak256(
-                abi.encodePacked(totalSupply(), msg.sender, block.timestamp)
-            )
-        );
-        _mint(msg.sender, tokenId);
+        _mint(msg.sender, totalSupply() + 1);
     }
 
     function mintMultiple(uint256 mintCount) external payable {
         require(bingoState == BingoState.MINT, "Minting has ended");
         require(msg.value == mintPrice * mintCount, "Incorrect payment amount");
         for (uint256 i = 0; i < mintCount; i++) {
-            // Using totalSupply() so that one can mint multiple different cards in a block
-            uint256 tokenId = uint256(
-                keccak256(
-                    abi.encodePacked(totalSupply(), msg.sender, block.timestamp)
-                )
-            );
-            _mint(msg.sender, tokenId);
+            _mint(msg.sender, totalSupply() + 1);
         }
     }
 
     function drawNumber() external returns (uint256) {
         require(bingoState == BingoState.DRAW, "Draw has not started");
-        require(randomSeed != 0, "Waiting for the random seed");
+        require(drawSeed != 0, "Waiting for the random seed");
 
         uint256 nonce = 0;
         uint256 number = 1 +
             (uint256(
                 keccak256(
                     abi.encodePacked(
-                        randomSeed,
+                        drawSeed,
                         nonce
                     )
                 )
@@ -154,7 +142,7 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
                 (uint256(
                     keccak256(
                         abi.encodePacked(
-                            randomSeed,
+                            drawSeed,
                             nonce
                         )
                     )
@@ -168,15 +156,15 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
         return number;
     }
 
-    function claimPrize(uint256 id) external {
+    function claimPrize(uint256 tokenId) external {
         require(bingoState != BingoState.FINISHED, "Game Over");
-        _requireMinted(id);
-        require(coveredNumbers(id) == 15, "INELIGIBLE");
+        _requireMinted(tokenId);
+        require(coveredNumbers(tokenId) == 15, "INELIGIBLE");
         donationAddress.call{value: address(this).balance / 2}("");
-        address payable winner = payable(ownerOf(id));
+        address payable winner = payable(ownerOf(tokenId));
         winner.call{value: address(this).balance}("");
         bingoState = BingoState.FINISHED;
-        emit ClaimPrize(id, winner);
+        emit ClaimPrize(tokenId, winner);
     }
 
     function startDrawPeriod() external {
@@ -185,12 +173,12 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
 
         bingoState = BingoState.DRAW;
         emit DrawStarted();
-        _requestSeed();
+        _requestDrawSeed();
     }
 
-    function rerequestSeed() external {
-        if (bingoState == BingoState.DRAW && randomSeed == 0 && lastRequestBlockNumber + VRF_REREQUEST_COOLDOWN_BLOCKS <= block.number) {
-            _requestSeed();
+    function rerequestDrawSeed() external {
+        if (bingoState == BingoState.DRAW && drawSeed == 0 && lastRequestBlockNumber + VRF_REREQUEST_COOLDOWN_BLOCKS <= block.number) {
+            _requestDrawSeed();
         }
     }
 
@@ -204,7 +192,7 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
         override
         returns (string memory)
     {
-        require(ownerOf(tokenId) != address(0), "INVALID_TOKEN_ID");
+        require(ownerOf(tokenId) != address(0), "Invalid card");
         return
             metadataGenerator.generateTokenURI(
                 tokenId,
@@ -223,10 +211,12 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
         view
         returns (uint256[9][3] memory numbers)
     {
+        require(ownerOf(tokenId) != address(0), "Invalid card");
+        uint256 tokenSeed = _tokenSeed(tokenId);
         for (uint256 row = 0; row < 3; row++) {
             for (uint256 column = 0; column < 9; column++) {
                 numbers[row][column] = getNumberByCoordinates(
-                    tokenId,
+                    tokenSeed,
                     row,
                     column
                 );
@@ -239,12 +229,13 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
         view
         returns (bool[9][3] memory covered)
     {
-        require(ownerOf(tokenId) != address(0), "INVALID_TOKEN_ID");
+        require(ownerOf(tokenId) != address(0), "Invalid card");
+        uint256 tokenSeed = _tokenSeed(tokenId);
         for (uint256 row = 0; row < 3; row++) {
             for (uint256 column = 0; column < 9; column++) {
                 if (
                     drawnNumbers.contains(
-                        getNumberByCoordinates(tokenId, row, column)
+                        getNumberByCoordinates(tokenSeed, row, column)
                     )
                 ) {
                     covered[row][column] = true;
@@ -258,12 +249,13 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
         view
         returns (uint256 count)
     {
-        require(ownerOf(tokenId) != address(0), "INVALID_TOKEN_ID");
+        require(ownerOf(tokenId) != address(0), "Invalid card");
+        uint256 tokenSeed = _tokenSeed(tokenId);
         for (uint256 row = 0; row < 3; row++) {
             for (uint256 column = 0; column < 9; column++) {
                 if (
                     drawnNumbers.contains(
-                        getNumberByCoordinates(tokenId, row, column)
+                        getNumberByCoordinates(tokenSeed, row, column)
                     )
                 ) {
                     count++;
@@ -273,15 +265,15 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
     }
 
     function getNumberByCoordinates(
-        uint256 tokenId,
+        uint256 tokenSeed,
         uint256 row,
         uint256 column
     ) public view returns (uint256) {
-        uint8[2][9][3] memory layout = LAYOUTS[tokenId % LAYOUTS_COUNT];
+        uint8[2][9][3] memory layout = LAYOUTS[tokenSeed % LAYOUTS_COUNT];
         if (layout[row][column][0] == 0) {
             return 0;
         } else {
-            return layout[row][column][0] + (tokenId % layout[row][column][1]);
+            return layout[row][column][0] + (tokenSeed % layout[row][column][1]);
         }
     }
 
@@ -292,16 +284,23 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
     /*//////////////////////////////////////////////////////////////
                           INTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    function _tokenSeed(uint256 tokenId)
+        internal
+        view
+        returns (uint256)
+    {
+        return uint256(keccak256(abi.encodePacked(address(this), tokenId)));
+    }
     function fulfillRandomWords(
         uint256 _requestId,
         uint256[] memory _randomWords
     ) internal override {
-        if (randomSeed == 0 && _requestId == lastRequestId) {
-            randomSeed = _randomWords[0];
+        if (drawSeed == 0 && _requestId == lastRequestId) {
+            drawSeed = _randomWords[0];
         }
     }
 
-    function _requestSeed() internal {
+    function _requestDrawSeed() internal {
         lastRequestBlockNumber = block.number;
         uint256 requestId = requestRandomness(
             VRF_CALLBACK_GAS_LIMIT,

@@ -4,7 +4,7 @@ import { useBingoContract } from "@/hooks/useBingoContract";
 import { toast, ToastContentProps } from "react-toastify";
 import { errorSlicing } from "@/utils/utils";
 
-export const ClaimThePrizeButton = (props: { tokenId: string }) => {
+export const ClaimThePrizeButton = (props: { tokenId: number }) => {
   const [loading, setLoading] = useState("");
   const [error, setError] = useState("");
 

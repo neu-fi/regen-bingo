@@ -33,8 +33,8 @@ function sortCards(
 export default function CardList(props: PropsWithChildren<CardListProps>) {
   const { trigger } = props;
   const [cardsCount, setCardsCount] = useState<number | undefined>(undefined);
-  const [cardsMap, setCardsMap] = useState<Map<string, ICard>>(
-    new Map<string, ICard>()
+  const [cardsMap, setCardsMap] = useState<Map<number, ICard>>(
+    new Map<number, ICard>()
   );
 
   const networkState: boolean = useContext(NetworkContext);
@@ -54,7 +54,7 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
         }
       }
     };
-    setCardsMap((cardsMap) => new Map<string, ICard>());
+    setCardsMap(new Map<number, ICard>());
 
     if (!contract) {
       return;
@@ -72,11 +72,10 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
         console.log("fetching card", i, "of", account.address!);
         contract!
           .tokenOfOwnerByIndex(account.address, i)
-          .then((bigNumber: BigNumber) => {
-            const tokenId: string = bigNumber._hex.toString();
-            if (!cardsMap.get(tokenId)) {
-              getToken(contract!, tokenId).then((card) =>
-                setCardsMap((cardsMap) => new Map(cardsMap.set(tokenId, card)))
+          .then((tokenId: BigNumber) => {
+            if (!cardsMap.get(Number(tokenId))) {
+              getToken(contract!, Number(tokenId)).then((card) =>
+                setCardsMap((cardsMap) => new Map(cardsMap.set(Number(tokenId), card)))
               );
             }
           });

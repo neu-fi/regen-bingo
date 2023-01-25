@@ -4,7 +4,7 @@ import Card, { ICard } from "@/components/Card";
 import { useBingoContract } from "@/hooks/useBingoContract";
 import { useProvider } from "wagmi";
 import { Contract } from "ethers";
-import { svg, getToken, clipHash } from "@/utils/utils";
+import { svg, getToken } from "@/utils/utils";
 import { useEffect } from "react";
 
 type CardProps = {};
@@ -12,11 +12,11 @@ type CardProps = {};
 function Cards(props: CardProps) {
   // Router
   const router = useRouter();
-  const { id } = router.query as unknown as { id: string };
+  const { id } = router.query as unknown as { id: number };
   // States
   const [loading, setLoading] = React.useState<string | null>(null);
   const [card, setCard] = React.useState<ICard>({
-    id: "0x36e1de2f4233ee543dc7e5670f9df61d997b5d648be5c4d8e36cf73edf0e46ea",
+    id: 1,
     coveredNumbersCount: 0,
     tokenURI: {
       image: svg,
@@ -33,7 +33,7 @@ function Cards(props: CardProps) {
     getTokenURI(id);
   }, [id]);
 
-  const getTokenURI = async (tokenId: string) => {
+  const getTokenURI = async (tokenId: number) => {
     setLoading("Loading...");
     if (contract) {
       try {
@@ -60,7 +60,7 @@ function Cards(props: CardProps) {
               <>
                 <div className="flex row-span-full justify-center">
                   <h1 className="font-bold tracking-tight text-center text-2xl sm:text-5xl">
-                    {`Regen Bingo Card #${clipHash(id)}`}
+                    {`Regen Bingo Card #${Number(id)}`}
                   </h1>
                 </div>
                 <div className="flex row-span-full mt-4">

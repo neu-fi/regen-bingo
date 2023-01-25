@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { clipHash, isSVG } from "@/utils/utils";
+import { isSVG } from "@/utils/utils";
 import { CONTRACT_ADDRESS, CHAIN_NAME } from "@/config";
 import { ClaimThePrizeButton } from "./contract/ClaimThePrizeButton";
 import { useContext } from "react";
@@ -13,7 +13,7 @@ type CardProps = {
 };
 
 export interface ICard {
-  id: string;
+  id: number;
   coveredNumbersCount: number;
   tokenURI: ITokenURI;
 }
@@ -71,7 +71,7 @@ export default function Card(props: CardProps) {
           <div className="space-y-2 text-lg font-medium leading-6">
             <h3>
               <Link href={`/cards/${card.id}`} className="text-lg text-green-2">
-                Regen Bingo Card #{clipHash(card.id)}
+                Regen Bingo Card #{card.id}
               </Link>
             </h3>
           </div>
