@@ -45,7 +45,6 @@ const config: any = {
   networks: {
     localhost: {
       chainId: 31337,
-      saveDeployments: false,
     },
     mainnet: {
       chainId: 1,

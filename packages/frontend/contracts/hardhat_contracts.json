@@ -3103,5 +3103,3110 @@
         }
       }
     }
+  ],
+  "31337": [
+    {
+      "name": "localhost",
+      "chainId": "31337",
+      "contracts": {
+        "DateTimeContract": {
+          "address": "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
+          "abi": [
+            {
+              "inputs": [],
+              "name": "DOW_FRI",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "DOW_MON",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "DOW_SAT",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "DOW_SUN",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "DOW_THU",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "DOW_TUE",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "DOW_WED",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "OFFSET19700101",
+              "outputs": [
+                {
+                  "internalType": "int256",
+                  "name": "",
+                  "type": "int256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "SECONDS_PER_DAY",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "SECONDS_PER_HOUR",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "SECONDS_PER_MINUTE",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "month",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "day",
+                  "type": "uint256"
+                }
+              ],
+              "name": "_daysFromDate",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_days",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_days",
+                  "type": "uint256"
+                }
+              ],
+              "name": "_daysToDate",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "month",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "day",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "month",
+                  "type": "uint256"
+                }
+              ],
+              "name": "_getDaysInMonth",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "daysInMonth",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                }
+              ],
+              "name": "_isLeapYear",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "leapYear",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "_now",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "_nowDateTime",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "month",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "day",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "hour",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "minute",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "second",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_days",
+                  "type": "uint256"
+                }
+              ],
+              "name": "addDays",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_hours",
+                  "type": "uint256"
+                }
+              ],
+              "name": "addHours",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_minutes",
+                  "type": "uint256"
+                }
+              ],
+              "name": "addMinutes",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_months",
+                  "type": "uint256"
+                }
+              ],
+              "name": "addMonths",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_seconds",
+                  "type": "uint256"
+                }
+              ],
+              "name": "addSeconds",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_years",
+                  "type": "uint256"
+                }
+              ],
+              "name": "addYears",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "fromTimestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "toTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "diffDays",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_days",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "fromTimestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "toTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "diffHours",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_hours",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "fromTimestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "toTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "diffMinutes",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_minutes",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "fromTimestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "toTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "diffMonths",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_months",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "fromTimestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "toTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "diffSeconds",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_seconds",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "fromTimestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "toTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "diffYears",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_years",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "getDay",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "day",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "getDayOfWeek",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "dayOfWeek",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "getDaysInMonth",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "daysInMonth",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "getHour",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "hour",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "getMinute",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "minute",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "getMonth",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "month",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "getSecond",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "second",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "getYear",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "isLeapYear",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "leapYear",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "month",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "day",
+                  "type": "uint256"
+                }
+              ],
+              "name": "isValidDate",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "valid",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "month",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "day",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "hour",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "minute",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "second",
+                  "type": "uint256"
+                }
+              ],
+              "name": "isValidDateTime",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "valid",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "isWeekDay",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "weekDay",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "isWeekEnd",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "weekEnd",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_days",
+                  "type": "uint256"
+                }
+              ],
+              "name": "subDays",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_hours",
+                  "type": "uint256"
+                }
+              ],
+              "name": "subHours",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_minutes",
+                  "type": "uint256"
+                }
+              ],
+              "name": "subMinutes",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_months",
+                  "type": "uint256"
+                }
+              ],
+              "name": "subMonths",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_seconds",
+                  "type": "uint256"
+                }
+              ],
+              "name": "subSeconds",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_years",
+                  "type": "uint256"
+                }
+              ],
+              "name": "subYears",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "newTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "month",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "day",
+                  "type": "uint256"
+                }
+              ],
+              "name": "timestampFromDate",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "month",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "day",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "hour",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "minute",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "second",
+                  "type": "uint256"
+                }
+              ],
+              "name": "timestampFromDateTime",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "timestampToDate",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "month",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "day",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "timestampToDateTime",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "year",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "month",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "day",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "hour",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "minute",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "second",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            }
+          ]
+        },
+        "LinkToken": {
+          "address": "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
+          "abi": [
+            {
+              "constant": true,
+              "inputs": [],
+              "name": "name",
+              "outputs": [
+                {
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "payable": false,
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "constant": false,
+              "inputs": [
+                {
+                  "name": "_spender",
+                  "type": "address"
+                },
+                {
+                  "name": "_value",
+                  "type": "uint256"
+                }
+              ],
+              "name": "approve",
+              "outputs": [
+                {
+                  "name": "",
+                  "type": "bool"
+                }
+              ],
+              "payable": false,
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "constant": true,
+              "inputs": [],
+              "name": "totalSupply",
+              "outputs": [
+                {
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "payable": false,
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "constant": false,
+              "inputs": [
+                {
+                  "name": "_from",
+                  "type": "address"
+                },
+                {
+                  "name": "_to",
+                  "type": "address"
+                },
+                {
+                  "name": "_value",
+                  "type": "uint256"
+                }
+              ],
+              "name": "transferFrom",
+              "outputs": [
+                {
+                  "name": "",
+                  "type": "bool"
+                }
+              ],
+              "payable": false,
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "constant": true,
+              "inputs": [],
+              "name": "decimals",
+              "outputs": [
+                {
+                  "name": "",
+                  "type": "uint8"
+                }
+              ],
+              "payable": false,
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "constant": false,
+              "inputs": [
+                {
+                  "name": "_to",
+                  "type": "address"
+                },
+                {
+                  "name": "_value",
+                  "type": "uint256"
+                },
+                {
+                  "name": "_data",
+                  "type": "bytes"
+                }
+              ],
+              "name": "transferAndCall",
+              "outputs": [
+                {
+                  "name": "success",
+                  "type": "bool"
+                }
+              ],
+              "payable": false,
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "constant": false,
+              "inputs": [
+                {
+                  "name": "_spender",
+                  "type": "address"
+                },
+                {
+                  "name": "_subtractedValue",
+                  "type": "uint256"
+                }
+              ],
+              "name": "decreaseApproval",
+              "outputs": [
+                {
+                  "name": "success",
+                  "type": "bool"
+                }
+              ],
+              "payable": false,
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "constant": true,
+              "inputs": [
+                {
+                  "name": "_owner",
+                  "type": "address"
+                }
+              ],
+              "name": "balanceOf",
+              "outputs": [
+                {
+                  "name": "balance",
+                  "type": "uint256"
+                }
+              ],
+              "payable": false,
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "constant": true,
+              "inputs": [],
+              "name": "symbol",
+              "outputs": [
+                {
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "payable": false,
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "constant": false,
+              "inputs": [
+                {
+                  "name": "_to",
+                  "type": "address"
+                },
+                {
+                  "name": "_value",
+                  "type": "uint256"
+                }
+              ],
+              "name": "transfer",
+              "outputs": [
+                {
+                  "name": "success",
+                  "type": "bool"
+                }
+              ],
+              "payable": false,
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "constant": false,
+              "inputs": [
+                {
+                  "name": "_spender",
+                  "type": "address"
+                },
+                {
+                  "name": "_addedValue",
+                  "type": "uint256"
+                }
+              ],
+              "name": "increaseApproval",
+              "outputs": [
+                {
+                  "name": "success",
+                  "type": "bool"
+                }
+              ],
+              "payable": false,
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "constant": true,
+              "inputs": [
+                {
+                  "name": "_owner",
+                  "type": "address"
+                },
+                {
+                  "name": "_spender",
+                  "type": "address"
+                }
+              ],
+              "name": "allowance",
+              "outputs": [
+                {
+                  "name": "remaining",
+                  "type": "uint256"
+                }
+              ],
+              "payable": false,
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "payable": false,
+              "stateMutability": "nonpayable",
+              "type": "constructor"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "name": "from",
+                  "type": "address"
+                },
+                {
+                  "indexed": true,
+                  "name": "to",
+                  "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "name": "value",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "name": "data",
+                  "type": "bytes"
+                }
+              ],
+              "name": "Transfer",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "name": "owner",
+                  "type": "address"
+                },
+                {
+                  "indexed": true,
+                  "name": "spender",
+                  "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "name": "value",
+                  "type": "uint256"
+                }
+              ],
+              "name": "Approval",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "name": "from",
+                  "type": "address"
+                },
+                {
+                  "indexed": true,
+                  "name": "to",
+                  "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "name": "value",
+                  "type": "uint256"
+                }
+              ],
+              "name": "Transfer",
+              "type": "event"
+            }
+          ]
+        },
+        "VRFCoordinatorV2Mock": {
+          "address": "0x9A676e781A523b5d0C0e43731313A708CB607508",
+          "abi": [
+            {
+              "inputs": [
+                {
+                  "internalType": "uint96",
+                  "name": "_baseFee",
+                  "type": "uint96"
+                },
+                {
+                  "internalType": "uint96",
+                  "name": "_gasPriceLink",
+                  "type": "uint96"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "constructor"
+            },
+            {
+              "inputs": [],
+              "name": "InsufficientBalance",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "InvalidConsumer",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "InvalidRandomWords",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "InvalidSubscription",
+              "type": "error"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "owner",
+                  "type": "address"
+                }
+              ],
+              "name": "MustBeSubOwner",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "TooManyConsumers",
+              "type": "error"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "internalType": "uint64",
+                  "name": "subId",
+                  "type": "uint64"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "address",
+                  "name": "consumer",
+                  "type": "address"
+                }
+              ],
+              "name": "ConsumerAdded",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "internalType": "uint64",
+                  "name": "subId",
+                  "type": "uint64"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "address",
+                  "name": "consumer",
+                  "type": "address"
+                }
+              ],
+              "name": "ConsumerRemoved",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "internalType": "uint256",
+                  "name": "requestId",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "outputSeed",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint96",
+                  "name": "payment",
+                  "type": "uint96"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "bool",
+                  "name": "success",
+                  "type": "bool"
+                }
+              ],
+              "name": "RandomWordsFulfilled",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "internalType": "bytes32",
+                  "name": "keyHash",
+                  "type": "bytes32"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "requestId",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "preSeed",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": true,
+                  "internalType": "uint64",
+                  "name": "subId",
+                  "type": "uint64"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint16",
+                  "name": "minimumRequestConfirmations",
+                  "type": "uint16"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint32",
+                  "name": "callbackGasLimit",
+                  "type": "uint32"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint32",
+                  "name": "numWords",
+                  "type": "uint32"
+                },
+                {
+                  "indexed": true,
+                  "internalType": "address",
+                  "name": "sender",
+                  "type": "address"
+                }
+              ],
+              "name": "RandomWordsRequested",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "internalType": "uint64",
+                  "name": "subId",
+                  "type": "uint64"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "address",
+                  "name": "to",
+                  "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "amount",
+                  "type": "uint256"
+                }
+              ],
+              "name": "SubscriptionCanceled",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "internalType": "uint64",
+                  "name": "subId",
+                  "type": "uint64"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "address",
+                  "name": "owner",
+                  "type": "address"
+                }
+              ],
+              "name": "SubscriptionCreated",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "internalType": "uint64",
+                  "name": "subId",
+                  "type": "uint64"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "oldBalance",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "newBalance",
+                  "type": "uint256"
+                }
+              ],
+              "name": "SubscriptionFunded",
+              "type": "event"
+            },
+            {
+              "inputs": [],
+              "name": "BASE_FEE",
+              "outputs": [
+                {
+                  "internalType": "uint96",
+                  "name": "",
+                  "type": "uint96"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "GAS_PRICE_LINK",
+              "outputs": [
+                {
+                  "internalType": "uint96",
+                  "name": "",
+                  "type": "uint96"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "MAX_CONSUMERS",
+              "outputs": [
+                {
+                  "internalType": "uint16",
+                  "name": "",
+                  "type": "uint16"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint64",
+                  "name": "_subId",
+                  "type": "uint64"
+                }
+              ],
+              "name": "acceptSubscriptionOwnerTransfer",
+              "outputs": [],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint64",
+                  "name": "_subId",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "address",
+                  "name": "_consumer",
+                  "type": "address"
+                }
+              ],
+              "name": "addConsumer",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint64",
+                  "name": "_subId",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "address",
+                  "name": "_to",
+                  "type": "address"
+                }
+              ],
+              "name": "cancelSubscription",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint64",
+                  "name": "_subId",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "address",
+                  "name": "_consumer",
+                  "type": "address"
+                }
+              ],
+              "name": "consumerIsAdded",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "createSubscription",
+              "outputs": [
+                {
+                  "internalType": "uint64",
+                  "name": "_subId",
+                  "type": "uint64"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_requestId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "address",
+                  "name": "_consumer",
+                  "type": "address"
+                }
+              ],
+              "name": "fulfillRandomWords",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_requestId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "address",
+                  "name": "_consumer",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256[]",
+                  "name": "_words",
+                  "type": "uint256[]"
+                }
+              ],
+              "name": "fulfillRandomWordsWithOverride",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint64",
+                  "name": "_subId",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "uint96",
+                  "name": "_amount",
+                  "type": "uint96"
+                }
+              ],
+              "name": "fundSubscription",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "getConfig",
+              "outputs": [
+                {
+                  "internalType": "uint16",
+                  "name": "minimumRequestConfirmations",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "maxGasLimit",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "stalenessSeconds",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "gasAfterPaymentCalculation",
+                  "type": "uint32"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "getFallbackWeiPerUnitLink",
+              "outputs": [
+                {
+                  "internalType": "int256",
+                  "name": "",
+                  "type": "int256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "getFeeConfig",
+              "outputs": [
+                {
+                  "internalType": "uint32",
+                  "name": "fulfillmentFlatFeeLinkPPMTier1",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "fulfillmentFlatFeeLinkPPMTier2",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "fulfillmentFlatFeeLinkPPMTier3",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "fulfillmentFlatFeeLinkPPMTier4",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "fulfillmentFlatFeeLinkPPMTier5",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "uint24",
+                  "name": "reqsForTier2",
+                  "type": "uint24"
+                },
+                {
+                  "internalType": "uint24",
+                  "name": "reqsForTier3",
+                  "type": "uint24"
+                },
+                {
+                  "internalType": "uint24",
+                  "name": "reqsForTier4",
+                  "type": "uint24"
+                },
+                {
+                  "internalType": "uint24",
+                  "name": "reqsForTier5",
+                  "type": "uint24"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "getRequestConfig",
+              "outputs": [
+                {
+                  "internalType": "uint16",
+                  "name": "",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "bytes32[]",
+                  "name": "",
+                  "type": "bytes32[]"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint64",
+                  "name": "_subId",
+                  "type": "uint64"
+                }
+              ],
+              "name": "getSubscription",
+              "outputs": [
+                {
+                  "internalType": "uint96",
+                  "name": "balance",
+                  "type": "uint96"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "reqCount",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "address",
+                  "name": "owner",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address[]",
+                  "name": "consumers",
+                  "type": "address[]"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint64",
+                  "name": "subId",
+                  "type": "uint64"
+                }
+              ],
+              "name": "pendingRequestExists",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint64",
+                  "name": "_subId",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "address",
+                  "name": "_consumer",
+                  "type": "address"
+                }
+              ],
+              "name": "removeConsumer",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "bytes32",
+                  "name": "_keyHash",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "_subId",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "_minimumRequestConfirmations",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "_callbackGasLimit",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "_numWords",
+                  "type": "uint32"
+                }
+              ],
+              "name": "requestRandomWords",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint64",
+                  "name": "_subId",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "address",
+                  "name": "_newOwner",
+                  "type": "address"
+                }
+              ],
+              "name": "requestSubscriptionOwnerTransfer",
+              "outputs": [],
+              "stateMutability": "pure",
+              "type": "function"
+            }
+          ]
+        },
+        "RegenBingoSVG": {
+          "address": "0x0B306BF915C4d645ff596e518fAf3F9669b97016",
+          "abi": [
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "_dateTimeContractAddress",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "constructor"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256[9][3]",
+                  "name": "numbers",
+                  "type": "uint256[9][3]"
+                },
+                {
+                  "internalType": "bool[9][3]",
+                  "name": "covered",
+                  "type": "bool[9][3]"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "donationAmount",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "donationName",
+                  "type": "string"
+                },
+                {
+                  "internalType": "address",
+                  "name": "donationAddress",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "isBingoFinished",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "drawTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "generateTokenSVG",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            }
+          ]
+        },
+        "RegenBingoMetadata": {
+          "address": "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1",
+          "abi": [
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "_svgGeneratorAddress",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "constructor"
+            },
+            {
+              "inputs": [],
+              "name": "generateContractURI",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "pure",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256[9][3]",
+                  "name": "numbers",
+                  "type": "uint256[9][3]"
+                },
+                {
+                  "internalType": "bool[9][3]",
+                  "name": "covered",
+                  "type": "bool[9][3]"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "donationAmount",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "donationName",
+                  "type": "string"
+                },
+                {
+                  "internalType": "address",
+                  "name": "donationAddress",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "isBingoFinished",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "drawTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "name": "generateTokenURI",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "svgGenerator",
+              "outputs": [
+                {
+                  "internalType": "contract IRegenBingoSVG",
+                  "name": "",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            }
+          ]
+        },
+        "RegenBingo": {
+          "address": "0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE",
+          "abi": [
+            {
+              "inputs": [
+                {
+                  "internalType": "string",
+                  "name": "_name",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "_symbol",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_mintPrice",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_drawTimestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_drawNumberCooldownSeconds",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "_donationName",
+                  "type": "string"
+                },
+                {
+                  "internalType": "address payable",
+                  "name": "_donationAddress",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "_metadataGenerator",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "_linkAddress",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "_wrapperAddress",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "constructor"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "internalType": "address",
+                  "name": "owner",
+                  "type": "address"
+                },
+                {
+                  "indexed": true,
+                  "internalType": "address",
+                  "name": "approved",
+                  "type": "address"
+                },
+                {
+                  "indexed": true,
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                }
+              ],
+              "name": "Approval",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "internalType": "address",
+                  "name": "owner",
+                  "type": "address"
+                },
+                {
+                  "indexed": true,
+                  "internalType": "address",
+                  "name": "operator",
+                  "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "bool",
+                  "name": "approved",
+                  "type": "bool"
+                }
+              ],
+              "name": "ApprovalForAll",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "address",
+                  "name": "winner",
+                  "type": "address"
+                }
+              ],
+              "name": "ClaimPrize",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "number",
+                  "type": "uint256"
+                }
+              ],
+              "name": "DrawNumber",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [],
+              "name": "DrawStarted",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "internalType": "address",
+                  "name": "from",
+                  "type": "address"
+                },
+                {
+                  "indexed": true,
+                  "internalType": "address",
+                  "name": "to",
+                  "type": "address"
+                },
+                {
+                  "indexed": true,
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                }
+              ],
+              "name": "Transfer",
+              "type": "event"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "to",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                }
+              ],
+              "name": "approve",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "owner",
+                  "type": "address"
+                }
+              ],
+              "name": "balanceOf",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "bingoState",
+              "outputs": [
+                {
+                  "internalType": "enum RegenBingo.BingoState",
+                  "name": "",
+                  "type": "uint8"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "id",
+                  "type": "uint256"
+                }
+              ],
+              "name": "claimPrize",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                }
+              ],
+              "name": "covered",
+              "outputs": [
+                {
+                  "internalType": "bool[9][3]",
+                  "name": "covered",
+                  "type": "bool[9][3]"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                }
+              ],
+              "name": "coveredNumbers",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "count",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "donationAddress",
+              "outputs": [
+                {
+                  "internalType": "address payable",
+                  "name": "",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "donationName",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "drawNumber",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "drawNumberCooldownSeconds",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "drawTimestamp",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                }
+              ],
+              "name": "getApproved",
+              "outputs": [
+                {
+                  "internalType": "address",
+                  "name": "",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "getDrawnNumbers",
+              "outputs": [
+                {
+                  "internalType": "uint256[]",
+                  "name": "",
+                  "type": "uint256[]"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "row",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "column",
+                  "type": "uint256"
+                }
+              ],
+              "name": "getNumberByCoordinates",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "owner",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "operator",
+                  "type": "address"
+                }
+              ],
+              "name": "isApprovedForAll",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "lastDrawTime",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "mint",
+              "outputs": [],
+              "stateMutability": "payable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "mintCount",
+                  "type": "uint256"
+                }
+              ],
+              "name": "mintMultiple",
+              "outputs": [],
+              "stateMutability": "payable",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "mintPrice",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "name",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                }
+              ],
+              "name": "numbers",
+              "outputs": [
+                {
+                  "internalType": "uint256[9][3]",
+                  "name": "numbers",
+                  "type": "uint256[9][3]"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                }
+              ],
+              "name": "ownerOf",
+              "outputs": [
+                {
+                  "internalType": "address",
+                  "name": "",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "randomSeed",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_requestId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256[]",
+                  "name": "_randomWords",
+                  "type": "uint256[]"
+                }
+              ],
+              "name": "rawFulfillRandomWords",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "rerequestSeed",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "from",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "to",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                }
+              ],
+              "name": "safeTransferFrom",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "from",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "to",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "data",
+                  "type": "bytes"
+                }
+              ],
+              "name": "safeTransferFrom",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "operator",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "approved",
+                  "type": "bool"
+                }
+              ],
+              "name": "setApprovalForAll",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "startDrawPeriod",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "bytes4",
+                  "name": "interfaceId",
+                  "type": "bytes4"
+                }
+              ],
+              "name": "supportsInterface",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "symbol",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "index",
+                  "type": "uint256"
+                }
+              ],
+              "name": "tokenByIndex",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "owner",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "index",
+                  "type": "uint256"
+                }
+              ],
+              "name": "tokenOfOwnerByIndex",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                }
+              ],
+              "name": "tokenURI",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "totalSupply",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "from",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "to",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                }
+              ],
+              "name": "transferFrom",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            }
+          ]
+        }
+      }
+    }
   ]
 }
