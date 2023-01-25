@@ -10,7 +10,7 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   let dateTimeContractAddress = DateTimeContractAddress;
   
-  if(dateTimeContractAddress == null) {
+  if (dateTimeContractAddress == null) {
     let dateTimeContract = await deploy('DateTimeContract', {
       from: deployer,
       log: true,
@@ -19,7 +19,7 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   }
 
   let linkAddress = LinkAddress;
-  if(linkAddress == null) {
+  if (linkAddress == null) {
     let linkToken = await deploy("LinkToken", {
       from: deployer,
       log: true,
@@ -28,7 +28,7 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   }
 
   let wrapperAddress = WrapperAddress;
-  if(wrapperAddress == null) {
+  if (wrapperAddress == null) {
     let vrfCoordinatorV2Mock = await deploy("VRFCoordinatorV2Mock", {
       args: [
         BigNumber.from('100000000000000000'), // 0.1 LINK
