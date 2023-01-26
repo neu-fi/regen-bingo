@@ -65,7 +65,7 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
 
     // Chainlink VRF
     uint256 lastRequestBlockNumber;
-    uint256 lastRequestId;
+    uint256 public lastRequestId;
     uint256 public drawSeed;
 
     /*//////////////////////////////////////////////////////////////
@@ -123,6 +123,10 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
 
     function drawNumber() external returns (uint256) {
         require(bingoState == BingoState.DRAW, "Draw has not started");
+        require(
+            lastDrawTime + drawNumberCooldownSeconds <= block.timestamp,
+            "Draw too soon"
+        );
         require(drawSeed != 0, "Waiting for the random seed");
 
         uint256 nonce = 0;

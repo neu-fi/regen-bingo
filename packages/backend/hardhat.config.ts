@@ -30,8 +30,10 @@ const config: any = {
   solidity: {
     compilers: [
       {
-        version: "0.4.25",
-        settings: COMPILER_SETTINGS
+        version: "0.4.25"
+      },
+      {
+        version: "0.7.0"
       }, 
       {
         version: "0.8.17",

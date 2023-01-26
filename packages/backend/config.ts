@@ -9,7 +9,7 @@ import {
 dotenv.config({
   path: '.env'
 });
-const network = process.env.NEXT_PUBLIC_NETWORK || 'localhost';
+export const network = process.env.NEXT_PUBLIC_NETWORK || 'localhost';
 
 const drawTimestamp =
   process.env.DRAW_TIMESTAMP || Math.floor(Date.now() / 1000) + 300;

@@ -13,14 +13,17 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const linkAmount = "302951757588516228";
   const regenBingoContract = await hre.ethers.getContract("RegenBingo");
   
-  let transaction = await linkContract.attach(deployer).transfer(regenBingoContract.address, linkAmount);
+  let transaction = await linkContract.transfer(regenBingoContract.address, linkAmount);
+  console.log("\n");
   try {
     await transaction.wait();
     console.log(linkAmount, "LINK sent for funding regen-bingo contract");
+    console.log("Rengen Bingo's balance is: ", Number(await linkContract.balanceOf(regenBingoContract.address)));
   } catch(err) {
     console.error(transaction);
     console.error(`Cannot fund the contract. Please send LINK to: ${regenBingoContract.address}`)
   }
+
 };
 
 export default main;
