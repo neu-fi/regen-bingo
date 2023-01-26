@@ -1,37 +1,37 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { DeployFunction } from 'hardhat-deploy/types';
 import { time } from "@nomicfoundation/hardhat-network-helpers";
-import { network, regenBingoArgs } from '../config';
-import { BigNumber } from 'ethers';
+import { network } from '../config';
+import { BigNumber, utils } from 'ethers';
 
 const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     if (network == "localhost") {
-
-        const { deployer } = await hre.getNamedAccounts();
         const regenBingoContract = await hre.ethers.getContract("RegenBingo");
-
         const vrfCoordinatorAddress = (await hre.deployments.get("VRFCoordinatorV2Mock")).address;
         const coordinatorFactory = await hre.ethers.getContractFactory("VRFCoordinatorV2Mock");
         const vrfCoordinatorV2Mock = coordinatorFactory.attach(vrfCoordinatorAddress);
 
         const drawTimestamp = Number(await regenBingoContract.drawTimestamp());
         
-        console.log("\nBingo state is: ", await regenBingoContract.bingoState())
+        console.log("Bingo state is: ", await regenBingoContract.bingoState());
+        console.log("Draw seed is: ", (await regenBingoContract.drawSeed()).toString());
 
         const latestTimestamp = Number(await time.latest());
-
         if(drawTimestamp > latestTimestamp) {
             await time.increaseTo(drawTimestamp);
         }
 
+        console.log("Calling regenBingoContract.startDrawPeriod...");
         await (await regenBingoContract.startDrawPeriod()).wait();
 
+        console.log("Bingo state is: ", await regenBingoContract.bingoState());
+        console.log("Draw seed is: ", (await regenBingoContract.drawSeed()).toString());
+
         const requestId = await regenBingoContract.lastRequestId();
-        const randomness = [(Math.random() * 1e10).toFixed()];
+        const randomness = [BigNumber.from(utils.randomBytes(32))];
         const wrapperAddress = (await hre.deployments.get("VRFV2Wrapper")).address;
 
-        console.log("Random seed is: ", randomness[0])
-
+        console.log("Calling vrfCoordinatorV2Mock.fulfillRandomWordsWithOverride...");
         await (await vrfCoordinatorV2Mock.fulfillRandomWordsWithOverride(
             requestId,
             wrapperAddress,
@@ -41,7 +41,8 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
             }
         )).wait();
 
-        console.log("Bingo state is: ", await regenBingoContract.bingoState())
+        console.log("Bingo state is: ", await regenBingoContract.bingoState());
+        console.log("Draw seed is: ", (await regenBingoContract.drawSeed()).toString());
     }
 };
 
