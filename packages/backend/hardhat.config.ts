@@ -18,11 +18,6 @@ dotenv.config({ path: ".env" });
 const defaultNetwork = process.env.NEXT_PUBLIC_NETWORK || "localhost";
 
 const COMPILER_SETTINGS = {
-  viaIR: true,
-  optimizer: {
-    enabled: true,
-    runs: 200
-  },
 };
 
 // Not using HardhatUserConfig type as it didn't work with hardhat-exposed v0.3.0
@@ -35,6 +30,10 @@ const config: any = {
       }, 
       {
         version: "0.8.17",
+        settings: COMPILER_SETTINGS
+      },
+      {
+        version: "0.7.0",
         settings: COMPILER_SETTINGS
       }
     ],
