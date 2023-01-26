@@ -37,7 +37,25 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       from: deployer,
       log: true,
     });
-    wrapperAddress = vrfCoordinatorV2Mock.address;
+    let mockV3Aggregator = await deploy("MockV3Aggregator", {
+      args : [
+        18,
+        BigNumber.from(String(3e16)) // 0.003
+      ],
+      from: deployer,
+      log: true,
+    })
+    let vrfV2Wrapper = await deploy("VRFV2Wrapper", {
+      args : [
+        linkAddress,
+        mockV3Aggregator.address,
+        vrfCoordinatorV2Mock.address
+      ],
+      from: deployer,
+      log: true
+    })
+
+    wrapperAddress = vrfV2Wrapper.address;
   }
 
   let regenBingoSVG = await deploy('RegenBingoSVG', {
@@ -51,7 +69,7 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     from: deployer,
     log: true,
   });
-
+  
   await deploy('RegenBingo', {
     args: [...regenBingoArgs, regenBingoMetadata.address, linkAddress, wrapperAddress],
     from: deployer,
