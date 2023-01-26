@@ -13,7 +13,8 @@
     "compile": "yarn workspace @regen-bingo/backend compile",
     "test": "yarn workspace @regen-bingo/backend test",
     "clean": "yarn workspace @regen-bingo/backend clean",
-    "deploy": "yarn workspace @regen-bingo/backend deploy"
+    "deploy": "yarn workspace @regen-bingo/backend deploy",
+    "random": "yarn workspace @regen-bingo/backend hardhat run scripts/provide_randomness.ts"
   },
   "workspaces": {
     "packages": [
