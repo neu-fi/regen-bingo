@@ -65,7 +65,7 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
 
     // Chainlink VRF
     uint256 lastRequestBlockNumber;
-    uint256 lastRequestId;
+    uint256 public lastRequestId;
     uint256 public drawSeed;
 
     /*//////////////////////////////////////////////////////////////
