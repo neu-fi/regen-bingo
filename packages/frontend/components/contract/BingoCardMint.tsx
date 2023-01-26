@@ -51,7 +51,13 @@ export const BingoCardMint = () => {
         setLoading("");
         toast.promise(tx.wait, {
           pending: "Waiting for transaction",
-          success: "Minted a new Regen Bingo Card!",
+          success: {
+            render() {
+              // TODO: Trigger a refresh on the bingo card list
+
+              return "Minted a new Regen Bingo Card!";
+            },
+          },
           error: {
             render({ data }: ToastContentProps<any>) {
               return (<span>{errorSlicing(data.reason)}</span>) as any;
