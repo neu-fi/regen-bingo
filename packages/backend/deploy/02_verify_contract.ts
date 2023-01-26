@@ -13,14 +13,7 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     }
 
     let linkAddress = LinkAddress;
-    if(linkAddress == null){
-      //deploy link token to hardhat
-    }
-
     let wrapperAddress = WrapperAddress;
-    if(wrapperAddress == null){
-      //deploy wrapper to hardhat
-    }
 
     let regenBingoSVG = await deployments.get("RegenBingoSVG");
     let regenBingoMetadata = await deployments.get("RegenBingoMetadata");
