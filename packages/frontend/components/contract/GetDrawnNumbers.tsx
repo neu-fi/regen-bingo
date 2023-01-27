@@ -48,9 +48,9 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
     };
     if (contract && !initialFetchCompleted) {
       getDrawnNumbers().then((drawnNumbersAsNumber) => {
+        setInitialFetchCompleted(true); // [1]
         if (drawnNumbersAsNumber === undefined) return;
         setDrawnNumbers(drawnNumbersAsNumber);
-        setInitialFetchCompleted(true); // [1]
       });
       return;
     }
