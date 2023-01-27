@@ -143,7 +143,7 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
             </div>
             {winnerCardURI && claimTxn && (
               <span className="mt-2">
-                Veried with txn:{" "}
+                Verified with txn:{" "}
                 <Link href={getTxn(claimTxn)}>
                   <span className="text-gray-500">{clipHash(claimTxn)}</span>
                 </Link>
