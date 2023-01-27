@@ -1,21 +1,5 @@
 import { ICard } from "@/components/Card";
-import { Contract } from "ethers";
-import { CHAIN_ID } from "../config";
-
-export function clipHash(hash: string) {
-  return hash.slice(0, 6) + "..." + hash.slice(hash.length - 4, hash.length);
-}
-
-export function getTxn(hash: string) {
-  switch (CHAIN_ID) {
-    case 1:
-      return `https://etherscan.io/tx/${hash}`;
-    case 5:
-      return `https://goerli.etherscan.io/tx/${hash}`;
-    default:
-      return `https://etherscan.io/tx/${hash}`;
-  }
-}
+import { BigNumber, Contract } from "ethers";
 
 export function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
