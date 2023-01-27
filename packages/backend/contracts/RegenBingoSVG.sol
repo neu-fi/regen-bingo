@@ -4,11 +4,11 @@ pragma solidity ^0.8.16;
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 import "./interfaces/IRegenBingoSVG.sol";
-import "./interfaces/IDateTime.sol";
+import "@quant-finance/solidity-datetime/contracts/DateTime.sol";
 
 contract RegenBingoSVG is IRegenBingoSVG {
     uint256 constant xOffset = 240;
-    uint256 constant yOffset = 935;
+    uint256 constant yOffset = 940;
     uint256 constant circleXOffset = 300;
     uint256 constant circleYOffset = 900;
     string[40] backgroundColors = [
@@ -67,12 +67,6 @@ contract RegenBingoSVG is IRegenBingoSVG {
         "November",
         "December"
     ];
-
-    IDateTime dateTimeContract;
-
-    constructor(address _dateTimeContractAddress) {
-        dateTimeContract = IDateTime(_dateTimeContractAddress);
-    }
 
     string constant defs1 =
         string(
@@ -211,7 +205,7 @@ contract RegenBingoSVG is IRegenBingoSVG {
         uint256 hour;
         uint256 minute;
 
-        (year, month, day, hour, minute, ) = dateTimeContract
+        (year, month, day, hour, minute, ) = DateTime
             .timestampToDateTime(timestamp);
 
         string memory minuteString;
