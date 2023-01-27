@@ -1,16 +1,10 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { DeployFunction } from 'hardhat-deploy/types';
-import { regenBingoArgs, DateTimeContractAddress, LinkAddress, WrapperAddress } from '../config';
+import { regenBingoArgs, LinkAddress, WrapperAddress } from '../config';
 
 const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   if (hre.network.name !== 'localhost') {
     const { deployments } = hre;
-
-    let dateTimeContractAddress = DateTimeContractAddress;
-    if(dateTimeContractAddress == null){
-      const dateTime = await deployments.get("DateTimeContract");
-      dateTimeContractAddress = dateTime.address;
-    }
 
     let linkAddress = LinkAddress;
     let wrapperAddress = WrapperAddress;
@@ -27,7 +21,6 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         counter0++;
         await hre.run("verify:verify", {
           address: regenBingoSVG.address,
-          constructorArguments : [dateTimeContractAddress]
         });
         skip0 = true;
         console.log("Verified!");

@@ -8,16 +8,6 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments } = hre;
   const { deploy } = deployments;
 
-  let dateTimeContractAddress = DateTimeContractAddress;
-  
-  if (dateTimeContractAddress == null) {
-    let dateTimeContract = await deploy('DateTimeContract', {
-      from: deployer,
-      log: true,
-    });
-    dateTimeContractAddress = dateTimeContract.address;
-  }
-
   let linkAddress = LinkAddress;
   if (linkAddress == null) {
     let linkToken = await deploy("LinkToken", {
@@ -59,7 +49,6 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   }
 
   let regenBingoSVG = await deploy('RegenBingoSVG', {
-    args: [dateTimeContractAddress],
     from: deployer,
     log: true,
   });
