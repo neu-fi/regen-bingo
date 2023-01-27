@@ -8,7 +8,7 @@
       "declaration": true,
       "resolveJsonModule":true
     },
-    "include": ["./config", "./scripts", "./deploy", "./test"],
+    "include": ["./config", "./scripts", "./deploy", "./test", "provide_randomness.ts"],
     "files": ["./hardhat.config.ts"]
   }
   
