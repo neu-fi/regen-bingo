@@ -10,8 +10,9 @@ import {
 import { BingoState, useBingoContract } from "@/hooks/useBingoContract";
 import { useProvider } from "wagmi";
 import { Contract } from "ethers";
-import { getToken, isSVG } from "@/utils/utils";
+import { getToken, isSVG, clipHash, getTxn } from "@/utils/utils";
 import { ICard } from "./Card";
+import Link from "next/link";
 
 type MintProps = {};
 
@@ -20,6 +21,7 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
   const winnerCardId = useContext(WinnerCardContext);
   const networkState = useContext(NetworkContext);
   const [winnerCardURI, setWinnerCardURI] = useState<ICard>();
+  const [claimTxn, setClaimTxn] = useState<string | undefined>();
 
   const provider = useProvider();
   const contract: Contract | undefined = useBingoContract(provider);
@@ -36,6 +38,23 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
     if (!contract || !winnerCardId || bingoState !== BingoState.FINISHED) {
       return;
     }
+
+    const getWinnerCardEvent = async () => {
+      const owner = await contract.ownerOf(winnerCardId);
+      console.log(owner);
+      const filter = contract.filters.ClaimPrize();
+      const events = await contract.queryFilter(filter, 0, "latest");
+      const latest = events.find((event) => event.args!.winner === owner);
+      if (latest) {
+        return latest.transactionHash!;
+      } else {
+        return;
+      }
+    };
+
+    getWinnerCardEvent().then((txnHash: any) => {
+      setClaimTxn(txnHash);
+    });
 
     getWinnerCardURI().then((cardURI: ICard | undefined) => {
       if (cardURI) {
@@ -62,7 +81,7 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
   return (
     <div className="relative px-6 lg:px-8">
       <section id="">
-        <div className="mx-auto mt-4  max-w-5xl flex space-x-1 lg:flex-1 justify-between lg:flex-nowrap flex-wrap">
+        <div className="mx-auto mt-4  max-w-5xl flex space-x-1 lg:flex-1 justify-evenly lg:flex-nowrap flex-wrap">
           <div className="mx-auto max-w-xl ml-5 pt-20 pb-32 sm:pt-48 sm:pb-40">
             <div>
               <div>
@@ -94,8 +113,17 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
             </div>
           </div>
 
-          <div className="flex justify-center items-center">
-            <div className="flex h-96 w-96">
+          <div className="flex flex-col justify-center items-center">
+            {winnerCardURI && (
+              <span>
+                Winner of the Gitcoin Alpha Round{" "}
+                <Link href={`/cards/${winnerCardId}`}>
+                  <span className="text-gray-500">#{winnerCardId}</span>
+                </Link>
+              </span>
+            )}
+
+            <div className="flex justify-items-center items-center h-80 w-80 sm:h-92 sm:w-92">
               <>
                 {winnerCardURI ? (
                   <div
@@ -103,6 +131,7 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
                     className="h-full w-full aspect-w-1 aspect-h-1 sm:aspect-w-1 sm:aspect-h-1 my-2"
                   ></div>
                 ) : (
+                  // TODO: Display random NFT on load
                   <Image
                     src="/board-example.svg"
                     height={"400"}
@@ -112,6 +141,14 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
                 )}
               </>
             </div>
+            {winnerCardURI && claimTxn && (
+              <span className="mt-2">
+                Veried with txn:{" "}
+                <Link href={getTxn(claimTxn)}>
+                  <span className="text-gray-500">{clipHash(claimTxn)}</span>
+                </Link>
+              </span>
+            )}
           </div>
         </div>
       </section>

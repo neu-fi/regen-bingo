@@ -44,7 +44,7 @@ export const DrawNumber = () => {
           });
         }
         setLoading("Waiting for approval...");
-        const tx = await contract.drawNumber({ gasLimit: 250000 });
+        const tx = await contract.drawNumber();
         toast.promise(tx.wait, {
           pending: "Waiting for transaction",
           success: "Drawn a new number!",
