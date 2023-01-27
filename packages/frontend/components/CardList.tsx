@@ -19,9 +19,10 @@ function sortCards(
   cards: Map<number, ICard>,
   type: SortType = { sort: "desc", key: "matches" }
 ): Map<number, ICard> {
+  // Check if there is any card with matches.
   const isAllEmpty: boolean =
     [...cards.entries()].find((element) => {
-      element[1].coveredNumbersCount !== 0;
+      return element[1].coveredNumbersCount !== 0;
     }) === undefined;
 
   if (type.key === "matches" && !isAllEmpty) {
@@ -38,6 +39,7 @@ function sortCards(
     return cards;
   }
 
+  // If there is no card with matches, sort by id.
   if (type.key === "id" || isAllEmpty) {
     // SORT MAP BY ID
     cards = new Map(
