@@ -26,7 +26,8 @@ yarn deploy
 While deploying if the hardhat chain crashes due to heap allocation error, please use
 `--max-memory` parameter. In order to do that, add `--max-memory <memory-size>` to the
 packages/backend/package.json. 
-e.g. `hardhat deploy --max-memory 8192 --export-all ../frontend/contracts/hardhat_contracts.json`
+e.g. 
+```hardhat deploy --max-memory 8192 --export-all ../frontend/contracts/hardhat_contracts.json```
 
 #### Run the frotnend
 ```
