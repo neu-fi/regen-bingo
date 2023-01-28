@@ -31,6 +31,17 @@ e.g.
 hardhat deploy --max-memory 8192 --export-all ../frontend/contracts/hardhat_contracts.json
 ```
 
+### Run tests
+
+```
+yarn test --grep "The minimal test"
+```
+
+Run a single or subset of tests like the following command:
+```
+yarn test --grep "The minimal test"
+```
+
 #### Run the frotnend
 ```
 yarn dev
