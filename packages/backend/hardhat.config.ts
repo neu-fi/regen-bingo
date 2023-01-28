@@ -17,12 +17,35 @@ chai.use(require("chai-bignumber")());
 dotenv.config({ path: ".env" });
 const defaultNetwork = process.env.NEXT_PUBLIC_NETWORK || "localhost";
 
+// Based on the default: https://github.com/ethereum/solidity/blob/v0.8.17/libsolidity/interface/OptimiserSettings.h#L44
+const YUL_OPTIMIZER_STEPS = [
+  "dhfoDgvulfnTUtnIf",             // None of these can make stack problems worse
+  "i",                             // Fixes https://github.com/NomicFoundation/hardhat/issues/3365#issuecomment-1407502717
+  "[",
+    "xa[r]EscLM",                  // Turn into SSA and simplify
+    "cCTUtTOntnfDIul",             // Perform structural simplification
+    "Lcul",                        // Simplify again
+    "Vcul [j]",                    // Reverse SSA
+    "Tpeul",                       // Run functional expression inliner
+    "xa[rul]",                     // Prune a bit more in SSA
+    "xa[r]cL",                     // Turn into SSA again and simplify
+    "gvif",                        // Run full inliner
+    "CTUca[r]LSsTFOtfDnca[r]Iulc", // SSA plus simplify
+  "]",
+  "jmul[jul] VcTOcul jmul"        // Make source short and pretty
+];
+
 const COMPILER_SETTINGS = {
   viaIR: true,
   optimizer: {
     enabled: true,
-    runs: 200
-  },
+    runs: 200,
+    details: {
+      yulDetails: {
+        optimizerSteps: YUL_OPTIMIZER_STEPS.join('')
+      }
+    }
+  }
 };
 
 // Not using HardhatUserConfig type as it didn't work with hardhat-exposed v0.3.0
