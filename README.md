@@ -17,7 +17,19 @@ yarn chain
 ```
 
 ### Tab 2
-While keeping the `yarn chain` tab open, follow the instructions below in a second tab.
+While keeping the `yarn chain` tab open, follow the instructions below in a seperate tab.
+
+### Deploy the contract
+```
+yarn deploy
+```
+While deploying if the hardhat chain crashes due to heap allocation error, please use
+`--max-memory` parameter. In order to do that, add `--max-memory <memory-size>` to the
+packages/backend/package.json. 
+e.g. 
+```
+hardhat deploy --max-memory 8192 --export-all ../frontend/contracts/hardhat_contracts.json
+```
 
 #### Run the frotnend
 ```
