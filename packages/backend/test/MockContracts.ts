@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { loadFixture, time, mineUpTo} from "@nomicfoundation/hardhat-network-helpers";
+import { loadFixture, time, mine} from "@nomicfoundation/hardhat-network-helpers";
 import { BigNumber } from "ethers";
 
 const name = "RegenBingo";
@@ -180,11 +180,9 @@ describe("Chainlink contract integrations", function () {
             expect(lastRequestId).to.equal(BigNumber.from("1"));
             expect(await regenBingo.drawSeed()).to.equal(BigNumber.from("0"));
             
-            const lastBlockNumber = Number(await ethers.provider.getBlockNumber());
-
             await provideRandomness(lastRequestId);
 
-            await mineUpTo(lastBlockNumber + 1000);
+            await mine(1000);
             
             await expect(regenBingo.rerequestDrawSeed()).to.not.emit(vrfCoordinatorV2Mock, "RandomWordsRequested");
             expect(await regenBingo.lastRequestId()).to.equal(lastRequestId);
@@ -203,8 +201,7 @@ describe("Chainlink contract integrations", function () {
             expect(lastRequestId).to.equal(BigNumber.from("1"));
             expect(await regenBingo.drawSeed()).to.equal(BigNumber.from("0"));
 
-            const lastBlockNumber = Number(await ethers.provider.getBlockNumber());
-            await mineUpTo(lastBlockNumber + 1000);
+            await mine(1000);
             
             await expect(regenBingo.rerequestDrawSeed()).to.emit(vrfCoordinatorV2Mock, "RandomWordsRequested");
             expect(await regenBingo.lastRequestId()).to.not.equal(lastRequestId);
