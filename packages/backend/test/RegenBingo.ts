@@ -306,7 +306,9 @@ describe("RegenBingo", function () {
     });
 
     describe("SVG Generation", function () {
-        it("Rolling text test (Donated)", async function() {
+        // Format is like the following:
+        // Donating 0.1 ETH · Donation Name · 0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc · January 29, 2023 05:28 UTC
+        it("Rolling text test (Donating)", async function() {
             const { regenBingo, donationAddress, drawTimestamp, donationName } = await loadFixture(deployBingoFixture);
             const donationAmount = String(ethers.utils.formatEther(String(Number(mintPrice) / 2)));
             const MONTHS = [
@@ -323,8 +325,6 @@ describe("RegenBingo", function () {
                 "November",
                 "December"];
 
-            //Donating 0.1 ETH · Donation Name · 0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc · January 24, 2023 17:42 UTC
-
             const tx = await regenBingo.mint({ value: mintPrice });
             await tx.wait();
 
@@ -334,10 +334,27 @@ describe("RegenBingo", function () {
             const decodedTokenURI = JSON.parse(Buffer.from(tokenURI.split(',')[1], 'base64').toString());
             const decodedImage = Buffer.from(decodedTokenURI['image'].split(',')[1], 'base64').toString();
             
-            const date = new Date((drawTimestamp - 3 * 60 * 60) * 1000);
-            const dateString = MONTHS[date.getMonth()] + ' ' + date.getDate().toString() + ', ' + date.getFullYear().toString() + ' ' + date.getHours().toString() + ':' + date.getMinutes().toString() + ' UTC';
+            const date = new Date(drawTimestamp * 1000);
+            let hours = date.getUTCHours();
+            let hoursPaddedString;
+            if (hours < 10) {
+                hoursPaddedString = "0" + hours;
+            } else {
+                hoursPaddedString = "" + hours;
+            }
+            let minutes = date.getUTCMinutes();
+            let minutesPaddedString;
+            if (minutes < 10) {
+                minutesPaddedString = "0" + minutes;
+            } else {
+                minutesPaddedString = "" + minutes;
+            }
 
-            expect(decodedImage).to.include('Donating ' + donationAmount + ' ETH · ' + donationName + ' · ' + String(donationAddress).toLowerCase() + ' · ' + dateString);
+            const dateString = MONTHS[date.getUTCMonth()] + ' ' + date.getUTCDate() + ', ' + date.getUTCFullYear() + ' ' + hoursPaddedString + ':' + minutesPaddedString + ' UTC';
+            const expectedRollingText = 'Donating ' + donationAmount + ' ETH · ' + donationName + ' · ' + String(donationAddress).toLowerCase() + ' · ' + dateString;
+            const foundRollingText = decodedImage.match(/Donat.*UTC/)?.toString();
+
+            expect(expectedRollingText).to.equal(foundRollingText);
         })
     })
 });

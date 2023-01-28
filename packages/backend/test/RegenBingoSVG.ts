@@ -62,14 +62,6 @@ describe('RegenBingoSVG', function () {
   describe('Rolling Text Generator', function () {
     it('Game is finished (Donated)', async function () {
       const { regenBingoSVG } = await loadFixture(deployExposedRegenBingoSVGFixture);
-      
-      /*
-        uint256 donationAmount,
-        string memory donationName,
-        address donationAddress,
-        bool isBingoFinished,
-        uint256 drawTimestamp
-      */ 
 
       const args = [
         ethers.BigNumber.from(String(1e18)),
@@ -100,7 +92,6 @@ describe('RegenBingoSVG', function () {
       const donationStatusText = rollingText.split(' ')[0];
 
       expect(donationStatusText).to.equal('Donating');
-
     });
   });
 
