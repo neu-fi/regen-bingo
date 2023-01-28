@@ -65,7 +65,7 @@ export default function Card(props: CardProps) {
           ></div>
         </div>
       </div>
-      
+
       <div className="sm:col-span-1">
         <div className="space-y-4">
           <div className="space-y-2 text-lg font-medium leading-6">
@@ -73,13 +73,8 @@ export default function Card(props: CardProps) {
               <Link href={`/cards/${card.id}`} className="text-lg text-green-2">
                 Regen Bingo Card #{card.id}
               </Link>
-            </h3>
-          </div>
-
-          <ul role="list" className="flex space-x-5">
-            <li>
-              <a
-                href={openseaURL(BigInt(card.id))}
+              <Link
+                href={new URL(openseaURL(BigInt(card.id))!)}
                 target="_blank"
                 className="text-gray-400 hover:text-gray-500"
               >
@@ -90,19 +85,23 @@ export default function Card(props: CardProps) {
                   width={24}
                   height={24}
                 />
-              </a>
-            </li>
+              </Link>
+            </h3>
+          </div>
+
+          <ul role="list" className="flex space-x-5">
+            <li></li>
           </ul>
-          <div className="text-lg">
+          <div className="text-lg text-center">
             <>
               {didWinPrize() && !isClaimed() ? (
                 <>
-                  <p className="text-gray-500">
+                  <p className="text-gray-500 mb-4">
                     Full house! Claim the prize immidately! 🔥
                   </p>
                   <ClaimThePrizeButton tokenId={card.id} />
                 </>
-              ) : !isClaimed() ? (
+              ) : !didWinPrize() ? (
                 <p className="text-gray-500">
                   Has{" "}
                   {card.coveredNumbersCount === 0
@@ -112,7 +111,7 @@ export default function Card(props: CardProps) {
                     : `${card.coveredNumbersCount} matches!`}
                 </p>
               ) : (
-                <span>Winner of the GitCoin Alpha Round</span>
+                <span>Winner of the GitCoin Alpha Round!</span>
               )}
             </>
           </div>
