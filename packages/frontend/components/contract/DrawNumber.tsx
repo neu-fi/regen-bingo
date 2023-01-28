@@ -35,13 +35,20 @@ export const DrawNumber = () => {
           const tx = await contract.startDrawPeriod();
           toast.promise(tx.wait, {
             pending: "Waiting for transaction",
-            success: undefined,
+            success: {
+              // When promise resolves, render toast and trigger the drawNumber
+              render() {
+                handleClick();
+                return "Draw period started!";
+              },
+            },
             error: {
               render({ data }: ToastContentProps<any>) {
                 return (<span>{errorSlicing(data.reason)}</span>) as any;
               },
             },
           });
+          return;
         }
         setLoading("Waiting for approval...");
         const tx = await contract.drawNumber({ gasLimit: 250000 });

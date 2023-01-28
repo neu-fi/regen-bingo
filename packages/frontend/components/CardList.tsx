@@ -16,22 +16,49 @@ type SortType = {
 };
 
 function sortCards(
-  cards: ICard[],
+  cards: Map<number, ICard>,
   type: SortType = { sort: "desc", key: "matches" }
-): ICard[] {
-  if (type.key === "matches") {
-    // SORT BY MATCHES
-    return cards.sort((a, b) => {
-      const aMatches = a.coveredNumbersCount;
-      const bMatches = b.coveredNumbersCount;
-      return type.sort === "asc" ? aMatches - bMatches : bMatches - aMatches;
-    });
+): Map<number, ICard> {
+  // Check if there is any card with matches.
+  const isAllEmpty: boolean =
+    [...cards.entries()].find((element) => {
+      return element[1].coveredNumbersCount !== 0;
+    }) === undefined;
+
+  if (type.key === "matches" && !isAllEmpty) {
+    // SORT MAP BY MATCHES
+    cards = new Map(
+      [...cards.entries()].sort((a, b) => {
+        if (type.sort === "asc") {
+          return a[1].coveredNumbersCount - b[1].coveredNumbersCount;
+        } else {
+          return b[1].coveredNumbersCount - a[1].coveredNumbersCount;
+        }
+      })
+    );
+    return cards;
+  }
+
+  // If there is no card with matches, sort by id.
+  if (type.key === "id" || isAllEmpty) {
+    // SORT MAP BY ID
+    cards = new Map(
+      [...cards.entries()].sort((a, b) => {
+        if (type.sort === "desc") {
+          return a[0] - b[0];
+        } else {
+          return b[0] - a[0];
+        }
+      })
+    );
+    return cards;
   }
   return cards;
 }
 
 export default function CardList(props: PropsWithChildren<CardListProps>) {
   const { trigger } = props;
+  const [accountTrigger, setAccountTrigger] = useState<Event>();
   const [cardsCount, setCardsCount] = useState<number | undefined>(undefined);
   const [cardsMap, setCardsMap] = useState<Map<number, ICard>>(
     new Map<number, ICard>()
@@ -61,34 +88,38 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
     }
 
     getBalance().then((balance) => {
-      console.log(balance);
-      setCardsCount((oldBalance) => balance);
+      setCardsCount((oldBalance) => {
+        if (oldBalance === balance) {
+          setAccountTrigger((old) => new Event("accountTrigger"));
+        }
+        return balance;
+      });
     });
   }, [contract, account.address, networkState, trigger]);
 
   useEffect(() => {
     const fetchCardList = () => {
       for (let i = 0; i < cardsCount!; i++) {
-        console.log("fetching card", i, "of", account.address!);
+        // console.log("fetching card", i, "of", account.address!);
         contract!
           .tokenOfOwnerByIndex(account.address, i)
           .then((tokenId: BigNumber) => {
             if (!cardsMap.get(Number(tokenId))) {
               getToken(contract!, Number(tokenId)).then((card) =>
-                setCardsMap((cardsMap) => new Map(cardsMap.set(Number(tokenId), card)))
+                setCardsMap((cardsMap) =>
+                  sortCards(new Map(cardsMap.set(Number(tokenId), card)))
+                )
               );
             }
           });
       }
     };
-
     // Guard clauses
     if (!contract) {
       return;
     }
-    // console.log(cardsCount);
     fetchCardList();
-  }, [cardsCount]);
+  }, [cardsCount, trigger, accountTrigger]);
 
   return (
     <>

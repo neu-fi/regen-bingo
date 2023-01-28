@@ -31,7 +31,7 @@ function Layout(props: PropsWithChildren<LayoutProps>) {
   const [network, setNetwork] = useState<GetNetworkResult>(() => getNetwork());
   watchNetwork((newNetwork) => {
     if (newNetwork.chain?.id != network.chain?.id) {
-      setNetwork(newNetwork)
+      setNetwork(newNetwork);
     }
   });
 
