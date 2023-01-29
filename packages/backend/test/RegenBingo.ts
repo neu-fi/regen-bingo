@@ -136,11 +136,11 @@ describe("RegenBingo", function () {
             const { regenBingo } = await loadFixture(deployBingoFixture);
 
             await expect(regenBingo.mint({ value: 0 })).to.be.revertedWith(
-                "Incorrect payment amount"
+                "Incorrect payment"
             );
 
             await expect(regenBingo.mint({ value: mintPrice.mul(2) })).to.be.revertedWith(
-                "Incorrect payment amount"
+                "Incorrect payment"
             );
         });
 
@@ -190,6 +190,7 @@ describe("RegenBingo", function () {
             const requestId = await regenBingo.lastRequestId();
             let randomness = await provideRandomness(requestId);
 
+            expect(await regenBingo.drawSeed()).not.to.equal(BigNumber.from("0"));
             expect(await regenBingo.drawSeed()).to.equal(BigNumber.from(randomness));
         });
         it("Draws one number correctly", async function () {
