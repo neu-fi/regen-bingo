@@ -7,10 +7,11 @@ import "./interfaces/IRegenBingoSVG.sol";
 import "./interfaces/IDateTime.sol";
 
 contract RegenBingoSVG is IRegenBingoSVG {
-    uint256 constant xOffset = 240;
-    uint256 constant yOffset = 935;
-    uint256 constant circleXOffset = 300;
-    uint256 constant circleYOffset = 900;
+    string constant STYLES = '<style>*{stroke:black;stroke-width:1}text{font-family:Monaco;font-size:100px}.a{fill:#57b592}.b{fill:#bde4df}.c{fill:#f8ce47}.d{fill:#fcf2b1}</style>';
+    uint256 constant X_OFFSET = 240;
+    uint256 constant Y_OFFSET = 935;
+    uint256 constant CIRCLE_X_OFFSET = 300;
+    uint256 constant CIRCLE_Y_OFFSET = 900;
     string[40] BACKGROUND_COLORS = [
         "#5f9e80",
         "#909F79",
@@ -74,11 +75,6 @@ contract RegenBingoSVG is IRegenBingoSVG {
         dateTimeContract = IDateTime(_dateTimeContractAddress);
     }
 
-    string constant styles = '<style>text{font-family:Monaco;font-size:100px}svg{stroke:black;stroke-width:1}.a{fill:#57b592}.b{fill:#bde4df}.c{fill:#f8ce47}.d{fill:#fcf2b1}</style>';
-
-
-    string constant header = '';
-
     function generateTokenSVG(
         uint256 tokenId,
         uint256[9][3] calldata numbers,
@@ -100,7 +96,7 @@ contract RegenBingoSVG is IRegenBingoSVG {
                         isBingoFinished,
                         drawTimestamp
                     ),
-                    styles,
+                    STYLES,
                     _generatePillPattern(tokenId),
                     _generateCard(numbers, covered),
                     '</svg>'
@@ -302,15 +298,15 @@ contract RegenBingoSVG is IRegenBingoSVG {
     ) internal pure returns (string memory) {
         string memory xCordinate;
         string memory yCordinate;
-        string memory circleX = Strings.toString(x * 200 + circleXOffset);
-        string memory circleY = Strings.toString(y * 200 + circleYOffset);
+        string memory circleX = Strings.toString(x * 200 + CIRCLE_X_OFFSET);
+        string memory circleY = Strings.toString(y * 200 + CIRCLE_Y_OFFSET);
 
         if (number < 10) {
-            xCordinate = Strings.toString(x * 200 + xOffset + 35);
+            xCordinate = Strings.toString(x * 200 + X_OFFSET + 35);
         } else {
-            xCordinate = Strings.toString(x * 200 + xOffset);
+            xCordinate = Strings.toString(x * 200 + X_OFFSET);
         }
-        yCordinate = Strings.toString(y * 200 + yOffset);
+        yCordinate = Strings.toString(y * 200 + Y_OFFSET);
 
         string memory numberSVG = string(
             abi.encodePacked(
