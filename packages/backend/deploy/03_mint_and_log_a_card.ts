@@ -17,21 +17,16 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     console.log("\nMinting a card...");
     await (await regenBingoContract.connect(deployer).mint({ value: mintPrice })).wait();
 
-    let multipleMintCount = 2;
-    console.log("\nMinting", multipleMintCount, "cards...");
-    await (await regenBingoContract.connect(deployer).mintMultiple(multipleMintCount, deployer.address, { value: mintPrice.mul(multipleMintCount) })).wait();
+    let quantity = 2;
+    console.log("\nMinting", quantity, "cards...");
+    await (await regenBingoContract.connect(deployer).mintMultiple(deployer.address, quantity, { value: mintPrice.mul(quantity) })).wait();
 
     console.log("\ntotalSupply():");
     totalSupply = (await regenBingoContract.totalSupply());
     console.log(totalSupply.toString());
 
     if ( 0 < totalSupply ) {
-      let tokenId = await regenBingoContract.tokenByIndex(totalSupply.sub(1));
-
-      console.log("\nLatest token id:");
-      console.log(tokenId.toString());
-      
-      let tokenURI = await regenBingoContract.tokenURI(tokenId);
+      let tokenURI = await regenBingoContract.tokenURI(totalSupply);
       let decodedTokenURI = JSON.parse(Buffer.from(tokenURI.split(',')[1], 'base64').toString());
 
       console.log("\nDecoded tokenURI(tokenId):");

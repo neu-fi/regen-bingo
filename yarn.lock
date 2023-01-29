@@ -1464,6 +1464,7 @@ __metadata:
     chai: ^4.3.6
     chai-bignumber: ^3.1.0
     dotenv: ^16.0.0
+    erc721a: ^4.2.3
     ethereum-waffle: ^3.4.4
     ethers: ^5.7.2
     hardhat: 2.12.1-ir.0
@@ -5931,6 +5932,13 @@ __metadata:
   version: 2.2.1
   resolution: "env-paths@npm:2.2.1"
   checksum: 65b5df55a8bab92229ab2b40dad3b387fad24613263d103a97f91c9fe43ceb21965cd3392b1ccb5d77088021e525c4e0481adb309625d0cb94ade1d1fb8dc17e
+  languageName: node
+  linkType: hard
+
+"erc721a@npm:^4.2.3":
+  version: 4.2.3
+  resolution: "erc721a@npm:4.2.3"
+  checksum: 0b2223678219d9b4a228da880cca9aab396ebe9cb59baf34a5501d4d9d297024d492ee5335c1983cd4c3bd15deef5e162c4837d27ac5ab5bf66e01591ead425c
   languageName: node
   linkType: hard
 

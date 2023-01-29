@@ -3,11 +3,11 @@
 
 pragma solidity ^0.8.17;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@chainlink/contracts/src/v0.8/VRFV2WrapperConsumerBase.sol";
+import "erc721a/contracts/ERC721A.sol";
 import "./interfaces/IRegenBingoMetadata.sol";
 
-contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
+contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
     enum BingoState {
         MINT,
         DRAW,
@@ -74,8 +74,8 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
 
     // Chainlink VRF
     uint256 lastRequestBlockNumber;
-    uint256 public lastRequestId;
-    uint256 public drawSeed;
+    uint256 lastRequestId;
+    uint256 drawSeed;
 
     /*//////////////////////////////////////////////////////////////
                                  EVENTS
@@ -101,7 +101,7 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
         address _linkAddress,
         address _wrapperAddress
     )
-        ERC721(_name, _symbol)
+        ERC721A(_name, _symbol)
         VRFV2WrapperConsumerBase(_linkAddress, _wrapperAddress)
     {
         mintPrice = _mintPrice;
@@ -119,20 +119,18 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
     function mint() external payable {
         require(bingoState == BingoState.MINT, "Minting has ended");
         require(msg.value == mintPrice, "Incorrect payment");
-        _mint(msg.sender, totalSupply() + 1);
+        _mint(msg.sender, 1);
     }
 
-    function mintMultiple(uint256 count, address to) external payable {
+    function mintMultiple(address to, uint256 quantity) external payable {
         require(bingoState == BingoState.MINT, "Minting has ended");
-        require(msg.value == count * mintPrice, "Incorrect payment");
-        for (uint256 i = 0; i < count; i++) {
-            _mint(to, totalSupply() + 1);
-        }
+        require(msg.value == quantity * mintPrice, "Incorrect payment");
+        _mint(to, quantity);
     }
 
     function drawNumber() external {
         require(bingoState == BingoState.DRAW, "Draw has not started");
-        require(nextDrawTimestamp <= block.timestamp, "Draw too soon");
+        require(nextDrawTimestamp <= block.timestamp, "Waiting the cooldown");
 
         // Pick a randomNumberIndex from the not yet drawn side.
         uint256 randomNumberIndex = (drawSeed + drawnNumbersCount) % (90 - drawnNumbersCount);
@@ -151,9 +149,9 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
     }
 
     function claimPrize(uint256 tokenId) external {
-        require(bingoState != BingoState.FINISHED, "Game Over");
-        _requireMinted(tokenId);
-        require(coveredNumbers(tokenId) == 15, "INELIGIBLE");
+        require(bingoState == BingoState.DRAW, "Game is over");
+        require(_exists(tokenId), "Invalid token ID");
+        require(coveredNumbers(tokenId) == 15, "Ineligible");
         donationAddress.call{value: address(this).balance / 2}("");
         address payable winner = payable(ownerOf(tokenId));
         winner.call{value: address(this).balance}("");
@@ -162,8 +160,8 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
     }
 
     function startDrawPeriod() external {
-        require(bingoState == BingoState.MINT);
-        require(firstDrawTimestamp <= block.timestamp, "It is not draw period yet");
+        require(bingoState == BingoState.MINT, "Draw already started");
+        require(firstDrawTimestamp <= block.timestamp, "Hold down");
 
         bingoState = BingoState.DRAW;
         emit DrawStarted();
@@ -174,6 +172,57 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
         if (bingoState == BingoState.DRAW && drawSeed == 0 && lastRequestBlockNumber + VRF_REREQUEST_COOLDOWN_BLOCKS <= block.number) {
             _requestDrawSeed();
         }
+    }
+
+    /**
+     * @dev Returns an array of token IDs owned by `owner`.
+     *
+     * This function scans the ownership mapping and is O(`totalSupply`) in complexity.
+     * It is meant to be called off-chain.
+     *
+     * See {ERC721AQueryable-tokensOfOwnerIn} for splitting the scan into
+     * multiple smaller scans if the collection is large enough to cause
+     * an out-of-gas error (10K collections should be fine).
+     *
+     * Taken from https://github.com/chiru-labs/ERC721A/blob/main/contracts/extensions/ERC721AQueryable.sol
+     */
+    function tokensOfOwner(address owner) external view returns (uint256[] memory) {
+        uint256 tokenIdsLength = balanceOf(owner);
+        uint256[] memory tokenIds;
+        assembly {
+            // Grab the free memory pointer.
+            tokenIds := mload(0x40)
+            // Allocate one word for the length, and `tokenIdsMaxLength` words
+            // for the data. `shl(5, x)` is equivalent to `mul(32, x)`.
+            mstore(0x40, add(tokenIds, shl(5, add(tokenIdsLength, 1))))
+            // Store the length of `tokenIds`.
+            mstore(tokenIds, tokenIdsLength)
+        }
+        address currOwnershipAddr;
+        uint256 tokenIdsIdx;
+        for (uint256 i = _startTokenId(); tokenIdsIdx != tokenIdsLength; ) {
+            TokenOwnership memory ownership = _ownershipAt(i);
+            assembly {
+                // if `ownership.burned == false`.
+                if iszero(mload(add(ownership, 0x40))) {
+                    // if `ownership.addr != address(0)`.
+                    // The `addr` already has it's upper 96 bits clearned,
+                    // since it is written to memory with regular Solidity.
+                    if mload(ownership) {
+                        currOwnershipAddr := mload(ownership)
+                    }
+                    // if `currOwnershipAddr == owner`.
+                    // The `shl(96, x)` is to make the comparison agnostic to any
+                    // dirty upper 96 bits in `owner`.
+                    if iszero(shl(96, xor(currOwnershipAddr, owner))) {
+                        tokenIdsIdx := add(tokenIdsIdx, 1)
+                        mstore(add(tokenIds, shl(5, tokenIdsIdx)), i)
+                    }
+                }
+                i := add(i, 1)
+            }
+        }
+        return tokenIds;
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -316,5 +365,9 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
             VRF_NUMBER_OF_WORDS
         );
         lastRequestId = requestId;
+    }
+
+    function _startTokenId() internal view override returns (uint256) {
+        return 1;
     }
 }

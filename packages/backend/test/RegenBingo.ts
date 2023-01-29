@@ -16,7 +16,7 @@ describe("RegenBingo", function () {
         const donationName = "Donation Name";
         const donationAddress = signer3.address;
 
-        // Deploymnets //
+        // Deployments //
 
         const LinkTokenFactory = await ethers.getContractFactory("LinkToken");
         const linkToken = await LinkTokenFactory.deploy();
@@ -56,7 +56,7 @@ describe("RegenBingo", function () {
         const regenBingoMetadata = await RegenBingoMetadata.deploy(regenBingoSVG.address);
         await regenBingoMetadata.deployed();
 
-        const RegenBingo = await ethers.getContractFactory("RegenBingo");
+        const RegenBingo = await ethers.getContractFactory("$RegenBingo");
         const regenBingo = await RegenBingo.deploy(
             name,
             symbol,
@@ -88,8 +88,11 @@ describe("RegenBingo", function () {
         
         await (await vrfCoordinatorV2Mock.fundSubscription(1, BigNumber.from(String(100 * 1e18)))).wait() // 100 LINK
 
-        const fundWithLINK = async (_linkAmount : string) => {
-            await (await linkToken.transfer(regenBingo.address, _linkAmount)).wait();
+        await (await linkToken.transfer(regenBingo.address, "302951757588516228")).wait(); //
+
+        const startDrawPeriod = async () => {
+            await time.increaseTo(Number(await regenBingo.firstDrawTimestamp()));
+            await (await regenBingo.startDrawPeriod()).wait();
         }
 
         const provideRandomness = async (_requestId : BigNumber) => {
@@ -106,7 +109,7 @@ describe("RegenBingo", function () {
             return randomness.toString();
         }
 
-        return { regenBingo, signer1, signer2, donationName, donationAddress, firstDrawTimestamp, vrfCoordinatorV2Mock, provideRandomness, fundWithLINK};
+        return { regenBingo, signer1, signer2, donationName, donationAddress, firstDrawTimestamp, vrfCoordinatorV2Mock, provideRandomness, startDrawPeriod};
     }
 
     describe("Deployment", function () {
@@ -144,17 +147,10 @@ describe("RegenBingo", function () {
             );
         });
 
-        it("Does not allow minting after draw", async function () {
-            const { regenBingo, fundWithLINK, provideRandomness } = await loadFixture(deployBingoFixture);
+        it("Does not allow minting after starting the draw period", async function () {
+            const { regenBingo, startDrawPeriod, provideRandomness } = await loadFixture(deployBingoFixture);
 
-            const linkAmount = "302951757588516228";
-            await fundWithLINK(linkAmount);
-
-            await time.increaseTo(Number(await regenBingo.firstDrawTimestamp()));
-            await (await regenBingo.startDrawPeriod()).wait();
-
-            const requestId = await regenBingo.lastRequestId();
-            await provideRandomness(requestId);
+            await startDrawPeriod();
 
             await expect(regenBingo.mint({ value: mintPrice })).to.be.revertedWith(
                 "Minting has ended"
@@ -164,45 +160,33 @@ describe("RegenBingo", function () {
 
     describe("Drawing numbers", function () {
         it("Can start the draw period", async function() {
-            const { regenBingo, fundWithLINK, provideRandomness } = await loadFixture(deployBingoFixture);
+            const { regenBingo, startDrawPeriod, provideRandomness } = await loadFixture(deployBingoFixture);
 
-            const linkAmount = "302951757588516228";
-            await fundWithLINK(linkAmount);
+            await startDrawPeriod();
 
-            await time.increaseTo(Number(await regenBingo.firstDrawTimestamp()));
-            await (await regenBingo.startDrawPeriod()).wait();
-
-            const requestId = await regenBingo.lastRequestId();
+            const requestId = await regenBingo.$lastRequestId();
             await provideRandomness(requestId);
 
             expect(await regenBingo.bingoState()).to.equal(BigNumber.from("1"));
 
         })
         it("Sets seed to VRF response", async function () {
-            const { regenBingo, fundWithLINK, provideRandomness } = await loadFixture(deployBingoFixture);
+            const { regenBingo, startDrawPeriod, provideRandomness } = await loadFixture(deployBingoFixture);
 
-            const linkAmount = "302951757588516228";
-            await fundWithLINK(linkAmount);
+            await startDrawPeriod();
 
-            await time.increaseTo(Number(await regenBingo.firstDrawTimestamp()));
-            await (await regenBingo.startDrawPeriod()).wait();
-
-            const requestId = await regenBingo.lastRequestId();
+            const requestId = await regenBingo.$lastRequestId();
             let randomness = await provideRandomness(requestId);
 
-            expect(await regenBingo.drawSeed()).not.to.equal(BigNumber.from("0"));
-            expect(await regenBingo.drawSeed()).to.equal(BigNumber.from(randomness));
+            expect(await regenBingo.$drawSeed()).not.to.equal(BigNumber.from("0"));
+            expect(await regenBingo.$drawSeed()).to.equal(BigNumber.from(randomness));
         });
         it("Draws one number correctly", async function () {
-            const { regenBingo, fundWithLINK, provideRandomness } = await loadFixture(deployBingoFixture);
+            const { regenBingo, startDrawPeriod, provideRandomness } = await loadFixture(deployBingoFixture);
 
-            const linkAmount = "302951757588516228";
-            await fundWithLINK(linkAmount);
+            await startDrawPeriod();
 
-            await time.increaseTo(Number(await regenBingo.firstDrawTimestamp()));
-            await (await regenBingo.startDrawPeriod()).wait();
-
-            const requestId = await regenBingo.lastRequestId();
+            const requestId = await regenBingo.$lastRequestId();
             await provideRandomness(requestId);
 
             let tx = await regenBingo.drawNumber();
@@ -214,15 +198,11 @@ describe("RegenBingo", function () {
         });
 
         it("Draws multiple numbers correctly", async function () {
-            const { regenBingo, fundWithLINK, provideRandomness } = await loadFixture(deployBingoFixture);
+            const { regenBingo, startDrawPeriod, provideRandomness } = await loadFixture(deployBingoFixture);
 
-            const linkAmount = "302951757588516228";
-            await fundWithLINK(linkAmount);
+            await startDrawPeriod();
 
-            await time.increaseTo(Number(await regenBingo.firstDrawTimestamp()));
-            await (await regenBingo.startDrawPeriod()).wait();
-
-            const requestId = await regenBingo.lastRequestId();
+            const requestId = await regenBingo.$lastRequestId();
             await provideRandomness(requestId);
 
             let tx1 = await regenBingo.drawNumber();
@@ -241,42 +221,31 @@ describe("RegenBingo", function () {
             expect(await regenBingo.getDrawnNumbers()).deep.includes(drawnNumber2);
         });
 
-        it("Does not allow drawing number before drawTimestamp", async function () {
+        it("Does not allow drawing numbers before the draw", async function () {
             const { regenBingo } = await loadFixture(deployBingoFixture);
 
             await expect(regenBingo.drawNumber()).to.be.revertedWith("Draw has not started");
         });
 
         it("Does not allow drawing number before firstDrawTimestamp", async function () {
-            const { regenBingo, fundWithLINK, provideRandomness } = await loadFixture(deployBingoFixture);
+            const { regenBingo, startDrawPeriod, provideRandomness } = await loadFixture(deployBingoFixture);
 
-            const linkAmount = "302951757588516228";
-            await fundWithLINK(linkAmount);
-
-            await time.increaseTo(Number(await regenBingo.firstDrawTimestamp()));
-            await (await regenBingo.startDrawPeriod()).wait();
-
-            const requestId = await regenBingo.lastRequestId();
-            await provideRandomness(requestId);
+            await startDrawPeriod();
 
             await regenBingo.drawNumber();
-            await expect(regenBingo.drawNumber()).to.be.revertedWith("Draw too soon");
+            await expect(regenBingo.drawNumber()).to.be.revertedWith("Waiting the cooldown");
         });
     });
 
     describe("Claiming prize", function () {
         it("Draws all numbers, a card eventually win", async function () {
-            const { regenBingo, donationAddress, signer1, signer2, fundWithLINK, provideRandomness } = await loadFixture(deployBingoFixture);
+            const { regenBingo, donationAddress, signer1, signer2, startDrawPeriod, provideRandomness } = await loadFixture(deployBingoFixture);
 
             await regenBingo.connect(signer1).mint({ value: mintPrice });
 
-            const linkAmount = "302951757588516228";
-            await fundWithLINK(linkAmount);
+            await startDrawPeriod();
 
-            await time.increaseTo(Number(await regenBingo.firstDrawTimestamp()));
-            await (await regenBingo.startDrawPeriod({gasLimit: 400000})).wait();
-
-            const requestId = await regenBingo.lastRequestId();
+            const requestId = await regenBingo.$lastRequestId();
             await provideRandomness(requestId);
 
             for (let i = 0; i < 90; i++) {
@@ -284,7 +253,7 @@ describe("RegenBingo", function () {
                 await time.increaseTo(Number(await regenBingo.nextDrawTimestamp()));
             }
 
-            let winnerTokenId = await regenBingo.tokenByIndex(0);
+            let winnerTokenId = 1;
             let contractBalanceBefore = await ethers.provider.getBalance(regenBingo.address);
             let donationBalanceBefore = await ethers.provider.getBalance(donationAddress);
             let winnerBalanceBefore = await ethers.provider.getBalance(signer1.address);
@@ -302,18 +271,32 @@ describe("RegenBingo", function () {
             );
         });
 
-        it("Invalid cards can not claim", async function () {
-            const { regenBingo } = await loadFixture(deployBingoFixture);
-
-            await expect(regenBingo.claimPrize(0)).to.be.revertedWith("ERC721: invalid token ID");
-        });
-
-        it("Losing cards can not claim", async function () {
+        it("Cannot claim before the game starts", async function () {
             const { regenBingo } = await loadFixture(deployBingoFixture);
 
             await regenBingo.mint({ value: mintPrice });
 
-            await expect(regenBingo.claimPrize(await regenBingo.tokenByIndex(0))).to.be.revertedWith("INELIGIBLE");
+            await expect(regenBingo.claimPrize(1)).to.be.revertedWith("Game is over");
+        });
+
+        it("Invalid cards can not claim", async function () {
+            const { regenBingo, startDrawPeriod } = await loadFixture(deployBingoFixture);
+            
+            await startDrawPeriod();
+
+            await expect(regenBingo.claimPrize(0)).to.be.revertedWith("Invalid token ID");
+            await expect(regenBingo.claimPrize(1)).to.be.revertedWith("Invalid token ID");
+            await expect(regenBingo.claimPrize(42)).to.be.revertedWith("Invalid token ID");
+        });
+
+        it("Losing cards can not claim", async function () {
+            const { regenBingo, startDrawPeriod } = await loadFixture(deployBingoFixture);
+
+            await regenBingo.mint({ value: mintPrice });
+            
+            await startDrawPeriod();
+
+            await expect(regenBingo.claimPrize(1)).to.be.revertedWith("Ineligible");
         });
     });
 
@@ -335,14 +318,13 @@ describe("RegenBingo", function () {
                 "September",
                 "October",
                 "November",
-                "December"];
+                "December"
+            ];
 
             const tx = await regenBingo.mint({ value: mintPrice });
             await tx.wait();
 
-            const tokenId = await regenBingo.tokenByIndex(0);
-            
-            const tokenURI = await regenBingo.tokenURI(tokenId);
+            const tokenURI = await regenBingo.tokenURI(1);
             const decodedTokenURI = JSON.parse(Buffer.from(tokenURI.split(',')[1], 'base64').toString());
             const decodedImage = Buffer.from(decodedTokenURI['image'].split(',')[1], 'base64').toString();
             
