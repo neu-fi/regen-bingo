@@ -100,7 +100,7 @@ describe("Chainlink contract integrations", function () {
                 vrfV2Wrapper.address,
                 randomness,
                 {
-                    gasLimit: 1000000,
+                    gasLimit: 580000,
                 }
             )).wait();
         }
