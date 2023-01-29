@@ -1,6 +1,6 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { DeployFunction } from 'hardhat-deploy/types';
-import { DateTimeContractAddress, LinkAddress, WrapperAddress, regenBingoArgs } from '../config';
+import { BokkyPooBahsDateTimeContractAddress, LinkAddress, WrapperAddress, regenBingoArgs } from '../config';
 import { BigNumber } from 'ethers';
 
 const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
@@ -8,14 +8,14 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments } = hre;
   const { deploy } = deployments;
 
-  let dateTimeContractAddress = DateTimeContractAddress;
+  let bokkyPooBahsBokkyPooBahsDateTimeContractAddress = BokkyPooBahsDateTimeContractAddress;
   
-  if (dateTimeContractAddress == null) {
-    let dateTimeContract = await deploy('DateTimeContract', {
+  if (bokkyPooBahsBokkyPooBahsDateTimeContractAddress == null) {
+    let bokkyPooBahsBokkyPooBahsDateTimeContract = await deploy('BokkyPooBahsDateTimeContract', {
       from: deployer,
       log: true,
     });
-    dateTimeContractAddress = dateTimeContract.address;
+    bokkyPooBahsBokkyPooBahsDateTimeContractAddress = bokkyPooBahsBokkyPooBahsDateTimeContract.address;
   }
 
   let linkAddress = LinkAddress;
@@ -59,7 +59,7 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   }
 
   let regenBingoSVG = await deploy('RegenBingoSVG', {
-    args: [dateTimeContractAddress],
+    args: [bokkyPooBahsBokkyPooBahsDateTimeContractAddress],
     from: deployer,
     log: true,
   });

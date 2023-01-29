@@ -44,12 +44,12 @@ describe("RegenBingo", function () {
         );
         await vrfV2Wrapper.deployed();
 
-        const DateTimeContract = await ethers.getContractFactory("DateTimeContract");
-        const dateTimeContract = await DateTimeContract.deploy();
-        await dateTimeContract.deployed();
+        const BokkyPooBahsDateTimeContract = await ethers.getContractFactory("BokkyPooBahsDateTimeContract");
+        const bokkyPooBahsBokkyPooBahsDateTimeContract = await BokkyPooBahsDateTimeContract.deploy();
+        await bokkyPooBahsBokkyPooBahsDateTimeContract.deployed();
 
         const RegenBingoSVG = await ethers.getContractFactory("RegenBingoSVG");
-        const regenBingoSVG = await RegenBingoSVG.deploy(dateTimeContract.address);
+        const regenBingoSVG = await RegenBingoSVG.deploy(bokkyPooBahsBokkyPooBahsDateTimeContract.address);
         await regenBingoSVG.deployed();
 
         const RegenBingoMetadata = await ethers.getContractFactory("RegenBingoMetadata");

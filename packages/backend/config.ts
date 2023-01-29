@@ -75,7 +75,7 @@ export const WrapperAddress: (string | null) = (() => {
   }
 })();
 
-export const DateTimeContractAddress: (string | null) = (() => {
+export const BokkyPooBahsDateTimeContractAddress: (string | null) = (() => {
   switch (network) {
     case 'ethereum':
       return '0x23d23d8F243e57d0b924bff3A3191078Af325101';
@@ -86,7 +86,7 @@ export const DateTimeContractAddress: (string | null) = (() => {
   }
 })();
 
-export const dateTimeContractAddress: string | null = (() => {
+export const bokkyPooBahsBokkyPooBahsDateTimeContractAddress: string | null = (() => {
   switch (network) {
     case "ethereum":
       return "0x23d23d8F243e57d0b924bff3A3191078Af325101";

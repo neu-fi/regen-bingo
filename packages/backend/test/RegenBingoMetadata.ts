@@ -6,7 +6,7 @@ describe("RegenBingoMetadata", function () {
 
   async function deployRegenBingoMetadataFixture() {
 
-    const DateTime = await ethers.getContractFactory("contracts/DateTimeContract.sol:DateTimeContract");
+    const DateTime = await ethers.getContractFactory("contracts/BokkyPooBahsDateTimeContract.sol:BokkyPooBahsDateTimeContract");
     const dateTime = await DateTime.deploy();
 
     const RegenBingoSVG = await ethers.getContractFactory("contracts/RegenBingoSVG.sol:RegenBingoSVG");

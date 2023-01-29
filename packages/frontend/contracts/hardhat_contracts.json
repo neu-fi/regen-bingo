@@ -4,7 +4,7 @@
       "name": "goerli",
       "chainId": "5",
       "contracts": {
-        "DateTimeContract": {
+        "BokkyPooBahsDateTimeContract": {
           "address": "0xA589C322147D9358ab670A78CdA8fe74b0F7B04b",
           "abi": [
             {
@@ -2359,7 +2359,7 @@
               "inputs": [
                 {
                   "internalType": "address",
-                  "name": "_dateTimeContractAddress",
+                  "name": "_bokkyPooBahsBokkyPooBahsDateTimeContractAddress",
                   "type": "address"
                 }
               ],
@@ -3109,7 +3109,7 @@
       "name": "localhost",
       "chainId": "31337",
       "contracts": {
-        "DateTimeContract": {
+        "BokkyPooBahsDateTimeContract": {
           "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
           "abi": [
             {
@@ -5281,7 +5281,7 @@
               "inputs": [
                 {
                   "internalType": "address",
-                  "name": "_dateTimeContractAddress",
+                  "name": "_bokkyPooBahsBokkyPooBahsDateTimeContractAddress",
                   "type": "address"
                 }
               ],

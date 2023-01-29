@@ -4,21 +4,9 @@ import { ethers } from "hardhat";
 
 describe('RegenBingoSVG', function () {
 
-  async function deployRegenBingoSVGFixture() {
-
-    const DateTime = await ethers.getContractFactory("contracts/DateTimeContract.sol:DateTimeContract");
-    const dateTime = await DateTime.deploy();
-    await dateTime.deployed();
-
-    const RegenBingoSVG = await ethers.getContractFactory("contracts/RegenBingoSVG.sol:RegenBingoSVG");
-    const regenBingoSVG = await RegenBingoSVG.deploy(dateTime.address);
-
-    return { regenBingoSVG };
-  }
-
   async function deployExposedRegenBingoSVGFixture() {
     
-    const DateTime = await ethers.getContractFactory("contracts/DateTimeContract.sol:DateTimeContract");
+    const DateTime = await ethers.getContractFactory("BokkyPooBahsDateTimeContract");
     const dateTime = await DateTime.deploy();
     await dateTime.deployed()
 
