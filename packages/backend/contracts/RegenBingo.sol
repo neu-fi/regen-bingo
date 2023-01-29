@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+// @author Neufi Limited (neu.fi)
+
+pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@chainlink/contracts/src/v0.8/VRFV2WrapperConsumerBase.sol";
@@ -47,7 +49,7 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
     //////////////////////////////////////////////////////////////*/
 
     // Drawn numbers have index of "90 - drawnNumbersCount" or larger in the "numbers" array.
-    uint8[] numbers = [
+    uint8[90] numbers = [
          1,  2,  3,  4,  5,  6,  7,  8,  9,  10,
         11, 12, 13, 14, 15, 16, 17, 18, 19,  20,
         21, 22, 23, 24, 25, 26, 27, 28, 29,  30,

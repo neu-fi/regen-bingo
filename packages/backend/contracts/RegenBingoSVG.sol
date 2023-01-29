@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
+// @author Neufi Limited (neu.fi)
 
-pragma solidity ^0.8.16;
+pragma solidity ^0.8.17;
+
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 import "./interfaces/IRegenBingoSVG.sol";
