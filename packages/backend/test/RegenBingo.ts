@@ -135,11 +135,11 @@ describe("RegenBingo", function () {
             const { regenBingo } = await loadFixture(deployBingoFixture);
 
             await expect(regenBingo.mint({ value: 0 })).to.be.revertedWith(
-                "Incorrect payment amount"
+                "Incorrect payment"
             );
 
             await expect(regenBingo.mint({ value: mintPrice.mul(2) })).to.be.revertedWith(
-                "Incorrect payment amount"
+                "Incorrect payment"
             );
         });
 
