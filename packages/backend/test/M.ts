@@ -144,26 +144,25 @@ describe("Chainlink contract integrations", function () {
                 "0x56BC75E2D63100000",
               ]);
             
+            /*
             impersonateAccount(vrfCoordinatorV2Mock.address);
             let coordinator = await ethers.getSigner(vrfCoordinatorV2Mock.address);
 
-            let rawTx = await vrfV2Wrapper.connect(coordinator).rawFulfillRandomWords(1, [42]);
+            let rawTx = await vrfV2Wrapper.connect(coordinator).rawFulfillRandomWords(1, [42] ,{ gasLimit: 1014884});
             
             await expect( rawTx ).to.emit(m, "WhatWeWant");
-
-            /*
+            */
             const rawTx = vrfCoordinatorV2Mock.connect(signer1).fulfillRandomWordsWithOverride(
                 await m.lastRequestId(),
                 vrfV2Wrapper.address,
                 [42],
                 {
-                    gasLimit: await m.VRF_CALLBACK_GAS_LIMIT()
+                    gasLimit: 580000
                 }
             );
-            */
-            // await expect( rawTx )
-            //     .to.emit(vrfCoordinatorV2Mock, "RandomWordsFulfilled")
-            //     .to.emit(m, "WhatWeWant")
+            await expect( rawTx )
+            .to.emit(vrfCoordinatorV2Mock, "RandomWordsFulfilled")
+            .to.emit(m, "WhatWeWant")
 
             const tx = await rawTx;
             const txReciept = await tx.wait(1);
