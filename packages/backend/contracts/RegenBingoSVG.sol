@@ -112,7 +112,7 @@ contract RegenBingoSVG is IRegenBingoSVG {
                         isBingoFinished,
                         drawTimestamp
                     ),
-                    '<animate attributeName="startOffset" values="2400; 0" dur="9s" repeatCount="indefinite"/></textPath></text></defs>'
+                    '<animate attributeName="startOffset" values="2400; 0" dur="20s" repeatCount="indefinite"/></textPath></text></defs>'
                 )
             )
         );
