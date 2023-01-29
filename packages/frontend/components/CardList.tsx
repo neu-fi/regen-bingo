@@ -1,148 +1,147 @@
+/* global BigInt */
+
 import Card, { ICard } from "@/components/Card";
 import { useBingoContract } from "@/hooks/useBingoContract";
 import { getToken } from "@/utils/utils";
-import { BigNumber, Contract } from "ethers";
-import { PropsWithChildren, useEffect, useState, useContext } from "react";
-import { useSigner, useAccount } from "wagmi";
-import { NetworkContext } from "@/components/Layout";
+import { Contract } from "ethers";
+import { useState } from "react";
+import { useSigner, useContractRead } from "wagmi";
+import { getAccount, getNetwork, watchAccount, watchNetwork, watchContractEvent, GetAccountResult, GetNetworkResult, deepEqual } from '@wagmi/core'
+import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../config";
 
-type CardListProps = {
-  trigger?: Event;
-};
+export default function CardList() {
+  const [cards, setCards] = useState<ICard[]>([]);
+  const [cardsCount, setCardsCount] = useState<number>(0);
+  const [network, setNetwork] = useState<GetNetworkResult>(() => getNetwork());
+  const [account, setAccount] = useState<GetAccountResult>(() => getAccount());
 
-type SortType = {
-  sort: "asc" | "desc";
-  key: "matches" | "id";
-};
-
-function sortCards(
-  cards: Map<number, ICard>,
-  type: SortType = { sort: "desc", key: "matches" }
-): Map<number, ICard> {
-  // Check if there is any card with matches.
-  const isAllEmpty: boolean =
-    [...cards.entries()].find((element) => {
-      return element[1].coveredNumbersCount !== 0;
-    }) === undefined;
-
-  if (type.key === "matches" && !isAllEmpty) {
-    // SORT MAP BY MATCHES
-    cards = new Map(
-      [...cards.entries()].sort((a, b) => {
-        if (type.sort === "asc") {
-          return a[1].coveredNumbersCount - b[1].coveredNumbersCount;
-        } else {
-          return b[1].coveredNumbersCount - a[1].coveredNumbersCount;
-        }
-      })
-    );
-    return cards;
-  }
-
-  // If there is no card with matches, sort by id.
-  if (type.key === "id" || isAllEmpty) {
-    // SORT MAP BY ID
-    cards = new Map(
-      [...cards.entries()].sort((a, b) => {
-        if (type.sort === "desc") {
-          return a[0] - b[0];
-        } else {
-          return b[0] - a[0];
-        }
-      })
-    );
-    return cards;
-  }
-  return cards;
-}
-
-export default function CardList(props: PropsWithChildren<CardListProps>) {
-  const { trigger } = props;
-  const [accountTrigger, setAccountTrigger] = useState<Event>();
-  const [cardsCount, setCardsCount] = useState<number | undefined>(undefined);
-  const [cardsMap, setCardsMap] = useState<Map<number, ICard>>(
-    new Map<number, ICard>()
-  );
-
-  const networkState: boolean = useContext(NetworkContext);
-
-  const account = useAccount();
   const signer = useSigner();
   const contract: Contract | undefined = useBingoContract(signer.data);
 
-  useEffect(() => {
-    const getBalance = async () => {
-      if (networkState && account?.address) {
-        try {
-          const balance: BigNumber = await contract!.balanceOf(account.address);
-          return Number(balance);
-        } catch (err) {
-          console.log(err);
-        }
-      }
-    };
-    setCardsMap(new Map<number, ICard>());
+  const idToCard = async (id: number) => {
+    return await getToken(contract!, Number(id))
+  };
 
-    if (!contract) {
-      return;
-    }
-
-    getBalance().then((balance) => {
-      setCardsCount((oldBalance) => {
-        if (oldBalance === balance) {
-          setAccountTrigger((old) => new Event("accountTrigger"));
-        }
-        return balance;
+  function computeCards(tokenIds: number[]) {
+    let promises = tokenIds.map(idToCard);
+    Promise.all(promises)
+      .then((values) => {
+        setCardsCount(values.length);
+        setCards(values);
+        return values;
+      })
+      .then((values) => {
+        setCardsCount(values.length);
+        setCards(
+          values.sort(function (a, b) {   
+            return a.coveredNumbersCount - b.coveredNumbersCount || Number(a.id) - Number(b.id);
+          })
+        );
+      })
+      .catch(() => {
+        setCardsCount(0);
+        setCards([]);
       });
-    });
-  }, [contract, account.address, networkState, trigger]);
+  }
 
-  useEffect(() => {
-    const fetchCardList = () => {
-      for (let i = 0; i < cardsCount!; i++) {
-        // console.log("fetching card", i, "of", account.address!);
-        contract!
-          .tokenOfOwnerByIndex(account.address, i)
-          .then((tokenId: BigNumber) => {
-            if (!cardsMap.get(Number(tokenId))) {
-              getToken(contract!, Number(tokenId)).then((card) =>
-                setCardsMap((cardsMap) =>
-                  sortCards(new Map(cardsMap.set(Number(tokenId), card)))
-                )
-              );
-            }
-          });
-      }
-    };
-    // Guard clauses
-    if (!contract) {
-      return;
+  const readTokensOfOwner = useContractRead({
+    address: CONTRACT_ADDRESS,
+    abi: CONTRACT_ABI,
+    functionName: 'tokensOfOwner',
+    args: [account.address],
+    onSuccess(data:any) {
+      setCardsCount(data.length);
+      computeCards(data);
+    },
+    onError() {
+      setCardsCount(0);
+      setCards([]);
+    },
+    onSettled() {
+      console.log("Triggered tokensOfOwner");
+    },
+    watch: true,
+  })
+
+  let throttleLock = false;
+  const throttle = (callback: Function, cooldown: number) => {
+    if (!throttleLock) {
+      throttleLock = true;
+      
+      callback();
+      
+      setTimeout(() => {
+        throttleLock = false;
+      }, cooldown);
     }
-    fetchCardList();
-  }, [cardsCount, trigger, accountTrigger]);
+  };
+  
+  watchNetwork((newNetwork) => {
+    if(!deepEqual(newNetwork, network)) {
+      console.log("Captured: newNetwork");
+      setNetwork(newNetwork);
+      throttle(readTokensOfOwner.refetch, 100);
+    }
+  });
+  
+  watchAccount((newAccount) => {
+    if(!deepEqual(newAccount, account)) {
+      console.log("Captured: newAccount");
+      setAccount(newAccount);
+      throttle(readTokensOfOwner.refetch, 100);
+    }
+  });
+
+  watchContractEvent(
+    {
+      address: CONTRACT_ADDRESS,
+      abi: CONTRACT_ABI,
+      eventName: 'Transfer',
+    },
+    () => {
+      console.log("Captured: Transfer");
+      throttle(readTokensOfOwner.refetch, 1000);
+    }
+  );
+
+  watchContractEvent(
+    {
+      address: CONTRACT_ADDRESS,
+      abi: CONTRACT_ABI,
+      eventName: 'DrawNumber',
+    },
+    () => {
+      console.log("Captured: DrawNumber");
+      throttle(readTokensOfOwner.refetch, 100);
+    }
+  );
+
+  watchContractEvent(
+    {
+      address: CONTRACT_ADDRESS,
+      abi: CONTRACT_ABI,
+      eventName: 'ClaimPrize',
+    },
+    () => {
+      console.log("Captured: ClaimPrize");
+      throttle(readTokensOfOwner.refetch, 100);
+    }
+  );
 
   return (
     <>
-      {!networkState ? (
+      { ( network.chain === undefined  || network.chain?.unsupported ) ? (
         <p className="mt-6 text-lg leading-8 font-bold text-gray-600 sm:text-center">
-          Please switch network!
+          Cannot connect to the network
         </p>
       ) : (
         <>
-          {cardsCount == 0 ? (
+          {cardsCount == 0 && cards.length == 0 ? (
             <p className="mb-6 text-lg leading-8 text-gray-600 sm:text-center">
-              You don't have any Regen Bingo Cards.
+              You don't have any Regen Bingo cards.
             </p>
           ) : (
             <>
-              {cardsCount && (
-                <>
-                  <p className="mb-6 text-lg leading-8 text-gray-600 sm:text-center">
-                    Displaying {cardsMap.size} out of {cardsCount} cards.
-                  </p>
-                </>
-              )}
-
               <div className="bg-white rounded-2xl shadow-2xl my-4">
                 <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8 lg:py-12 ">
                   <div className="space-y-12 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0">
@@ -151,44 +150,12 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
                         role="list"
                         className="space-y-12 sm:-mt-8 sm:space-y-0 divide-y divide-gray-200 lg:gap-x-8 lg:space-y-0"
                       >
-                        {[...cardsMap.values()].map((card) => (
+                        {cards.map((card) => (
                           <li key={card.id} className="sm:py-4">
                             <Card card={card}></Card>
                           </li>
                         ))}
                       </ul>
-                      {cardsMap.size !== cardsCount && (
-                        <div>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            xmlnsXlink="http://www.w3.org/1999/xlink"
-                            style={{
-                              margin: "auto",
-                              display: "block",
-                            }}
-                            shapeRendering="auto"
-                            width="200px"
-                            height="200px"
-                            viewBox="0 0 100 100"
-                            preserveAspectRatio="xMidYMid"
-                          >
-                            <path
-                              d="M10 50A40 40 0 0 0 90 50A40 43.4 0 0 1 10 50"
-                              fill="#d4ecc9"
-                              stroke="none"
-                            >
-                              <animateTransform
-                                attributeName="transform"
-                                type="rotate"
-                                dur="1.1764705882352942s"
-                                repeatCount="indefinite"
-                                keyTimes="0;1"
-                                values="0 50 51.7;360 50 51.7"
-                              ></animateTransform>
-                            </path>
-                          </svg>
-                        </div>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -199,4 +166,4 @@ export default function CardList(props: PropsWithChildren<CardListProps>) {
       )}
     </>
   );
-}
+};

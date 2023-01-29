@@ -13,7 +13,7 @@ export const BingoCardMint = () => {
 
   const networkState: boolean = useContext(NetworkContext);
 
-  const { isConnected } = useAccount();
+  const account = useAccount();
   const { data: signerData } = useSigner();
 
   const contract = useBingoContract(signerData);
@@ -30,7 +30,7 @@ export const BingoCardMint = () => {
         console.error(e);
       }
     };
-    if (isConnected && contract) {
+    if (account.isConnected && contract) {
       setError("");
       getMintPrice().then((mintPrice) => {
         setMintPrice(mintPrice);
@@ -39,15 +39,18 @@ export const BingoCardMint = () => {
       setError("Please connect wallet to mint");
     }
     return;
-  }, [contract, isConnected, networkState]);
+  }, [contract, account.isConnected, networkState]);
 
   async function mintBingoCard() {
-    if (isConnected) {
+    if (account.isConnected) {
       try {
         setLoading("Waiting for approval...");
-        const tx = await contract?.mint({
-          value: mintPrice,
-        });
+        const tx = await contract?.mint(
+          account.address,
+          1, {
+            value: mintPrice,
+          }
+        );
         setLoading("");
         toast.promise(tx.wait, {
           pending: "Waiting for transaction",

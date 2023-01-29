@@ -129,30 +129,30 @@ describe("RegenBingo", function () {
         it("Mints correctly", async function () {
             const { regenBingo, signer1 } = await loadFixture(deployBingoFixture);
 
-            await regenBingo.mint({ value: mintPrice });
+            await regenBingo.mint(signer1.address, 1, { value: mintPrice });
 
             expect(await regenBingo.balanceOf(signer1.address)).to.equal(1);
             expect(await regenBingo.totalSupply()).to.equal(1);
         });
 
         it("Does not allow minting with incorrect payment", async function () {
-            const { regenBingo } = await loadFixture(deployBingoFixture);
+            const { regenBingo, signer1 } = await loadFixture(deployBingoFixture);
 
-            await expect(regenBingo.mint({ value: 0 })).to.be.revertedWith(
+            await expect(regenBingo.mint(signer1.address, 1, { value: 0 })).to.be.revertedWith(
                 "Incorrect payment"
             );
 
-            await expect(regenBingo.mint({ value: mintPrice.mul(2) })).to.be.revertedWith(
+            await expect(regenBingo.mint(signer1.address, 1, { value: mintPrice.mul(2) })).to.be.revertedWith(
                 "Incorrect payment"
             );
         });
 
         it("Does not allow minting after starting the draw period", async function () {
-            const { regenBingo, startDrawPeriod, provideRandomness } = await loadFixture(deployBingoFixture);
+            const { regenBingo, signer1, startDrawPeriod, provideRandomness } = await loadFixture(deployBingoFixture);
 
             await startDrawPeriod();
 
-            await expect(regenBingo.mint({ value: mintPrice })).to.be.revertedWith(
+            await expect(regenBingo.mint(signer1.address, 1, { value: mintPrice })).to.be.revertedWith(
                 "Minting has ended"
             );
         });
@@ -241,7 +241,7 @@ describe("RegenBingo", function () {
         it("Draws all numbers, a card eventually win", async function () {
             const { regenBingo, donationAddress, signer1, signer2, startDrawPeriod, provideRandomness } = await loadFixture(deployBingoFixture);
 
-            await regenBingo.connect(signer1).mint({ value: mintPrice });
+            await regenBingo.connect(signer1).mint(signer1.address, 1, { value: mintPrice });
 
             await startDrawPeriod();
 
@@ -272,9 +272,9 @@ describe("RegenBingo", function () {
         });
 
         it("Cannot claim before the game starts", async function () {
-            const { regenBingo } = await loadFixture(deployBingoFixture);
+            const { regenBingo, signer1 } = await loadFixture(deployBingoFixture);
 
-            await regenBingo.mint({ value: mintPrice });
+            await regenBingo.mint(signer1.address, 1, { value: mintPrice });
 
             await expect(regenBingo.claimPrize(1)).to.be.revertedWith("Game is over");
         });
@@ -290,9 +290,9 @@ describe("RegenBingo", function () {
         });
 
         it("Losing cards can not claim", async function () {
-            const { regenBingo, startDrawPeriod } = await loadFixture(deployBingoFixture);
+            const { regenBingo, signer1, startDrawPeriod } = await loadFixture(deployBingoFixture);
 
-            await regenBingo.mint({ value: mintPrice });
+            await regenBingo.mint(signer1.address, 1, { value: mintPrice });
             
             await startDrawPeriod();
 
@@ -304,7 +304,7 @@ describe("RegenBingo", function () {
         // Format is like the following:
         // Donating 0.1 ETH · Donation Name · 0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc · January 29, 2023 05:28 UTC
         it("Rolling text test (Donating)", async function() {
-            const { regenBingo, donationAddress, firstDrawTimestamp, donationName } = await loadFixture(deployBingoFixture);
+            const { regenBingo, donationAddress, firstDrawTimestamp, donationName, signer1 } = await loadFixture(deployBingoFixture);
             const donationAmount = String(ethers.utils.formatEther(String(Number(mintPrice) / 2)));
             const MONTHS = [
                 "January",
@@ -321,7 +321,7 @@ describe("RegenBingo", function () {
                 "December"
             ];
 
-            const tx = await regenBingo.mint({ value: mintPrice });
+            const tx = await regenBingo.mint(signer1.address, 1, { value: mintPrice });
             await tx.wait();
 
             const tokenURI = await regenBingo.tokenURI(1);

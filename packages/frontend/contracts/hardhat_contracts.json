@@ -1517,7 +1517,7 @@
                 },
                 {
                   "internalType": "uint256",
-                  "name": "_drawNumberCooldownMultiplier",
+                  "name": "_drawNumberCooldownSeconds",
                   "type": "uint256"
                 },
                 {
@@ -1804,7 +1804,7 @@
             },
             {
               "inputs": [],
-              "name": "drawNumberCooldownMultiplier",
+              "name": "drawNumberCooldownSeconds",
               "outputs": [
                 {
                   "internalType": "uint256",
@@ -4860,7 +4860,7 @@
           ]
         },
         "RegenBingo": {
-          "address": "0xfc073209b7936A771F77F63D42019a3a93311869",
+          "address": "0xfC47d03bd4C8a7E62A62f29000ceBa4D84142343",
           "abi": [
             {
               "inputs": [
@@ -5257,19 +5257,6 @@
             },
             {
               "inputs": [],
-              "name": "drawSeed",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [],
               "name": "drawnNumbersCount",
               "outputs": [
                 {
@@ -5418,26 +5405,6 @@
               "type": "function"
             },
             {
-              "inputs": [],
-              "name": "lastRequestId",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [],
-              "name": "mint",
-              "outputs": [],
-              "stateMutability": "payable",
-              "type": "function"
-            },
-            {
               "inputs": [
                 {
                   "internalType": "address",
@@ -5450,7 +5417,7 @@
                   "type": "uint256"
                 }
               ],
-              "name": "mintMultiple",
+              "name": "mint",
               "outputs": [],
               "stateMutability": "payable",
               "type": "function"
@@ -5679,6 +5646,25 @@
                   "internalType": "string",
                   "name": "",
                   "type": "string"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "owner",
+                  "type": "address"
+                }
+              ],
+              "name": "tokensOfOwner",
+              "outputs": [
+                {
+                  "internalType": "uint256[]",
+                  "name": "",
+                  "type": "uint256[]"
                 }
               ],
               "stateMutability": "view",
