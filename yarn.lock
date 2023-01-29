@@ -1466,7 +1466,7 @@ __metadata:
     dotenv: ^16.0.0
     ethereum-waffle: ^3.4.4
     ethers: ^5.7.2
-    hardhat: 2.12.6
+    hardhat: 2.12.1-ir.0
     hardhat-contract-sizer: ^2.6.1
     hardhat-deploy: ^0.11.10
     hardhat-exposed: ^0.3.0
@@ -8183,9 +8183,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hardhat@npm:2.12.6":
-  version: 2.12.6
-  resolution: "hardhat@npm:2.12.6"
+"hardhat@npm:2.12.1-ir.0":
+  version: 2.12.1-ir.0
+  resolution: "hardhat@npm:2.12.1-ir.0"
   dependencies:
     "@ethersproject/abi": ^5.1.2
     "@metamask/eth-sig-util": ^4.0.0
@@ -8234,7 +8234,7 @@ __metadata:
     source-map-support: ^0.5.13
     stacktrace-parser: ^0.1.10
     tsort: 0.0.1
-    undici: ^5.14.0
+    undici: ^5.4.0
     uuid: ^8.3.2
     ws: ^7.4.6
   peerDependencies:
@@ -8247,7 +8247,7 @@ __metadata:
       optional: true
   bin:
     hardhat: internal/cli/cli.js
-  checksum: c97c5ed2336541e8b0a3034dc5c94319cffbf93fa1b6385091858f8eefb392129c6109cbaca0837fd4dff4d627b3e3ccb931706257a5d0bee71fc7f7fe90a536
+  checksum: 08abee3b9a3d5a9d01517117ba5cc721bdc661477cac77bcdd334e3a24fc4096c73c2ecfa045726e502ddbd03fe9c3070f03cff9c609a9d5139d8ab95e8496d6
   languageName: node
   linkType: hard
 
@@ -14521,15 +14521,6 @@ __metadata:
   version: 1.9.1
   resolution: "underscore@npm:1.9.1"
   checksum: bee6f587661a6a9ca2f77e611896141e0287af51d8ca6034b11d0d4163ddbdd181a9720078ddbe94d265b7694f4880bc7f4c2ad260cfb8985ee2f9adcf13df03
-  languageName: node
-  linkType: hard
-
-"undici@npm:^5.14.0":
-  version: 5.16.0
-  resolution: "undici@npm:5.16.0"
-  dependencies:
-    busboy: ^1.6.0
-  checksum: bc22e797cbf469351713c88af33e65e21952a75f431b78b0e75fb2411426ab38b888ec0761d4b81eadf8f6e8872ed23fb75641cc7319c6a7f08bd083899fa1cc
   languageName: node
   linkType: hard
 
