@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/utils/Base64.sol";
 import "./interfaces/IRegenBingoSVG.sol";
 import "./interfaces/IRegenBingoMetadata.sol";
 
+string constant CONTRACT_METADATA = '{"name":"Regen Bingo","description":"A win-win game for regens! The first one with a full suite takes half of the pool. The other half is donated.","image":"ipfs://QmaGjcDG48ynW9htCKshQB4HvkPBjWSPuJR7QmWaWfe7Df","external_url":"https://regen.bingo"}';
 contract RegenBingoMetadata is IRegenBingoMetadata {
     IRegenBingoSVG public svgGenerator;
 
@@ -62,8 +63,7 @@ contract RegenBingoMetadata is IRegenBingoMetadata {
     }
 
     function generateContractURI() external pure returns (string memory) {
-        string memory json = '{"name":"Regen Bingo","description":"A win-win game for regens! The first one with a full suite takes half of the pool. The other half is donated.","image":"ipfs://QmaGjcDG48ynW9htCKshQB4HvkPBjWSPuJR7QmWaWfe7Df","external_url":"https://regen.bingo"}';
-        return string.concat('data:application/json;base64,', Base64.encode(bytes(json)));
+        return string.concat('data:application/json;base64,', Base64.encode(bytes(CONTRACT_METADATA)));
     }
 
     function _generateImageStringFraction(

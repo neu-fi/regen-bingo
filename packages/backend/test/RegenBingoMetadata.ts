@@ -5,7 +5,6 @@ import { ethers } from "hardhat";
 describe("RegenBingoMetadata", function () {
 
   async function deployRegenBingoMetadataFixture() {
-
     const DateTime = await ethers.getContractFactory("BokkyPooBahsDateTimeContract");
     const dateTime = await DateTime.deploy();
 
@@ -24,9 +23,8 @@ describe("RegenBingoMetadata", function () {
 
       const URI = await regenBingoMetadata.generateContractURI();
       const splittedURI = URI.split(',')[1];
-      const expectedURI = '{"name":"RegenBingo","description":"RegenBingo is a simple experimental game to raise ETH for public goods funding while entertaining us greenpilled regens.","image":"...","external_url":"https://www.regen.bingo"}';
+      const expectedURI = '{"name":"Regen Bingo","description":"A win-win game for regens! The first one with a full suite takes half of the pool. The other half is donated.","image":"ipfs://QmaGjcDG48ynW9htCKshQB4HvkPBjWSPuJR7QmWaWfe7Df","external_url":"https://regen.bingo"}';
       const encodedExpectedURI = Buffer.from(expectedURI).toString('base64');
-      console.log()
       expect(encodedExpectedURI).to.equal(splittedURI);
     });
 
