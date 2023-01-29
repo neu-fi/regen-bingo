@@ -9,9 +9,9 @@ import "./interfaces/IDateTime.sol";
 contract RegenBingoSVG is IRegenBingoSVG {
     string constant STYLES = '<style>*{stroke:black;stroke-width:1}text{font-family:Monaco;font-size:100px}.a{fill:#57b592}.b{fill:#bde4df}.c{fill:#f8ce47}.d{fill:#fcf2b1}</style>';
     uint256 constant X_OFFSET = 240;
-    uint256 constant Y_OFFSET = 935;
+    uint256 constant Y_OFFSET = 1035;
     uint256 constant CIRCLE_X_OFFSET = 300;
-    uint256 constant CIRCLE_Y_OFFSET = 900;
+    uint256 constant CIRCLE_Y_OFFSET = 1000;
     string[40] BACKGROUND_COLORS = [
         "#5f9e80",
         "#909F79",
@@ -259,9 +259,9 @@ contract RegenBingoSVG is IRegenBingoSVG {
         return (
             string(
                 abi.encodePacked(
-                    '<pattern id="bg" width="0.111111111111" height="0.333333333333"><polygon class="a" points="0,0 0,200 200,200"/><polygon class="c" points="0,0 200,0 200,200"/><rect class="d" x="20" y="20" width="160" height="160"/></pattern><g><polygon style="stroke-width: 20" points="200,500 200,1500 2000,1500 2000,500"/><rect fill="url(#bg)" x="200" y="800" width="1800" height="600"/>',
+                    '<pattern id="bg" width="0.111111111111" height="0.333333333333"><polygon class="a" points="0,0 0,200 200,200"/><polygon class="c" points="0,0 200,0 200,200"/><rect class="d" x="20" y="20" width="160" height="160"/></pattern><g><polygon style="stroke-width: 20" points="200,600 200,1600 2000,1600 2000,600"/><rect fill="url(#bg)" x="200" y="900" width="1800" height="600"/>',
                     _generateNumbers(numbers, covered),
-                    '<polygon class="b" points="200,500 200,800 2000,800 2000,500"/><polygon class="c" points="200,500 200,800 350,650"/><polygon class="c" points="2000,500 2000,800 1850,650"/><rect class="d" x="220" y="520" width="1760" height="260"/><text x="1100" y="650" dominant-baseline="middle" text-anchor="middle" style="font-size:150">Regen Bingo</text><polygon class="b" points="200,1400 200,1500 2000,1500 2000,1400"/><polygon class="a" points="200,1400 200,1500 250,1450"/><polygon class="a" points="2000,1400 2000,1500 1950,1450"/><rect class="d" x="220" y="1420" width="1760" height="60"/><clipPath id="clip"><rect x="230" y="1420" width="1740" height="60"/></clipPath><g clip-path="url(#clip)"><use x="-1900" y="1460" href="#t"/><use x="500" y="1460" href="#t"/></g></g>'
+                    '<polygon class="b" points="200,600 200,900 2000,900 2000,600"/><polygon class="c" points="200,600 200,900 350,750"/><polygon class="c" points="2000,600 2000,900 1850,750"/><rect class="d" x="220" y="620" width="1760" height="260"/><text x="1100" y="750" dominant-baseline="middle" text-anchor="middle" style="font-size:150">Regen Bingo</text><polygon class="b" points="200,1500 200,1600 2000,1600 2000,1500"/><polygon class="a" points="200,1500 200,1600 250,1550"/><polygon class="a" points="2000,1500 2000,1600 1950,1550"/><rect class="d" x="220" y="1520" width="1760" height="60"/><clipPath id="clip"><rect x="230" y="1520" width="1740" height="60"/></clipPath><g clip-path="url(#clip)"><use x="-1900" y="1560" href="#t"/><use x="500" y="1560" href="#t"/></g></g>'
                 )
             )
         );
