@@ -100,9 +100,10 @@ describe("RegenBingo", function () {
                 vrfV2Wrapper.address,
                 randomness,
                 {
-                    gasLimit: 1000000,
+                    gasLimit: 580000,
                 }
             )).wait();
+            return randomness.toString();
         }
 
         return { regenBingo, signer1, signer2, donationName, donationAddress, drawTimestamp, vrfCoordinatorV2Mock, provideRandomness, fundWithLINK};
@@ -177,6 +178,20 @@ describe("RegenBingo", function () {
             expect(await regenBingo.bingoState()).to.equal(BigNumber.from("1"));
 
         })
+        it("Sets seed to VRF response", async function () {
+            const { regenBingo, fundWithLINK, provideRandomness } = await loadFixture(deployBingoFixture);
+
+            const linkAmount = "302951757588516228";
+            await fundWithLINK(linkAmount);
+
+            await time.increase(drawCooldownSeconds);
+            await (await regenBingo.startDrawPeriod()).wait();
+
+            const requestId = await regenBingo.lastRequestId();
+            let randomness = await provideRandomness(requestId);
+
+            expect(await regenBingo.drawSeed()).to.equal(BigNumber.from(randomness));
+        });
         it("Draws one number correctly", async function () {
             const { regenBingo, fundWithLINK, provideRandomness } = await loadFixture(deployBingoFixture);
 
@@ -187,7 +202,7 @@ describe("RegenBingo", function () {
             await (await regenBingo.startDrawPeriod()).wait();
 
             const requestId = await regenBingo.lastRequestId();
-            await provideRandomness(requestId);
+            let randomness = await provideRandomness(requestId);
 
             await time.increase(50);
             let tx = await regenBingo.drawNumber();
@@ -197,6 +212,7 @@ describe("RegenBingo", function () {
             expect(drawnNumber).to.be.within(1, 90);
             expect(await regenBingo.lastDrawTime()).to.equal(await time.latest());
             expect(await regenBingo.getDrawnNumbers()).deep.includes(BigNumber.from(drawnNumber));
+            
         });
 
         it("Draws multiple numbers correctly", async function () {
