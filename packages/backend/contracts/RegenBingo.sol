@@ -52,6 +52,18 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
                              STATE VARIABLES
     //////////////////////////////////////////////////////////////*/
 
+    uint8[] numbersInTheBag = [
+         1,  2,  3,  4,  5,  6,  7,  8,  9,  10,
+        11, 12, 13, 14, 15, 16, 17, 18, 19,  20,
+        21, 22, 23, 24, 25, 26, 27, 28, 29,  30,
+        31, 32, 33, 34, 35, 36, 37, 38, 39,  40,
+        41, 42, 43, 44, 45, 46, 47, 48, 49,  50,
+        51, 52, 53, 54, 55, 56, 57, 58, 59,  60,
+        61, 62, 63, 64, 65, 66, 67, 68, 69,  70,
+        71, 72, 73, 74, 75, 76, 77, 78, 79,  80,
+        81, 82, 83, 84, 85, 86, 87, 88, 89,  90
+    ];
+
     IRegenBingoMetadata metadataGenerator;
 
     BingoState public bingoState;
@@ -121,7 +133,7 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
         }
     }
 
-    function drawNumber() external returns (uint256) {
+    function drawNumber() external {
         require(bingoState == BingoState.DRAW, "Draw has not started");
         require(
             lastDrawTime + drawNumberCooldownSeconds <= block.timestamp,
@@ -129,35 +141,13 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
         );
         require(drawSeed != 0, "Waiting for the random seed");
 
-        uint256 nonce = 0;
-        uint256 number = 1 +
-            (uint256(
-                keccak256(
-                    abi.encodePacked(
-                        drawSeed,
-                        nonce
-                    )
-                )
-            ) % 90);
-
-        while (drawnNumbers.contains(number)) {
-            number =
-                1 +
-                (uint256(
-                    keccak256(
-                        abi.encodePacked(
-                            drawSeed,
-                            nonce
-                        )
-                    )
-                ) % 90);
-            nonce++;
-        }
-
-        drawnNumbers.add(number);
+        uint256 randomNumberIndex = (drawSeed + numbersInTheBag.length) % numbersInTheBag.length;
+        uint256 randomNumber = numbersInTheBag[randomNumberIndex];
+        numbersInTheBag[randomNumberIndex] = numbersInTheBag[numbersInTheBag.length - 1];
+        numbersInTheBag.pop();
+        drawnNumbers.add(randomNumber);
         lastDrawTime = block.timestamp;
-        emit DrawNumber(number);
-        return number;
+        emit DrawNumber(randomNumber);
     }
 
     function claimPrize(uint256 tokenId) external {
