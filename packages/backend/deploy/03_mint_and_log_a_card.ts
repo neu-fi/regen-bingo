@@ -19,7 +19,7 @@ const main: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     let multipleMintCount = 2;
     console.log("\nMinting", multipleMintCount, "cards...");
-    await (await regenBingoContract.connect(deployer).mintMultiple(multipleMintCount, { value: mintPrice.mul(multipleMintCount) })).wait();
+    await (await regenBingoContract.connect(deployer).mintMultiple(multipleMintCount, deployer.address, { value: mintPrice.mul(multipleMintCount) })).wait();
 
     console.log("\ntotalSupply():");
     totalSupply = (await regenBingoContract.totalSupply());
