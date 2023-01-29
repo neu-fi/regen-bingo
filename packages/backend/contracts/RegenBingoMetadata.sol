@@ -23,41 +23,47 @@ contract RegenBingoMetadata is IRegenBingoMetadata {
         bool isBingoFinished,
         uint256 drawTimestamp
     ) external view virtual returns (string memory) {
-        string memory json = Base64.encode(
-            bytes(
-                string(
-                    abi.encodePacked(
-                        '{"name":"RegenBingo #',
-                        Strings.toString(tokenId),
-                        '","description":"...","image":"',
-                        _generateImageStringFraction(
-                            tokenId,
-                            numbers,
-                            covered,
-                            donationAmount,
-                            donationName,
-                            donationAddress,
-                            isBingoFinished,
-                            drawTimestamp
-                        ),
-                        '"}'
-                    )
-                )
-            )
+        string memory description = string.concat(
+            'A Regen Bingo card ',
+            (isBingoFinished ? 'donated' : 'donating'),
+            ' to ',
+            donationName,
+            ' (',
+            Strings.toHexString(uint256(uint160(donationAddress)), 20),
+            ').'
         );
-        return string(abi.encodePacked("data:application/json;base64,", json));
+
+        string memory externalUrl = string.concat(
+            'https://regen.bingo/cards/',
+            Strings.toString(tokenId)
+        );
+
+        string memory json = string.concat(
+            '{"name":"RegenBingo #',
+            Strings.toString(tokenId),
+            '","description":"',
+            description,
+            '","external_url":"',
+            externalUrl,
+            '","image":"',
+            _generateImageStringFraction(
+                tokenId,
+                numbers,
+                covered,
+                donationAmount,
+                donationName,
+                donationAddress,
+                isBingoFinished,
+                drawTimestamp
+            ),
+            '"}'
+        );
+        return string.concat('data:application/json;base64,', Base64.encode(bytes(json)));
     }
 
     function generateContractURI() external pure returns (string memory) {
-        return
-            string(
-                abi.encodePacked(
-                    "data:application/json;base64,",
-                    Base64.encode(
-                        '{"name":"RegenBingo","description":"RegenBingo is a simple experimental game to raise ETH for public goods funding while entertaining us greenpilled regens.","image":"...","external_url":"https://www.regen.bingo"}'
-                    )
-                )
-            );
+        string memory json = '{"name":"Regen Bingo","description":"A win-win game for regens! The first one with a full suite takes half of the pool. The other half is donated.","image":"ipfs://QmaGjcDG48ynW9htCKshQB4HvkPBjWSPuJR7QmWaWfe7Df","external_url":"https://regen.bingo"}';
+        return string.concat('data:application/json;base64,', Base64.encode(bytes(json)));
     }
 
     function _generateImageStringFraction(
@@ -80,12 +86,6 @@ contract RegenBingoMetadata is IRegenBingoMetadata {
             isBingoFinished,
             drawTimestamp
         );
-        return
-            string(
-                abi.encodePacked(
-                    "data:image/svg+xml;base64,",
-                    Base64.encode(bytes(svg))
-                )
-            );
+        return string.concat('data:application/json;base64,', Base64.encode(bytes(svg)));
     }
 }
