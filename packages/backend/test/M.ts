@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { loadFixture, mine} from "@nomicfoundation/hardhat-network-helpers";
+import { impersonateAccount, loadFixture, mine} from "@nomicfoundation/hardhat-network-helpers";
 import { BigNumber } from "ethers";
 
 // See the following test for similar examples:
@@ -137,7 +137,21 @@ describe("Chainlink contract integrations", function () {
             // }
 
             mine(await m.VRF_REQUEST_CONFIRMATIONS());
+
+            // Add ETH to Coordinator to pay for gas
+            await ethers.provider.send("hardhat_setBalance", [
+                vrfCoordinatorV2Mock.address,
+                "0x56BC75E2D63100000",
+              ]);
             
+            impersonateAccount(vrfCoordinatorV2Mock.address);
+            let coordinator = await ethers.getSigner(vrfCoordinatorV2Mock.address);
+
+            let rawTx = await vrfV2Wrapper.connect(coordinator).rawFulfillRandomWords(1, [42]);
+            
+            await expect( rawTx ).to.emit(m, "WhatWeWant");
+
+            /*
             const rawTx = vrfCoordinatorV2Mock.connect(signer1).fulfillRandomWordsWithOverride(
                 await m.lastRequestId(),
                 vrfV2Wrapper.address,
@@ -146,7 +160,7 @@ describe("Chainlink contract integrations", function () {
                     gasLimit: await m.VRF_CALLBACK_GAS_LIMIT()
                 }
             );
-
+            */
             // await expect( rawTx )
             //     .to.emit(vrfCoordinatorV2Mock, "RandomWordsFulfilled")
             //     .to.emit(m, "WhatWeWant")
