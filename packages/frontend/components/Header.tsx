@@ -33,7 +33,7 @@ export default function Header(props: HeaderProps) {
   const router = useRouter();
 
   return (
-    <div className="px-6 pt-8 lg:px-8">
+    <div className="px-6 pt-8 pb-8 lg:px-8 bg-green-1">
       <div>
         <nav className="flex h-9 items-center justify-between">
           <div className="flex justify-center align-middle items-center">
