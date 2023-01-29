@@ -5,12 +5,11 @@ import { ethers } from "hardhat";
 describe('RegenBingoSVG', function () {
 
   async function deployExposedRegenBingoSVGFixture() {
-    
     const DateTime = await ethers.getContractFactory("BokkyPooBahsDateTimeContract");
     const dateTime = await DateTime.deploy();
     await dateTime.deployed()
 
-    const RegenBingoSVG = await ethers.getContractFactory("contracts-exposed/RegenBingoSVG.sol:$RegenBingoSVG");
+    const RegenBingoSVG = await ethers.getContractFactory("$RegenBingoSVG");
     const regenBingoSVG = await RegenBingoSVG.deploy(dateTime.address);
 
     return { regenBingoSVG };

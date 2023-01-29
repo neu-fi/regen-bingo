@@ -6,13 +6,13 @@ describe("RegenBingoMetadata", function () {
 
   async function deployRegenBingoMetadataFixture() {
 
-    const DateTime = await ethers.getContractFactory("contracts/BokkyPooBahsDateTimeContract.sol:BokkyPooBahsDateTimeContract");
+    const DateTime = await ethers.getContractFactory("BokkyPooBahsDateTimeContract");
     const dateTime = await DateTime.deploy();
 
-    const RegenBingoSVG = await ethers.getContractFactory("contracts/RegenBingoSVG.sol:RegenBingoSVG");
+    const RegenBingoSVG = await ethers.getContractFactory("RegenBingoSVG");
     const regenBingoSVG = await RegenBingoSVG.deploy(dateTime.address);
 
-    const RegenBingoMetadata = await ethers.getContractFactory("contracts/RegenBingoMetadata.sol:RegenBingoMetadata");
+    const RegenBingoMetadata = await ethers.getContractFactory("RegenBingoMetadata");
     const regenBingoMetadata = await RegenBingoMetadata.deploy(regenBingoSVG.address);
 
     return { regenBingoMetadata };
