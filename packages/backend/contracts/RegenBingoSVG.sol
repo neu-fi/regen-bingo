@@ -14,12 +14,6 @@ contract RegenBingoSVG is IRegenBingoSVG {
         "#5f9e80",
         "#909F79",
         "#9C9491",
-        "#A0B59E",
-        "#a3b18a",
-        "#A9B9A9",
-        "#b08968",
-        "#b1a7a6",
-        "#b57170",
         "#b5e48c",
         "#BAB86C",
         "#c9ada7",
@@ -50,7 +44,14 @@ contract RegenBingoSVG is IRegenBingoSVG {
         "#ffc43d",
         "#ffdab9",
         "#ffe5b4",
-        "#ffefd5"
+        "#ffefd5",
+        // Colors given by Hatun are below:
+        "#dbffde",
+        "#f19fa4",
+        "#f4bab4",
+        "#f9dbc4",
+        "#c0e8d8",
+        "#c8cee8"
     ];
     string[12] MONTHS = [
         "January",
