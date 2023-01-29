@@ -286,8 +286,7 @@ contract RegenBingoSVG is IRegenBingoSVG {
             )
         );
 
-        // if (covered) {
-        if (number % 2 == 1) {
+        if (covered) {
             return string(
                 abi.encodePacked(
                     '<circle fill="#c24f64" style="stroke-width: 0" cx="',
