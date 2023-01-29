@@ -8,10 +8,8 @@ import "./interfaces/IDateTime.sol";
 
 contract RegenBingoSVG is IRegenBingoSVG {
     string constant STYLES = '<style>*{stroke:black;stroke-width:1}text{font-family:Monaco;font-size:100px}.a{fill:#57b592}.b{fill:#bde4df}.c{fill:#f8ce47}.d{fill:#fcf2b1}</style>';
-    uint256 constant X_OFFSET = 240;
-    uint256 constant Y_OFFSET = 1035;
-    uint256 constant CIRCLE_X_OFFSET = 300;
-    uint256 constant CIRCLE_Y_OFFSET = 1000;
+    uint256 constant X_OFFSET = 300;
+    uint256 constant Y_OFFSET = 1000;
     string[40] BACKGROUND_COLORS = [
         "#5f9e80",
         "#909F79",
@@ -296,38 +294,30 @@ contract RegenBingoSVG is IRegenBingoSVG {
         uint256 number,
         bool covered
     ) internal pure returns (string memory) {
-        string memory xCordinate;
-        string memory yCordinate;
-        string memory circleX = Strings.toString(x * 200 + CIRCLE_X_OFFSET);
-        string memory circleY = Strings.toString(y * 200 + CIRCLE_Y_OFFSET);
-
-        if (number < 10) {
-            xCordinate = Strings.toString(x * 200 + X_OFFSET + 35);
-        } else {
-            xCordinate = Strings.toString(x * 200 + X_OFFSET);
-        }
-        yCordinate = Strings.toString(y * 200 + Y_OFFSET);
+        uint256 centerX = x * 200 + X_OFFSET;
+        uint256 centerY = y * 200 + Y_OFFSET;
 
         string memory numberSVG = string(
             abi.encodePacked(
-                '<text x="',
-                xCordinate,
+                '<text dominant-baseline="middle" text-anchor="middle" x="',
+                Strings.toString(centerX),
                 '" y="',
-                yCordinate,
+                Strings.toString(centerY + 10),
                 '">',
                 Strings.toString(number),
                 '</text>'
             )
         );
 
-        if (covered) {
+        // if (covered) {
+        if (number % 2 == 1) {
             return string(
                 abi.encodePacked(
-                    '<circle fill="#ee2d25" cx="',
-                    circleX,
+                    '<circle fill="#c24f64" style="stroke-width: 0" cx="',
+                    Strings.toString(centerX),
                     '" cy="',
-                    circleY,
-                    ' "r="75"></circle>',
+                    Strings.toString(centerY),
+                    ' "r="72"></circle>',
                     numberSVG
                 )
             );
