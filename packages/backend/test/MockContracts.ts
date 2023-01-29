@@ -7,7 +7,7 @@ const name = "RegenBingo";
 const symbol = "BINGO";
 const mintPrice = ethers.utils.parseEther("0.2") ;
 const drawCooldownSeconds = 60 * 60; // 1 hour
-const drawNumberCooldownSeconds = 5 * 60; // 5 minutes
+const drawNumberCooldownMultiplier = 3; // 3 seconds per numbers drawn
 
 describe("Chainlink contract integrations", function () {
     async function deployBingoFixture() {
@@ -62,7 +62,7 @@ describe("Chainlink contract integrations", function () {
             symbol,
             mintPrice,
             drawTimestamp,
-            drawNumberCooldownSeconds,
+            drawNumberCooldownMultiplier,
             donationName,
             donationAddress,
             regenBingoMetadata.address,

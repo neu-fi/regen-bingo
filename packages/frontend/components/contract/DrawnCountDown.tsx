@@ -21,7 +21,7 @@ export const DrawnCountDown = () => {
   }, []);
 
   useEffect(() => {
-    const fetchAndSetDrawTimestamp = async () => setDrawTimestamp(Number(await contract?.drawTimestamp()));
+    const fetchAndSetDrawTimestamp = async () => setDrawTimestamp(Number(await contract?.firstDrawTimestamp()));
     fetchAndSetDrawTimestamp();
   }, [contract]);
 

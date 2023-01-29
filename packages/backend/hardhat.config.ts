@@ -101,7 +101,7 @@ const config: any = {
     currency: 'USD',
     coinmarketcap: process.env.COINMARKETCAP_API_KEY,
     gasPrice: 50,
-    excludeContracts: ["$RegenBingoSVG", "LinkToken", "BokkyPooBahsDateTimeContract", "VRFCoordinatorV2Mock"]
+    excludeContracts: ["$RegenBingoSVG", "BasicToken", "LinkToken", "BokkyPooBahsDateTimeContract", "VRFCoordinatorV2Mock", "VRFV2Wrapper", "MockV3Aggregator"]
   }
 };
 

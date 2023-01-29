@@ -66,9 +66,9 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
 
     BingoState public bingoState;
     uint256 public mintPrice;
-    uint256 public drawTimestamp;
-    uint256 public drawNumberCooldownSeconds;
-    uint256 public lastDrawTime;
+    uint256 public firstDrawTimestamp;
+    uint256 public nextDrawTimestamp;
+    uint256 public drawNumberCooldownMultiplier;
     string public donationName;
     address payable public donationAddress;
 
@@ -93,8 +93,8 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
         string memory _name,
         string memory _symbol,
         uint256 _mintPrice,
-        uint256 _drawTimestamp,
-        uint256 _drawNumberCooldownSeconds,
+        uint256 _firstDrawTimestamp,
+        uint256 _drawNumberCooldownMultiplier,
         string memory _donationName,
         address payable _donationAddress,
         address _metadataGenerator,
@@ -105,8 +105,8 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
         VRFV2WrapperConsumerBase(_linkAddress, _wrapperAddress)
     {
         mintPrice = _mintPrice;
-        drawTimestamp = _drawTimestamp;
-        drawNumberCooldownSeconds = _drawNumberCooldownSeconds;
+        firstDrawTimestamp = _firstDrawTimestamp;
+        drawNumberCooldownMultiplier = _drawNumberCooldownMultiplier;
         donationName = _donationName;
         donationAddress = _donationAddress;
         metadataGenerator = IRegenBingoMetadata(_metadataGenerator);
@@ -132,10 +132,7 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
 
     function drawNumber() external {
         require(bingoState == BingoState.DRAW, "Draw has not started");
-        require(
-            lastDrawTime + drawNumberCooldownSeconds <= block.timestamp,
-            "Draw too soon"
-        );
+        require(nextDrawTimestamp <= block.timestamp, "Draw too soon");
 
         // Pick a randomNumberIndex from the not yet drawn side.
         uint256 randomNumberIndex = (drawSeed + drawnNumbersCount) % (90 - drawnNumbersCount);
@@ -149,7 +146,7 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
         numbers[90 - drawnNumbersCount] = randomNumber;
 
         // Side effects
-        lastDrawTime = block.timestamp;
+        nextDrawTimestamp = block.timestamp + drawNumberCooldownMultiplier * drawnNumbersCount;
         emit DrawNumber(randomNumber);
     }
 
@@ -166,7 +163,7 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
 
     function startDrawPeriod() external {
         require(bingoState == BingoState.MINT);
-        require(drawTimestamp <= block.timestamp, "It is not draw period yet");
+        require(firstDrawTimestamp <= block.timestamp, "It is not draw period yet");
 
         bingoState = BingoState.DRAW;
         emit DrawStarted();
@@ -199,7 +196,7 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
                 donationName,
                 donationAddress,
                 bingoState == BingoState.FINISHED,
-                drawTimestamp
+                firstDrawTimestamp
             );
     }
 
