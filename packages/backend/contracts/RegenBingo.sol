@@ -2,23 +2,17 @@
 pragma solidity ^0.8.13;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
-import "@openzeppelin/contracts/utils/Base64.sol";
-import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
-import "./interfaces/IRegenBingoMetadata.sol";
 import "@chainlink/contracts/src/v0.8/VRFV2WrapperConsumerBase.sol";
+import "./interfaces/IRegenBingoMetadata.sol";
 
 contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
-    using Strings for uint256;
-    using EnumerableSet for EnumerableSet.UintSet;
-
     enum BingoState {
         MINT,
         DRAW,
         FINISHED
     }
 
-    // Bingo Card layouts.
+    // Bingo card layouts.
     // Cells have the following format: [lowest_available_number, possible_options]
     // Given a seed, a number in the cell could be calculated as:
     // lowest_available_number + (seed % possible_options)
@@ -52,7 +46,8 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
                              STATE VARIABLES
     //////////////////////////////////////////////////////////////*/
 
-    uint8[] numbersInTheBag = [
+    // Drawn numbers have index of "90 - drawnNumbersCount" or larger in the "numbers" array.
+    uint8[] numbers = [
          1,  2,  3,  4,  5,  6,  7,  8,  9,  10,
         11, 12, 13, 14, 15, 16, 17, 18, 19,  20,
         21, 22, 23, 24, 25, 26, 27, 28, 29,  30,
@@ -63,6 +58,7 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
         71, 72, 73, 74, 75, 76, 77, 78, 79,  80,
         81, 82, 83, 84, 85, 86, 87, 88, 89,  90
     ];
+    uint8 public drawnNumbersCount;
 
     IRegenBingoMetadata metadataGenerator;
 
@@ -73,7 +69,6 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
     uint256 public lastDrawTime;
     string public donationName;
     address payable public donationAddress;
-    EnumerableSet.UintSet private drawnNumbers;
 
     // Chainlink VRF
     uint256 lastRequestBlockNumber;
@@ -139,13 +134,19 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
             lastDrawTime + drawNumberCooldownSeconds <= block.timestamp,
             "Draw too soon"
         );
-        require(drawSeed != 0, "Waiting for the random seed");
 
-        uint256 randomNumberIndex = (drawSeed + numbersInTheBag.length) % numbersInTheBag.length;
-        uint256 randomNumber = numbersInTheBag[randomNumberIndex];
-        numbersInTheBag[randomNumberIndex] = numbersInTheBag[numbersInTheBag.length - 1];
-        numbersInTheBag.pop();
-        drawnNumbers.add(randomNumber);
+        // Pick a randomNumberIndex from the not yet drawn side.
+        uint256 randomNumberIndex = (drawSeed + drawnNumbersCount) % (90 - drawnNumbersCount);
+
+        // Increase drawnNumbersCount, i.e. reduce the caret of (drawnNumbersCount - 1)
+        drawnNumbersCount++;
+
+        // Swap randomNumberIndex and (90 - drawnNumbersCount)
+        uint8 randomNumber = numbers[randomNumberIndex];
+        numbers[randomNumberIndex] = numbers[90 - drawnNumbersCount];
+        numbers[90 - drawnNumbersCount] = randomNumber;
+
+        // Side effects
         lastDrawTime = block.timestamp;
         emit DrawNumber(randomNumber);
     }
@@ -190,8 +191,8 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
         return
             metadataGenerator.generateTokenURI(
                 tokenId,
-                numbers(tokenId),
-                covered(tokenId),
+                numberMatrix(tokenId),
+                isDrawnMatrix(tokenId),
                 mintPrice / 2,
                 donationName,
                 donationAddress,
@@ -200,16 +201,16 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
             );
     }
 
-    function numbers(uint256 tokenId)
+    function numberMatrix(uint256 tokenId)
         public
         view
-        returns (uint256[9][3] memory numbers)
+        returns (uint256[9][3] memory numberMatrix)
     {
         require(ownerOf(tokenId) != address(0), "Invalid card");
         uint256 tokenSeed = _tokenSeed(tokenId);
         for (uint256 row = 0; row < 3; row++) {
             for (uint256 column = 0; column < 9; column++) {
-                numbers[row][column] = getNumberByCoordinates(
+                numberMatrix[row][column] = getNumberByCoordinates(
                     tokenSeed,
                     row,
                     column
@@ -218,21 +219,21 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
         }
     }
 
-    function covered(uint256 tokenId)
+    function isDrawnMatrix(uint256 tokenId)
         public
         view
-        returns (bool[9][3] memory covered)
+        returns (bool[9][3] memory isDrawnMatrix)
     {
         require(ownerOf(tokenId) != address(0), "Invalid card");
         uint256 tokenSeed = _tokenSeed(tokenId);
         for (uint256 row = 0; row < 3; row++) {
             for (uint256 column = 0; column < 9; column++) {
                 if (
-                    drawnNumbers.contains(
+                    isDrawn(
                         getNumberByCoordinates(tokenSeed, row, column)
                     )
                 ) {
-                    covered[row][column] = true;
+                    isDrawnMatrix[row][column] = true;
                 }
             }
         }
@@ -248,7 +249,7 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
         for (uint256 row = 0; row < 3; row++) {
             for (uint256 column = 0; column < 9; column++) {
                 if (
-                    drawnNumbers.contains(
+                    isDrawn(
                         getNumberByCoordinates(tokenSeed, row, column)
                     )
                 ) {
@@ -262,17 +263,31 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
         uint256 tokenSeed,
         uint256 row,
         uint256 column
-    ) public view returns (uint256) {
+    ) public view returns (uint8) {
         uint8[2][9][3] memory layout = LAYOUTS[tokenSeed % LAYOUTS_COUNT];
         if (layout[row][column][0] == 0) {
             return 0;
         } else {
-            return layout[row][column][0] + (tokenSeed % layout[row][column][1]);
+            return layout[row][column][0] + uint8(tokenSeed % layout[row][column][1]);
         }
     }
 
-    function getDrawnNumbers() public view returns (uint256[] memory) {
-        return drawnNumbers.values();
+    function getDrawnNumbers() public view returns (uint8[] memory) {
+        uint8[] memory drawnNumbers = new uint8[](drawnNumbersCount);
+        for (uint8 i = 0; i < drawnNumbersCount; i++) {
+            drawnNumbers[i] = numbers[89 - i];
+        }
+        return drawnNumbers;
+    }
+
+    function isDrawn(uint8 number) public view returns (bool) {
+        uint8[] memory drawnNumbers = new uint8[](drawnNumbersCount);
+        for (uint8 i = 0; i < drawnNumbersCount; i++) {
+            if (number == numbers[89 - i]) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /*//////////////////////////////////////////////////////////////

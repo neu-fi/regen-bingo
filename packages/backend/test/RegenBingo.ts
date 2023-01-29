@@ -212,7 +212,7 @@ describe("RegenBingo", function () {
 
             expect(drawnNumber).to.be.within(1, 90);
             expect(await regenBingo.lastDrawTime()).to.equal(await time.latest());
-            expect(await regenBingo.getDrawnNumbers()).deep.includes(BigNumber.from(drawnNumber));
+            expect(await regenBingo.getDrawnNumbers()).deep.includes(drawnNumber);
             
         });
 
@@ -238,10 +238,10 @@ describe("RegenBingo", function () {
             let drawnNumber2 = Number(receipt2.events[0].data);
 
             expect(drawnNumber1).to.be.within(1, 90);
-            expect(await regenBingo.getDrawnNumbers()).deep.includes(BigNumber.from(drawnNumber1));
+            expect(await regenBingo.getDrawnNumbers()).deep.includes(drawnNumber1);
 
             expect(drawnNumber2).to.be.within(1, 90);
-            expect(await regenBingo.getDrawnNumbers()).deep.includes(BigNumber.from(drawnNumber2));
+            expect(await regenBingo.getDrawnNumbers()).deep.includes(drawnNumber2);
 
             expect(await regenBingo.lastDrawTime()).to.equal(await time.latest());
         });
@@ -270,7 +270,7 @@ describe("RegenBingo", function () {
     });
 
     describe("Claiming prize", function () {
-        it("All cards eventually win", async function () {
+        it("Draws all numbers, a card eventually win", async function () {
             const { regenBingo, donationAddress, signer1, signer2, fundWithLINK, provideRandomness } = await loadFixture(deployBingoFixture);
 
             await regenBingo.connect(signer1).mint({ value: mintPrice });
