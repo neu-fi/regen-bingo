@@ -109,15 +109,15 @@ contract RegenBingo is ERC721Enumerable, VRFV2WrapperConsumerBase {
 
     function mint() external payable {
         require(bingoState == BingoState.MINT, "Minting has ended");
-        require(msg.value == mintPrice, "Incorrect payment amount");
+        require(msg.value == mintPrice, "Incorrect payment");
         _mint(msg.sender, totalSupply() + 1);
     }
 
-    function mintMultiple(uint256 mintCount) external payable {
+    function mintMultiple(uint256 count, address to) external payable {
         require(bingoState == BingoState.MINT, "Minting has ended");
-        require(msg.value == mintPrice * mintCount, "Incorrect payment amount");
-        for (uint256 i = 0; i < mintCount; i++) {
-            _mint(msg.sender, totalSupply() + 1);
+        require(msg.value == count * mintPrice, "Incorrect payment");
+        for (uint256 i = 0; i < count; i++) {
+            _mint(to, totalSupply() + 1);
         }
     }
 
