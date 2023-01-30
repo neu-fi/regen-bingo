@@ -303,14 +303,10 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
         returns (uint256 count)
     {
         require(ownerOf(tokenId) != address(0), "Invalid card");
-        uint256 tokenSeed = _tokenSeed(tokenId);
+        bool[9][3] memory matrix = isDrawnMatrix(tokenId);
         for (uint256 row = 0; row < 3; row++) {
             for (uint256 column = 0; column < 9; column++) {
-                if (
-                    isDrawn(
-                        getNumberByCoordinates(tokenSeed, row, column)
-                    )
-                ) {
+                if ( matrix[row][column] ) {
                     count++;
                 }
             }
