@@ -80,7 +80,7 @@ export const BokkyPooBahsDateTimeContractAddress: (string | null) = (() => {
     case 'ethereum':
       return '0x23d23d8F243e57d0b924bff3A3191078Af325101';
     case 'goerli':
-      return '0x85CC560EfebA375959B0FBA451cF4eBD1c8E6FA6';
+      return '0x382ebFD153a1439ee01E646161dCAA75987ebfD0';
     default:
       return null;
   }
@@ -91,7 +91,7 @@ export const bokkyPooBahsBokkyPooBahsDateTimeContractAddress: string | null = ((
     case "ethereum":
       return "0x23d23d8F243e57d0b924bff3A3191078Af325101";
     case "goerli":
-      return "0x85CC560EfebA375959B0FBA451cF4eBD1c8E6FA6";
+      return "0x382ebFD153a1439ee01E646161dCAA75987ebfD0";
     default:
       return null;
   }
