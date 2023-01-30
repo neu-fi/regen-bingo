@@ -153,7 +153,7 @@ describe("RegenBingo", function () {
             await startDrawPeriod();
 
             await expect(regenBingo.mint(signer1.address, 1, { value: mintPrice })).to.be.revertedWith(
-                "Minting has ended"
+                "Not minting"
             );
         });
     });
@@ -224,7 +224,7 @@ describe("RegenBingo", function () {
         it("Does not allow drawing numbers before the draw", async function () {
             const { regenBingo } = await loadFixture(deployBingoFixture);
 
-            await expect(regenBingo.drawNumber()).to.be.revertedWith("Draw has not started");
+            await expect(regenBingo.drawNumber()).to.be.revertedWith("Not drawing");
         });
 
         it("Does not allow drawing number before firstDrawTimestamp", async function () {
@@ -276,7 +276,7 @@ describe("RegenBingo", function () {
 
             await regenBingo.mint(signer1.address, 1, { value: mintPrice });
 
-            await expect(regenBingo.claimPrize(1)).to.be.revertedWith("Game is over");
+            await expect(regenBingo.claimPrize(1)).to.be.revertedWith("Not drawing");
         });
 
         it("Invalid cards can not claim", async function () {
@@ -327,6 +327,9 @@ describe("RegenBingo", function () {
             const tokenURI = await regenBingo.tokenURI(1);
             const decodedTokenURI = JSON.parse(Buffer.from(tokenURI.split(',')[1], 'base64').toString());
             const decodedImage = Buffer.from(decodedTokenURI['image'].split(',')[1], 'base64').toString();
+
+            console.log(tokenURI)
+            console.log(decodedTokenURI)
             
             const date = new Date(firstDrawTimestamp * 1000);
             let hours = date.getUTCHours();

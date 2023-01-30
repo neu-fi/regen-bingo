@@ -142,10 +142,7 @@ describe("Chainlink contract integrations", function () {
             const linkAmount = "3029517575885162280";
             await fundWithLINK(linkAmount);
 
-            await regenBingo.rerequestDrawSeed();
-            
-            expect(await regenBingo.$lastRequestId()).to.equal(BigNumber.from("0"));
-            expect(await regenBingo.$drawSeed()).to.equal(BigNumber.from("0"));
+            await expect(regenBingo.rerequestDrawSeed()).to.be.revertedWith("Not drawing");
         });
         it("Cannot rerequest before vrf_cooldown", async function () {
             const { regenBingo, fundWithLINK } = await loadFixture(deployBingoFixture);
