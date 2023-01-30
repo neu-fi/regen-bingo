@@ -161,7 +161,7 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
 
     function claimPrize(uint256 tokenId) onlyDrawState external {
         require(_exists(tokenId), "Invalid token ID");
-        require(coveredNumbers(tokenId) == 15, "Ineligible");
+        require(score(tokenId) == 15, "Ineligible");
 
         donationAddress.call{value: address(this).balance / 2}("");
         address payable winner = payable(ownerOf(tokenId));
@@ -297,7 +297,7 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
         }
     }
 
-    function coveredNumbers(uint256 tokenId)
+    function score(uint256 tokenId)
         public
         view
         returns (uint256 count)
