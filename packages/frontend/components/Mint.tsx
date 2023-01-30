@@ -79,79 +79,15 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
   }, [winnerCardURI]);
 
   return (
-    <div className="relative px-6 lg:px-8">
-      <section id="">
-        <div className="mx-auto mt-4  max-w-5xl flex space-x-1 lg:flex-1 justify-evenly lg:flex-nowrap flex-wrap">
-          <div className="mx-auto max-w-xl ml-5 pt-20 pb-32 sm:pt-48 sm:pb-40">
-            <div>
-              <div>
-                <h1 className="text-4xl font-bold tracking-tight sm:text-center sm:text-6xl">
-                  Regen Bingo
-                </h1>
-                <p className="mt-6 text-lg leading-8 text-gray-600 sm:text-center">
-                  Mint Regen Bingo Cards to contribute to public goods funding
-                  while getting a chance to claim the prize pool!
-                </p>
-                <div className="mt-8 flex gap-x-4 sm:justify-center">
-                  {bingoState === BingoState.MINT && networkState && (
-                    <BingoCardMint />
-                  )}
-                  <a
-                    href="#guide"
-                    className="inline-block rounded-lg  px-2 sm:px-4 py-1.5 text-base font-semibold leading-7 text-gray-900 ring-1 ring-gray-900/10 hover:ring-gray-900/20"
-                  >
-                    {"What the heck is this? "}
-                    <span className="text-yellow-1" aria-hidden="true">
-                      &rarr;
-                    </span>
-                  </a>
-                </div>
-                <div className="mt-8 text-md text-gray-600 sm:text-center">
-                  {networkState && <DrawnCountDown />}
-                </div>
-              </div>
-            </div>
-          </div>
+    <div className="bg-green-1 flex justify-between">
 
-          <div className="flex flex-col justify-center items-center">
-            {winnerCardURI && (
-              <span>
-                Winner of the Gitcoin Alpha Round{" "}
-                <Link href={`/cards/${winnerCardId}`}>
-                  <span className="text-gray-500">#{winnerCardId}</span>
-                </Link>
-              </span>
-            )}
+    <div className="bg-left bg-no-repeat bg-contain  w-2/12 max-w-md"></div>      
 
-            <div className="flex justify-items-center items-center h-80 w-80 sm:h-92 sm:w-92">
-              <>
-                {winnerCardURI ? (
-                  <div
-                    id="tokenImage"
-                    className="h-full w-full aspect-w-1 aspect-h-1 sm:aspect-w-1 sm:aspect-h-1 my-2"
-                  ></div>
-                ) : (
-                  // TODO: Display random NFT on load
-                  <Image
-                    src="/board-example.svg"
-                    height={"400"}
-                    width={"400"}
-                    alt=""
-                  />
-                )}
-              </>
-            </div>
-            {winnerCardURI && claimTxn && (
-              <span className="mt-2">
-                Verified with txn:{" "}
-                <Link href={getTxn(claimTxn)}>
-                  <span className="text-gray-500">{clipHash(claimTxn)}</span>
-                </Link>
-              </span>
-            )}
-          </div>
-        </div>
-      </section>
+      <div className="container mx-auto max-w-2x1 w-8/12 lg:py-12">
+        <img className="" src="/landing-board.png"/> 
+      </div>
+
+    <div className="bg-right bg-no-repeat bg-contain w-2/12 max-w-md"></div>
     </div>
   );
 }

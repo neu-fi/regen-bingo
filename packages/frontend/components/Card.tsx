@@ -48,7 +48,7 @@ export default function Card(props: CardProps) {
   }
 
   return (
-    <div className="mt-4 space-y-4 sm:grid sm:grid-cols-2 sm:items-start sm:gap-6 sm:space-y-0">
+    <div className="mt-4 space-y-4 sm:grid sm:items-start sm:gap-6 sm:space-y-0">
       <div>
         <div className="aspect-w-1 aspect-h-1 sm:aspect-w-1 sm:aspect-h-1">
           <div
@@ -73,6 +73,7 @@ export default function Card(props: CardProps) {
               <Link href={`/cards/${card.id}`} className="text-lg text-green-2">
                 Regen Bingo Card #{card.id}
               </Link>
+
               <Link
                 href={new URL(openseaURL(BigInt(card.id))!)}
                 target="_blank"
@@ -86,7 +87,8 @@ export default function Card(props: CardProps) {
                   height={24}
                 />
               </Link>
-            </h3>
+              </h3>
+
           </div>
 
           <ul role="list" className="flex space-x-5">
@@ -97,7 +99,7 @@ export default function Card(props: CardProps) {
               {didWinPrize() && !isClaimed() ? (
                 <>
                   <p className="text-gray-500 mb-4">
-                    Full house! Claim the prize immidately! 🔥
+                    Full house! Claim the prize immedately! 🔥
                   </p>
                   <ClaimThePrizeButton tokenId={card.id} />
                 </>

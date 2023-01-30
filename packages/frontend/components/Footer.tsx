@@ -70,8 +70,8 @@ const navigation = [
 export default function Footer(footerProps: FooterProps) {
   return (
     <footer>
-      <div className="mx-auto max-w-7xl py-12 px-6 md:flex md:items-center md:justify-between lg:px-8">
-        <div className="flex justify-center space-x-6 md:order-2">
+      <div className="mx-auto bg-green-1 max-w-full py-12 px-36 md:flex md:items-center md:justify-between">
+        <div className="flex space-x-6 md:order-2">
           {navigation.map((item) => (
             <Link
               key={item.name}

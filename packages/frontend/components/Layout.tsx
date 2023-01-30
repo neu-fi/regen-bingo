@@ -113,7 +113,7 @@ function Layout(props: PropsWithChildren<LayoutProps>) {
     <div className="flex flex-col h-screen">
       <BGBlur type={"header"} colors={["#ffcc01", "#00e2ab"]}></BGBlur>
       <Header></Header>
-      <main className="flex-grow">
+      <main className="flex-grow bg-green-5">
         <NetworkContext.Provider value={isOnCorrectNetwork}>
           <ContractStateContext.Provider value={bingoState}>
             <WinnerCardContext.Provider value={winnerCardId!}>

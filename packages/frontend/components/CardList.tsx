@@ -141,6 +141,7 @@ export default function CardList() {
               You don't have any Regen Bingo cards.
             </p>
           ) : (
+            /*
             <>
               <div className="bg-white rounded-2xl shadow-2xl my-4">
                 <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8 lg:py-12 ">
@@ -160,7 +161,22 @@ export default function CardList() {
                   </div>
                 </div>
               </div>
-            </>
+              </>
+
+            */
+      <div className="bg-white w-full">
+      <div className="mx-auto max-w-8xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 justify-center">
+        <div className="mt-6 grid grid-cols-3 gap-y-10 gap-x-6">
+        {cards.map((card) => (
+            <div key={card.id} className="group relative">
+              <div className="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md group-hover:opacity-75 lg:aspect-none lg:h-90">
+              <Card card={card}></Card>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
           )}
         </>
       )}

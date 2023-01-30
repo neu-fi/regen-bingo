@@ -33,7 +33,7 @@ export default function Header(props: HeaderProps) {
   const router = useRouter();
 
   return (
-    <div className="px-6 pt-8 lg:px-8">
+    <div className="px-6 pt-8 pb-8 lg:px-8 bg-green-1">
       <div>
         <nav className="flex h-9 items-center justify-between">
           <div className="flex justify-center align-middle items-center">
@@ -88,7 +88,7 @@ export default function Header(props: HeaderProps) {
                         href={tab.href}
                         className={classNames(
                           isCurrent(tab, router)
-                            ? "hover:bg-yellow-2 hover:text-black bg-green-2 text-white"
+                            ? "bg-green-3 text-black"
                             : "hover:bg-green-3",
                           "px-4 py-3 rounded-xl text-center"
                         )}
