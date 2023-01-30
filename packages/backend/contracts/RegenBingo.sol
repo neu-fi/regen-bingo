@@ -126,20 +126,24 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
         require(bingoState == BingoState.DRAW, "Draw has not started");
         require(nextDrawTimestamp <= block.timestamp, "Waiting the cooldown");
 
-        // Pick a randomNumberIndex from the not yet drawn side.
-        uint256 randomNumberIndex = (drawSeed + drawnNumbersCount) % (90 - drawnNumbersCount);
+        // None of the computations below can overflow.
+        // drawnNumbersCount will be up to 90 and the game will end in about 60 rounds even in low participation.
+        unchecked {
+            // Pick a randomNumberIndex from the not yet drawn side.
+            uint256 randomNumberIndex = addmod(drawSeed, drawnNumbersCount, (90 - drawnNumbersCount));
 
-        // Increase drawnNumbersCount, i.e. reduce the caret of (drawnNumbersCount - 1)
-        drawnNumbersCount++;
+            // Increase drawnNumbersCount, i.e. reduce the caret of undrawn vs drawn in the numbers array
+            drawnNumbersCount++;
 
-        // Swap randomNumberIndex and (90 - drawnNumbersCount)
-        uint8 randomNumber = numbers[randomNumberIndex];
-        numbers[randomNumberIndex] = numbers[90 - drawnNumbersCount];
-        numbers[90 - drawnNumbersCount] = randomNumber;
+            // Swap randomNumberIndex and (90 - drawnNumbersCount)
+            uint8 randomNumber = numbers[randomNumberIndex];
+            numbers[randomNumberIndex] = numbers[90 - drawnNumbersCount];
+            numbers[90 - drawnNumbersCount] = randomNumber;
 
-        // Side effects
-        nextDrawTimestamp = block.timestamp + drawNumberCooldownMultiplier * drawnNumbersCount;
-        emit DrawNumber(randomNumber);
+            // Side effects
+            nextDrawTimestamp = block.timestamp + drawNumberCooldownMultiplier * drawnNumbersCount;
+            emit DrawNumber(randomNumber);
+        }
     }
 
     function claimPrize(uint256 tokenId) external {
