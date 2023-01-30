@@ -137,6 +137,7 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
     }
 
     function drawNumber() onlyDrawState external {
+        require(0 < drawSeed, "The draw will start soon");
         require(nextDrawTimestamp <= block.timestamp, "Waiting the cooldown");
 
         // None of the computations below can overflow.
