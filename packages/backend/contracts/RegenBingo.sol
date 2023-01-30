@@ -86,6 +86,20 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
     event DrawStarted();
 
     /*//////////////////////////////////////////////////////////////
+                               MODIFIERS
+    //////////////////////////////////////////////////////////////*/
+
+    modifier onlyMintState {
+        require(bingoState == BingoState.MINT, "Not minting");
+        _;
+    }
+
+    modifier onlyDrawState {
+        require(bingoState == BingoState.DRAW, "Not drawing");
+        _;
+    }
+
+    /*//////////////////////////////////////////////////////////////
                                CONSTRUCTOR
     //////////////////////////////////////////////////////////////*/
 
@@ -116,14 +130,13 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
                            EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
-    function mint(address to, uint256 quantity) external payable {
-        require(bingoState == BingoState.MINT, "Minting has ended");
+    function mint(address to, uint256 quantity) onlyMintState external payable {
         require(msg.value == quantity * mintPrice, "Incorrect payment");
+
         _mint(to, quantity);
     }
 
-    function drawNumber() external {
-        require(bingoState == BingoState.DRAW, "Draw has not started");
+    function drawNumber() onlyDrawState external {
         require(nextDrawTimestamp <= block.timestamp, "Waiting the cooldown");
 
         // None of the computations below can overflow.
@@ -146,10 +159,10 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
         }
     }
 
-    function claimPrize(uint256 tokenId) external {
-        require(bingoState == BingoState.DRAW, "Game is over");
+    function claimPrize(uint256 tokenId) onlyDrawState external {
         require(_exists(tokenId), "Invalid token ID");
         require(coveredNumbers(tokenId) == 15, "Ineligible");
+
         donationAddress.call{value: address(this).balance / 2}("");
         address payable winner = payable(ownerOf(tokenId));
         winner.call{value: address(this).balance}("");
@@ -157,8 +170,7 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
         emit ClaimPrize(tokenId, winner);
     }
 
-    function startDrawPeriod() external {
-        require(bingoState == BingoState.MINT, "Draw already started");
+    function startDrawPeriod() onlyMintState external {
         require(firstDrawTimestamp <= block.timestamp, "Hold down");
 
         bingoState = BingoState.DRAW;
@@ -166,8 +178,8 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
         _requestDrawSeed();
     }
 
-    function rerequestDrawSeed() external {
-        if (bingoState == BingoState.DRAW && drawSeed == 0 && lastRequestBlockNumber + VRF_REREQUEST_COOLDOWN_BLOCKS <= block.number) {
+    function rerequestDrawSeed() onlyDrawState external {
+        if (drawSeed == 0 && lastRequestBlockNumber + VRF_REREQUEST_COOLDOWN_BLOCKS <= block.number) {
             _requestDrawSeed();
         }
     }
