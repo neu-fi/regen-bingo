@@ -49,7 +49,7 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
     // If chain is not supported, do not fetch
     if (network.chain === undefined || network.chain.unsupported) {
       setDrawnNumbers(undefined);
-      setMessage("Please switch network!");
+      setMessage("Cannot connect to network.");
       return;
     }
 
