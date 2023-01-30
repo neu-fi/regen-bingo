@@ -29,17 +29,19 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
     const getDrawnNumbers = async () => {
       setLoading("Loading...");
       try {
-        const drawnNumbers: BigNumber[] = await contract!.getDrawnNumbers();
-        if (drawnNumbers.length === 0) {
-          setLoading("No numbers drawn yet.");
-          return;
-        } else {
-          setLoading("");
-        }
-        const drawnNumbersAsNumber: number[] = drawnNumbers.map((number) =>
-          number.toNumber()
-        );
-        return drawnNumbersAsNumber;
+        if (contract) {
+            const drawnNumbers: BigNumber[] = await contract.getDrawnNumbers();
+            if (drawnNumbers.length === 0) {
+              setLoading("No numbers drawn yet.");
+              return;
+            } else {
+              setLoading("");
+            }
+            const drawnNumbersAsNumber: number[] = drawnNumbers.map((number) =>
+              number.toNumber()
+            );
+            return drawnNumbersAsNumber;
+        };
       } catch (err: any) {
         toast.error(`${errorSlicing(err.reason)}!`);
         setLoading("");
