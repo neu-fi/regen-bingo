@@ -26,7 +26,7 @@ export const DrawNumber = () => {
     if (isConnected && contract) {
       try {
         const state = await contract.bingoState();
-        if (state === BingoState.FINISHED) {
+        if (state === BingoState.END) {
           setError("Bingo is finished");
           toast.error(`Draw is finished!`);
           return;

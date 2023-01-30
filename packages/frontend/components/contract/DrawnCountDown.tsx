@@ -35,7 +35,7 @@ export const DrawnCountDown = () => {
         }
       } else if (bingoState === BingoState.DRAW) {
         setText("The game has started.");
-      } else if (bingoState === BingoState.FINISHED) {
+      } else if (bingoState === BingoState.END) {
         setText("The game has ended.");
       }
     } else {

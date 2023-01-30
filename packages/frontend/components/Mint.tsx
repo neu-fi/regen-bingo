@@ -35,7 +35,7 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
         console.log(error);
       }
     };
-    if (!contract || !winnerCardId || bingoState !== BingoState.FINISHED) {
+    if (!contract || !winnerCardId || bingoState !== BingoState.END) {
       return;
     }
 

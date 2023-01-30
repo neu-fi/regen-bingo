@@ -44,7 +44,7 @@ export default function Card(props: CardProps) {
   }
 
   function isClaimed(): boolean {
-    return bingoState === BingoState.FINISHED;
+    return bingoState === BingoState.END;
   }
 
   return (

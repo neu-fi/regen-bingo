@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 export const enum BingoState {
   MINT,
   DRAW,
-  FINISHED,
+  END,
 }
 
 export const useBingoContract = (providerOrSigner: any) => {

@@ -28,7 +28,7 @@ export default function DrawnNumbers(props: DrawnNumbersProps) {
         </div>
       </div>
       <div className="w-full mt-4 relative flex justify-center">
-        {bingoState !== BingoState.FINISHED && networkState && <DrawNumber />}
+        {bingoState !== BingoState.END && networkState && <DrawNumber />}
       </div>
     </>
   );

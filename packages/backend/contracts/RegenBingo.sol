@@ -11,7 +11,7 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
     enum BingoState {
         MINT,
         DRAW,
-        FINISHED
+        END
     }
 
     // Bingo card layouts.
@@ -149,7 +149,7 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
         donationAddress.call{value: address(this).balance / 2}("");
         address payable winner = payable(ownerOf(tokenId));
         winner.call{value: address(this).balance}("");
-        bingoState = BingoState.FINISHED;
+        bingoState = BingoState.END;
         emit ClaimPrize(tokenId, winner);
     }
 
@@ -238,7 +238,7 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
                 mintPrice / 2,
                 donationName,
                 donationAddress,
-                bingoState == BingoState.FINISHED,
+                bingoState == BingoState.END,
                 firstDrawTimestamp
             );
     }
