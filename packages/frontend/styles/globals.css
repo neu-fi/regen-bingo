@@ -90,7 +90,7 @@ button {
     background-color: #11bc92;
   }
   .bg-green-5 {
-    backgroud-color: #02e2aead;
+    background-color: #F4FCF5;
   }
   .bg-yellow-1 {
     background-color: #f2b705;
@@ -103,8 +103,8 @@ button {
   }
 }
 
-connect-button > button {
-  background-color: #02e2ac;
+.connect-button > button {
+  background-color: #FFCC07;
 }
 
 .bg-left {

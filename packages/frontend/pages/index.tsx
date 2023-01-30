@@ -20,7 +20,7 @@ export default function Home() {
         <Guide></Guide>
       </section>
       <section id="faq">
-        <div className="pt-10 pb-40">
+        <div className="bg-green-5">
           <FAQ></FAQ>
         </div>
       </section>

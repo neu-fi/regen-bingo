@@ -88,7 +88,7 @@ export default function Header(props: HeaderProps) {
                         href={tab.href}
                         className={classNames(
                           isCurrent(tab, router)
-                            ? "hover:bg-yellow-2 hover:text-black bg-green-2 text-white"
+                            ? "bg-green-3 text-black"
                             : "hover:bg-green-3",
                           "px-4 py-3 rounded-xl text-center"
                         )}
