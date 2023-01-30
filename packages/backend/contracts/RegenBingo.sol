@@ -347,13 +347,8 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
     /*//////////////////////////////////////////////////////////////
                           INTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    function _tokenSeed(uint256 tokenId)
-        internal
-        view
-        returns (uint256)
-    {
-        return uint256(keccak256(abi.encodePacked(address(this), tokenId)));
-    }
+
+    // Overriding VRFV2WrapperConsumerBase
     function fulfillRandomWords(
         uint256 _requestId,
         uint256[] memory _randomWords
@@ -361,6 +356,14 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
         if (drawSeed == 0 && _requestId == lastRequestId) {
             drawSeed = _randomWords[0];
         }
+    }
+
+    function _tokenSeed(uint256 tokenId)
+        internal
+        view
+        returns (uint256)
+    {
+        return uint256(keccak256(abi.encodePacked(address(this), tokenId)));
     }
 
     function _requestDrawSeed() internal {
