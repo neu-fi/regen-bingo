@@ -18,8 +18,8 @@ contract RegenBingoMetadata is IRegenBingoMetadata {
 
     function generateTokenURI(
         uint256 tokenId,
-        uint256[9][3] calldata numbers,
-        bool[9][3] calldata covered,
+        uint256[9][3] calldata numbersMatrix,
+        bool[9][3] calldata isDrawnMatrix,
         uint256 donationAmount,
         string memory donationName,
         address donationAddress,
@@ -51,16 +51,16 @@ contract RegenBingoMetadata is IRegenBingoMetadata {
             '","image":"',
             _generateImageStringFraction(
                 tokenId,
-                numbers,
-                covered,
+                numbersMatrix,
+                isDrawnMatrix,
                 donationAmount,
                 donationName,
                 donationAddress,
                 isBingoFinished,
                 drawTimestamp
             ),
-            '","image":"',
-            _generateNumbersStringFraction(numbers),
+            '","numbers":"',
+            _generateNumbersStringFraction(numbersMatrix),
             '"}'
         );
         return string.concat('data:application/json;base64,', Base64.encode(bytes(json)));
@@ -72,8 +72,8 @@ contract RegenBingoMetadata is IRegenBingoMetadata {
 
     function _generateImageStringFraction(
         uint256 tokenId,
-        uint256[9][3] calldata numbers,
-        bool[9][3] calldata covered,
+        uint256[9][3] calldata numbersMatrix,
+        bool[9][3] calldata isDrawnMatrix,
         uint256 donationAmount,
         string memory donationName,
         address donationAddress,
@@ -82,8 +82,8 @@ contract RegenBingoMetadata is IRegenBingoMetadata {
     ) internal view returns (string memory) {
         string memory svg = svgGenerator.generateTokenSVG(
             tokenId,
-            numbers,
-            covered,
+            numbersMatrix,
+            isDrawnMatrix,
             donationAmount,
             donationName,
             donationAddress,
@@ -94,42 +94,42 @@ contract RegenBingoMetadata is IRegenBingoMetadata {
     }
 
     function _generateNumbersStringFraction(
-        uint256[9][3] calldata numbers
+        uint256[9][3] calldata numbersMatrix
     ) internal view returns (string memory) {
         string memory firstRow = string.concat(
-            Strings.toString(numbers[0][0]), ',',
-            Strings.toString(numbers[0][1]), ',',
-            Strings.toString(numbers[0][2]), ',',
-            Strings.toString(numbers[0][3]), ',',
-            Strings.toString(numbers[0][4]), ',',
-            Strings.toString(numbers[0][5]), ',',
-            Strings.toString(numbers[0][6]), ',',
-            Strings.toString(numbers[0][7]), ',',
-            Strings.toString(numbers[0][8])
+            Strings.toString(numbersMatrix[0][0]), ',',
+            Strings.toString(numbersMatrix[0][1]), ',',
+            Strings.toString(numbersMatrix[0][2]), ',',
+            Strings.toString(numbersMatrix[0][3]), ',',
+            Strings.toString(numbersMatrix[0][4]), ',',
+            Strings.toString(numbersMatrix[0][5]), ',',
+            Strings.toString(numbersMatrix[0][6]), ',',
+            Strings.toString(numbersMatrix[0][7]), ',',
+            Strings.toString(numbersMatrix[0][8])
         );
 
         string memory secondRow = string.concat(
-            Strings.toString(numbers[1][0]), ',',
-            Strings.toString(numbers[1][1]), ',',
-            Strings.toString(numbers[1][2]), ',',
-            Strings.toString(numbers[1][3]), ',',
-            Strings.toString(numbers[1][4]), ',',
-            Strings.toString(numbers[1][5]), ',',
-            Strings.toString(numbers[1][6]), ',',
-            Strings.toString(numbers[1][7]), ',',
-            Strings.toString(numbers[1][8])
+            Strings.toString(numbersMatrix[1][0]), ',',
+            Strings.toString(numbersMatrix[1][1]), ',',
+            Strings.toString(numbersMatrix[1][2]), ',',
+            Strings.toString(numbersMatrix[1][3]), ',',
+            Strings.toString(numbersMatrix[1][4]), ',',
+            Strings.toString(numbersMatrix[1][5]), ',',
+            Strings.toString(numbersMatrix[1][6]), ',',
+            Strings.toString(numbersMatrix[1][7]), ',',
+            Strings.toString(numbersMatrix[1][8])
         );
 
         string memory thirdRow = string.concat(
-            Strings.toString(numbers[2][0]), ',',
-            Strings.toString(numbers[2][1]), ',',
-            Strings.toString(numbers[2][2]), ',',
-            Strings.toString(numbers[2][3]), ',',
-            Strings.toString(numbers[2][4]), ',',
-            Strings.toString(numbers[2][5]), ',',
-            Strings.toString(numbers[2][6]), ',',
-            Strings.toString(numbers[2][7]), ',',
-            Strings.toString(numbers[2][8])
+            Strings.toString(numbersMatrix[2][0]), ',',
+            Strings.toString(numbersMatrix[2][1]), ',',
+            Strings.toString(numbersMatrix[2][2]), ',',
+            Strings.toString(numbersMatrix[2][3]), ',',
+            Strings.toString(numbersMatrix[2][4]), ',',
+            Strings.toString(numbersMatrix[2][5]), ',',
+            Strings.toString(numbersMatrix[2][6]), ',',
+            Strings.toString(numbersMatrix[2][7]), ',',
+            Strings.toString(numbersMatrix[2][8])
         );
 
         return string.concat('[[',firstRow,'],[',secondRow,'],[',thirdRow,']]');
