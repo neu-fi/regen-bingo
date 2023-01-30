@@ -1,25 +1,40 @@
 /* global BigInt */
 
 import Card, { ICard } from "@/components/Card";
+import {
+  useWatchAccount,
+  useWatchContractEvent,
+  useWatchNetwork,
+} from "@/hooks";
 import { useBingoContract } from "@/hooks/useBingoContract";
-import { getToken } from "@/utils/utils";
+import { getToken, throttle } from "@/utils/utils";
+import {
+  getAccount,
+  GetAccountResult,
+  getNetwork,
+  GetNetworkResult,
+} from "@wagmi/core";
 import { Contract } from "ethers";
-import { useState } from "react";
-import { useSigner, useContractRead } from "wagmi";
-import { getAccount, getNetwork, watchAccount, watchNetwork, watchContractEvent, GetAccountResult, GetNetworkResult, deepEqual } from '@wagmi/core'
-import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../config";
+import { useEffect, useState } from "react";
+import { useContractRead, useSigner } from "wagmi";
+import { CONTRACT_ABI, CONTRACT_ADDRESS } from "../config";
 
 export default function CardList() {
+  // States
   const [cards, setCards] = useState<ICard[]>([]);
   const [cardsCount, setCardsCount] = useState<number>(0);
   const [network, setNetwork] = useState<GetNetworkResult>(() => getNetwork());
   const [account, setAccount] = useState<GetAccountResult>(() => getAccount());
 
+  // Web3 Hooks
   const signer = useSigner();
   const contract: Contract | undefined = useBingoContract(signer.data);
 
+  // Throttle lock
+  let throttleLock = false;
+
   const idToCard = async (id: number) => {
-    return await getToken(contract!, Number(id))
+    return await getToken(contract!, Number(id));
   };
 
   function computeCards(tokenIds: number[]) {
@@ -33,8 +48,11 @@ export default function CardList() {
       .then((values) => {
         setCardsCount(values.length);
         setCards(
-          values.sort(function (a, b) {   
-            return a.coveredNumbersCount - b.coveredNumbersCount || Number(a.id) - Number(b.id);
+          values.sort(function (a, b) {
+            return (
+              a.coveredNumbersCount - b.coveredNumbersCount ||
+              Number(a.id) - Number(b.id)
+            );
           })
         );
       })
@@ -47,9 +65,9 @@ export default function CardList() {
   const readTokensOfOwner = useContractRead({
     address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI,
-    functionName: 'tokensOfOwner',
+    functionName: "tokensOfOwner",
     args: [account.address],
-    onSuccess(data:any) {
+    onSuccess(data: any) {
       setCardsCount(data.length);
       computeCards(data);
     },
@@ -61,76 +79,22 @@ export default function CardList() {
       console.log("Triggered tokensOfOwner");
     },
     watch: true,
-  })
-
-  let throttleLock = false;
-  const throttle = (callback: Function, cooldown: number) => {
-    if (!throttleLock) {
-      throttleLock = true;
-      
-      callback();
-      
-      setTimeout(() => {
-        throttleLock = false;
-      }, cooldown);
-    }
-  };
-  
-  watchNetwork((newNetwork) => {
-    if(!deepEqual(newNetwork, network)) {
-      console.log("Captured: newNetwork");
-      setNetwork(newNetwork);
-      throttle(readTokensOfOwner.refetch, 100);
-    }
-  });
-  
-  watchAccount((newAccount) => {
-    if(!deepEqual(newAccount, account)) {
-      console.log("Captured: newAccount");
-      setAccount(newAccount);
-      throttle(readTokensOfOwner.refetch, 100);
-    }
   });
 
-  watchContractEvent(
-    {
-      address: CONTRACT_ADDRESS,
-      abi: CONTRACT_ABI,
-      eventName: 'Transfer',
-    },
-    () => {
-      console.log("Captured: Transfer");
-      throttle(readTokensOfOwner.refetch, 1000);
+  useWatchNetwork(network, setNetwork);
+  useWatchAccount(account, setAccount);
+  useEffect(() => {
+    if (network.chain && network.chain.id === network.chains[0].id) {
+      throttle(readTokensOfOwner.refetch, throttleLock);
+      useWatchContractEvent("Transfer", readTokensOfOwner, throttleLock);
+      useWatchContractEvent("DrawNumber", readTokensOfOwner, throttleLock);
+      useWatchContractEvent("ClaimPrize", readTokensOfOwner, throttleLock);
     }
-  );
-
-  watchContractEvent(
-    {
-      address: CONTRACT_ADDRESS,
-      abi: CONTRACT_ABI,
-      eventName: 'DrawNumber',
-    },
-    () => {
-      console.log("Captured: DrawNumber");
-      throttle(readTokensOfOwner.refetch, 100);
-    }
-  );
-
-  watchContractEvent(
-    {
-      address: CONTRACT_ADDRESS,
-      abi: CONTRACT_ABI,
-      eventName: 'ClaimPrize',
-    },
-    () => {
-      console.log("Captured: ClaimPrize");
-      throttle(readTokensOfOwner.refetch, 100);
-    }
-  );
+  }, [network, account]);
 
   return (
     <>
-      { ( network.chain === undefined  || network.chain?.unsupported ) ? (
+      {network.chain === undefined || network.chain?.unsupported ? (
         <p className="mt-6 text-lg leading-8 font-bold text-gray-600 sm:text-center">
           Cannot connect to the network
         </p>
@@ -164,22 +128,22 @@ export default function CardList() {
               </>
 
             */
-      <div className="bg-white w-full">
-      <div className="mx-auto max-w-8xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 justify-center">
-        <div className="mt-6 grid grid-cols-3 gap-y-10 gap-x-6">
-        {cards.map((card) => (
-            <div key={card.id} className="group relative">
-              <div className="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md group-hover:opacity-75 lg:aspect-none lg:h-90">
-              <Card card={card}></Card>
+            <div className="bg-white w-full">
+              <div className="mx-auto max-w-8xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 justify-center">
+                <div className="mt-6 grid grid-cols-3 gap-y-10 gap-x-6">
+                  {cards.map((card) => (
+                    <div key={card.id} className="group relative">
+                      <div className="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md group-hover:opacity-75 lg:aspect-none lg:h-90">
+                        <Card card={card}></Card>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          ))}
-        </div>
-      </div>
-    </div>
           )}
         </>
       )}
     </>
   );
-};
+}
