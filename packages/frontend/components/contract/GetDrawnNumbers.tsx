@@ -1,89 +1,79 @@
-import { useContext, useEffect, useState } from "react";
-import { useProvider } from "wagmi";
 import DrawnNumbersTable from "@/components/DrawnNumbersTable";
-import { useBingoContract } from "@/hooks/useBingoContract";
-import { BigNumber, Event, Contract } from "ethers";
-import { toast } from "react-toastify";
-import { errorSlicing } from "@/utils/utils";
-import { NetworkContext } from "@/components/Layout";
+import { CHAIN_ID, CONTRACT_ABI, CONTRACT_ADDRESS } from "@/config";
+import { useWatchContractEvent, useWatchNetwork } from "@/hooks";
+import { getNetwork, GetNetworkResult } from "@wagmi/core";
+import { useEffect, useState } from "react";
+import { useContractRead, useProvider } from "wagmi";
 
 type GetDrawnNumbersProps = {};
 
 export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
-  const [drawnNumbers, setDrawnNumbers] = useState<number[]>([]);
-  const [initialFetchCompleted, setInitialFetchCompleted] = useState(false);
-  const [loading, setLoading] = useState("Loading...");
+  // States
+  const [drawnNumbers, setDrawnNumbers] = useState<number[] | undefined>(
+    undefined
+  );
+  const [message, setMessage] = useState("Loading...");
 
-  const networkState: boolean = useContext(NetworkContext);
-
+  // Web3 Hooks
   const provider = useProvider();
-  const contract: Contract | undefined = useBingoContract(provider);
+  const [network, setNetwork] = useState<GetNetworkResult>(() => getNetwork());
 
+  // Throttle lock
+  let throttleLock = false;
+
+  // Contract call
+  const fetchDrawnNumbers = useContractRead({
+    address: CONTRACT_ADDRESS,
+    abi: CONTRACT_ABI,
+    functionName: "getDrawnNumbers",
+    onSuccess(data: any) {
+      console.log(data);
+      setDrawnNumbers(data);
+      setMessage("");
+    },
+    onError(error: any) {
+      console.log(error);
+      setDrawnNumbers(undefined);
+    },
+    onSettled() {
+      console.log("DrawnNumber fetch completed.");
+    },
+  });
+
+  // Network listener.
+  // TODO: Use a global network listener and remove this.
+  useWatchNetwork(network, setNetwork);
+
+  // Side-effects
   useEffect(() => {
-    if (!networkState) {
-      setDrawnNumbers((prev) => []);
-      setInitialFetchCompleted(false);
-      setLoading("Please switch network!");
+    // If chain is not supported, do not fetch
+    if (network.chain === undefined || network.chain.unsupported) {
+      setDrawnNumbers(undefined);
+      setMessage("Please switch network!");
       return;
     }
-    const getDrawnNumbers = async () => {
-      setLoading("Loading...");
-      try {
-        if (contract) {
-            const drawnNumbers: BigNumber[] = await contract.getDrawnNumbers();
-            if (drawnNumbers.length === 0) {
-              setLoading("No numbers drawn yet.");
-              return;
-            } else {
-              setLoading("");
-            }
-            const drawnNumbersAsNumber: number[] = drawnNumbers.map((number) =>
-              number.toNumber()
-            );
-            return drawnNumbersAsNumber;
-        };
-      } catch (err: any) {
-        toast.error(`${errorSlicing(err.reason)}!`);
-        setLoading("");
-        return [];
-      }
-    };
-    if (contract && !initialFetchCompleted) {
-      getDrawnNumbers().then((drawnNumbersAsNumber) => {
-        setInitialFetchCompleted(true); // [1]
-        if (drawnNumbersAsNumber === undefined) return;
-        setDrawnNumbers(drawnNumbersAsNumber);
-      });
-      return;
-    }
-    toast.error(`Unexpected Error!`);
-  }, [networkState]);
 
-  useEffect(() => {
-    if (contract && initialFetchCompleted) {
-      contract.on("DrawNumber", eventHandler);
-    }
-    return () => {
-      if (contract) {
-        contract.off("DrawNumber", eventHandler);
+    // If chain is correct, fetch
+    if (network.chain && network.chain.id === CHAIN_ID) {
+      if (!drawnNumbers) {
+        fetchDrawnNumbers.refetch();
+      } else {
+        useWatchContractEvent("DrawNumber", fetchDrawnNumbers, throttleLock);
       }
-    };
-  }, [initialFetchCompleted]);
-
-  const eventHandler = async (number: BigNumber, event: Event) => {
-    const luckyNumber = number.toNumber();
-    if (!drawnNumbers.includes(luckyNumber)) {
-      setDrawnNumbers((prev) => [...prev, luckyNumber]);
-      toast.info(`New number drawn: ${luckyNumber}`);
     }
-  };
+  });
 
   return (
     <>
-      {drawnNumbers.length === 0 && (
-        <div className="text-xl m-20 font-semibold">{loading}</div>
+      {!drawnNumbers && (
+        <div className="text-xl m-20 font-semibold">{message}</div>
       )}
-      {drawnNumbers.length > 0 && (
+      {drawnNumbers && drawnNumbers.length === 0 && (
+        <div className="text-xl m-20 font-semibold">
+          No numbers are drawn, yet.
+        </div>
+      )}
+      {drawnNumbers && drawnNumbers.length > 0 && (
         <DrawnNumbersTable drawnNumbers={drawnNumbers}></DrawnNumbersTable>
       )}
     </>
