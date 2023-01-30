@@ -8,11 +8,41 @@ import "erc721a/contracts/ERC721A.sol";
 import "./interfaces/IRegenBingoMetadata.sol";
 
 contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
+
+    /*//////////////////////////////////////////////////////////////
+                                ENUMS
+    //////////////////////////////////////////////////////////////*/
+
     enum BingoState {
         MINT,
         DRAW,
         END
     }
+
+    /*//////////////////////////////////////////////////////////////
+                                CONSTANTS
+    //////////////////////////////////////////////////////////////*/
+
+    uint8 constant NUMBERS_COUNT = 90;
+    uint256 constant LAYOUTS_COUNT = 3;
+    uint256 constant ROWS_COUNT = 3;
+    uint256 constant COLUMNS_COUNT = 9;
+    uint32 constant VRF_CALLBACK_GAS_LIMIT = 100000;
+    uint32 constant VRF_NUMBER_OF_WORDS = 1;
+    uint16 constant VRF_REQUEST_CONFIRMATIONS = 3;
+    uint256 constant VRF_REREQUEST_COOLDOWN_BLOCKS = 300;
+
+    /*//////////////////////////////////////////////////////////////
+                        IMMUTABLE STATE VARIABLES
+    //////////////////////////////////////////////////////////////*/
+
+    // Not set as immutable as it increases bytecode size with optimizations
+    IRegenBingoMetadata metadataGenerator;
+    uint256 public mintPrice;
+    uint256 public firstDrawTimestamp;
+    uint256 public drawNumberCooldownMultiplier;
+    address payable donationAddress;
+    string public donationName;
 
     // Bingo card layouts.
     // Cells have the following format: [lowest_available_number, possible_options]
@@ -20,8 +50,7 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
     // lowest_available_number + (seed % possible_options)
     // Following these rules: https://en.wikipedia.org/wiki/Bingo_card#90-ball_bingo_cards
     // Using these as templates: https://www.scribd.com/document/325121782/1-90-British-Bingo-Cards
-    uint256 constant LAYOUTS_COUNT = 3;
-    uint8[2][9][3][LAYOUTS_COUNT] LAYOUTS = [
+    uint8[2][COLUMNS_COUNT][ROWS_COUNT][LAYOUTS_COUNT] layouts = [
         [
             [[ 1, 9], [ 0, 0], [ 0, 0], [ 0, 0], [40, 5], [56, 4], [60,10], [77, 3], [ 0, 0]],
             [[ 0, 0], [ 0, 0], [ 0, 0], [30,10], [45, 5], [53, 3], [ 0, 0], [74, 3], [80, 6]],
@@ -39,17 +68,16 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
         ]
     ];
 
-    uint32 constant VRF_CALLBACK_GAS_LIMIT = 100000;
-    uint16 constant VRF_REQUEST_CONFIRMATIONS = 3;
-    uint32 constant VRF_NUMBER_OF_WORDS = 1;
-    uint256 constant VRF_REREQUEST_COOLDOWN_BLOCKS = 1000;
-
     /*//////////////////////////////////////////////////////////////
                              STATE VARIABLES
     //////////////////////////////////////////////////////////////*/
 
+    BingoState public bingoState;
+    uint256 public nextDrawTimestamp;
+
     // Drawn numbers have index of "90 - drawnNumbersCount" or larger in the "numbers" array.
-    uint8[90] numbers = [
+    uint8 public drawnNumbersCount;
+    uint8[NUMBERS_COUNT] numbers = [
          1,  2,  3,  4,  5,  6,  7,  8,  9,  10,
         11, 12, 13, 14, 15, 16, 17, 18, 19,  20,
         21, 22, 23, 24, 25, 26, 27, 28, 29,  30,
@@ -60,22 +88,11 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
         71, 72, 73, 74, 75, 76, 77, 78, 79,  80,
         81, 82, 83, 84, 85, 86, 87, 88, 89,  90
     ];
-    uint8 public drawnNumbersCount;
-
-    IRegenBingoMetadata metadataGenerator;
-
-    BingoState public bingoState;
-    uint256 public mintPrice;
-    uint256 public firstDrawTimestamp;
-    uint256 public nextDrawTimestamp;
-    uint256 public drawNumberCooldownMultiplier;
-    string public donationName;
-    address payable public donationAddress;
 
     // Chainlink VRF
-    uint256 lastRequestBlockNumber;
-    uint256 lastRequestId;
-    uint256 drawSeed;
+    uint256 vrfRandomWord;
+    uint256 vrfLastRequestId;
+    uint256 vfrLastRequestBlockNumber;
 
     /*//////////////////////////////////////////////////////////////
                                  EVENTS
@@ -137,22 +154,22 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
     }
 
     function drawNumber() onlyDrawState external {
-        require(0 < drawSeed, "The draw will start soon");
+        require(0 < vrfRandomWord, "The draw will start soon");
         require(nextDrawTimestamp <= block.timestamp, "Waiting the cooldown");
 
         // None of the computations below can overflow.
         // drawnNumbersCount will be up to 90 and the game will end in about 60 rounds even in low participation.
         unchecked {
             // Pick a randomNumberIndex from the not yet drawn side.
-            uint256 randomNumberIndex = addmod(drawSeed, drawnNumbersCount, (90 - drawnNumbersCount));
+            uint256 randomNumberIndex = addmod(vrfRandomWord, drawnNumbersCount, (NUMBERS_COUNT - drawnNumbersCount));
 
             // Increase drawnNumbersCount, i.e. reduce the caret of undrawn vs drawn in the numbers array
             drawnNumbersCount++;
 
             // Swap randomNumberIndex and (90 - drawnNumbersCount)
             uint8 randomNumber = numbers[randomNumberIndex];
-            numbers[randomNumberIndex] = numbers[90 - drawnNumbersCount];
-            numbers[90 - drawnNumbersCount] = randomNumber;
+            numbers[randomNumberIndex] = numbers[NUMBERS_COUNT - drawnNumbersCount];
+            numbers[NUMBERS_COUNT - drawnNumbersCount] = randomNumber;
 
             // Side effects
             nextDrawTimestamp = block.timestamp + drawNumberCooldownMultiplier * drawnNumbersCount;
@@ -176,14 +193,18 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
 
         bingoState = BingoState.DRAW;
         emit DrawStarted();
-        _requestDrawSeed();
+        _requestVrfRandomWord();
     }
 
-    function rerequestDrawSeed() onlyDrawState external {
-        if (drawSeed == 0 && lastRequestBlockNumber + VRF_REREQUEST_COOLDOWN_BLOCKS <= block.number) {
-            _requestDrawSeed();
+    function rerequestVrfRandomWord() onlyDrawState external {
+        if (vrfRandomWord == 0 && vfrLastRequestBlockNumber + VRF_REREQUEST_COOLDOWN_BLOCKS <= block.number) {
+            _requestVrfRandomWord();
         }
     }
+
+    /*//////////////////////////////////////////////////////////////
+                          EXTERNAL VIEW FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
 
     /**
      * @dev Returns an array of token IDs owned by `owner`.
@@ -264,12 +285,12 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
     function numberMatrix(uint256 tokenId)
         public
         view
-        returns (uint8[9][3] memory numberMatrix)
+        returns (uint8[COLUMNS_COUNT][ROWS_COUNT] memory numberMatrix)
     {
         require(ownerOf(tokenId) != address(0), "Invalid card");
         uint256 tokenSeed = _tokenSeed(tokenId);
-        for (uint256 row = 0; row < 3; row++) {
-            for (uint256 column = 0; column < 9; column++) {
+        for (uint256 row = 0; row < ROWS_COUNT; row++) {
+            for (uint256 column = 0; column < COLUMNS_COUNT; column++) {
                 numberMatrix[row][column] = getNumberByCoordinates(
                     tokenSeed,
                     row,
@@ -282,12 +303,12 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
     function isDrawnMatrix(uint256 tokenId)
         public
         view
-        returns (bool[9][3] memory isDrawnMatrix)
+        returns (bool[COLUMNS_COUNT][ROWS_COUNT] memory isDrawnMatrix)
     {
         require(ownerOf(tokenId) != address(0), "Invalid card");
         uint256 tokenSeed = _tokenSeed(tokenId);
-        for (uint256 row = 0; row < 3; row++) {
-            for (uint256 column = 0; column < 9; column++) {
+        for (uint256 row = 0; row < ROWS_COUNT; row++) {
+            for (uint256 column = 0; column < COLUMNS_COUNT; column++) {
                 if (
                     isDrawn(
                         getNumberByCoordinates(tokenSeed, row, column)
@@ -305,9 +326,9 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
         returns (uint8 count)
     {
         require(ownerOf(tokenId) != address(0), "Invalid card");
-        bool[9][3] memory matrix = isDrawnMatrix(tokenId);
-        for (uint256 row = 0; row < 3; row++) {
-            for (uint256 column = 0; column < 9; column++) {
+        bool[COLUMNS_COUNT][ROWS_COUNT] memory matrix = isDrawnMatrix(tokenId);
+        for (uint256 row = 0; row < ROWS_COUNT; row++) {
+            for (uint256 column = 0; column < COLUMNS_COUNT; column++) {
                 if ( matrix[row][column] ) {
                     count++;
                 }
@@ -320,7 +341,7 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
         uint256 row,
         uint256 column
     ) public view returns (uint8) {
-        uint8[2][9][3] memory layout = LAYOUTS[tokenSeed % LAYOUTS_COUNT];
+        uint8[2][COLUMNS_COUNT][ROWS_COUNT] memory layout = layouts[tokenSeed % LAYOUTS_COUNT];
         if (layout[row][column][0] == 0) {
             return 0;
         } else {
@@ -331,7 +352,7 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
     function getDrawnNumbers() public view returns (uint8[] memory) {
         uint8[] memory drawnNumbers = new uint8[](drawnNumbersCount);
         for (uint8 i = 0; i < drawnNumbersCount; i++) {
-            drawnNumbers[i] = numbers[89 - i];
+            drawnNumbers[i] = numbers[NUMBERS_COUNT - 1 - i];
         }
         return drawnNumbers;
     }
@@ -339,7 +360,7 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
     function isDrawn(uint8 number) public view returns (bool) {
         uint8[] memory drawnNumbers = new uint8[](drawnNumbersCount);
         for (uint8 i = 0; i < drawnNumbersCount; i++) {
-            if (number == numbers[89 - i]) {
+            if (number == numbers[NUMBERS_COUNT - 1 - i]) {
                 return true;
             }
         }
@@ -355,8 +376,8 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
         uint256 _requestId,
         uint256[] memory _randomWords
     ) internal override {
-        if (drawSeed == 0 && _requestId == lastRequestId) {
-            drawSeed = _randomWords[0];
+        if (vrfRandomWord == 0 && _requestId == vrfLastRequestId) {
+            vrfRandomWord = _randomWords[0];
         }
     }
 
@@ -368,14 +389,14 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
         return uint256(keccak256(abi.encodePacked(address(this), tokenId)));
     }
 
-    function _requestDrawSeed() internal {
-        lastRequestBlockNumber = block.number;
+    function _requestVrfRandomWord() internal {
+        vfrLastRequestBlockNumber = block.number;
         uint256 requestId = requestRandomness(
             VRF_CALLBACK_GAS_LIMIT,
             VRF_REQUEST_CONFIRMATIONS,
             VRF_NUMBER_OF_WORDS
         );
-        lastRequestId = requestId;
+        vrfLastRequestId = requestId;
     }
 
     function _startTokenId() internal view override returns (uint256) {
