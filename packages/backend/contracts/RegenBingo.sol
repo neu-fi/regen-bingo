@@ -251,6 +251,7 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
                 tokenId,
                 numberMatrix(tokenId),
                 isDrawnMatrix(tokenId),
+                score(tokenId),
                 mintPrice / 2,
                 donationName,
                 donationAddress,
@@ -262,7 +263,7 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
     function numberMatrix(uint256 tokenId)
         public
         view
-        returns (uint256[9][3] memory numberMatrix)
+        returns (uint8[9][3] memory numberMatrix)
     {
         require(ownerOf(tokenId) != address(0), "Invalid card");
         uint256 tokenSeed = _tokenSeed(tokenId);
@@ -300,7 +301,7 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
     function score(uint256 tokenId)
         public
         view
-        returns (uint256 count)
+        returns (uint8 count)
     {
         require(ownerOf(tokenId) != address(0), "Invalid card");
         bool[9][3] memory matrix = isDrawnMatrix(tokenId);

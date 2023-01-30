@@ -18,8 +18,9 @@ contract RegenBingoMetadata is IRegenBingoMetadata {
 
     function generateTokenURI(
         uint256 tokenId,
-        uint256[9][3] calldata numbersMatrix,
+        uint8[9][3] calldata numbersMatrix,
         bool[9][3] calldata isDrawnMatrix,
+        uint8 score,
         uint256 donationAmount,
         string memory donationName,
         address donationAddress,
@@ -48,19 +49,22 @@ contract RegenBingoMetadata is IRegenBingoMetadata {
             description,
             '","external_url":"',
             externalUrl,
-            '","image":"',
+            '","numbers":',
+            _generateNumbersStringFraction(numbersMatrix),
+            ',"score":',
+            Strings.toString(score),
+            ',"image":"',
             _generateImageStringFraction(
                 tokenId,
                 numbersMatrix,
                 isDrawnMatrix,
+                score,
                 donationAmount,
                 donationName,
                 donationAddress,
                 isBingoFinished,
                 drawTimestamp
             ),
-            '","numbers":"',
-            _generateNumbersStringFraction(numbersMatrix),
             '"}'
         );
         return string.concat('data:application/json;base64,', Base64.encode(bytes(json)));
@@ -72,8 +76,9 @@ contract RegenBingoMetadata is IRegenBingoMetadata {
 
     function _generateImageStringFraction(
         uint256 tokenId,
-        uint256[9][3] calldata numbersMatrix,
+        uint8[9][3] calldata numbersMatrix,
         bool[9][3] calldata isDrawnMatrix,
+        uint8 score,
         uint256 donationAmount,
         string memory donationName,
         address donationAddress,
@@ -84,6 +89,7 @@ contract RegenBingoMetadata is IRegenBingoMetadata {
             tokenId,
             numbersMatrix,
             isDrawnMatrix,
+            score,
             donationAmount,
             donationName,
             donationAddress,
@@ -94,7 +100,7 @@ contract RegenBingoMetadata is IRegenBingoMetadata {
     }
 
     function _generateNumbersStringFraction(
-        uint256[9][3] calldata numbersMatrix
+        uint8[9][3] calldata numbersMatrix
     ) internal view returns (string memory) {
         string memory firstRow = string.concat(
             Strings.toString(numbersMatrix[0][0]), ',',

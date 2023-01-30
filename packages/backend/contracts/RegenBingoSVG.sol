@@ -52,8 +52,9 @@ contract RegenBingoSVG is IRegenBingoSVG {
 
     function generateTokenSVG(
         uint256 tokenId,
-        uint256[9][3] calldata numbers,
-        bool[9][3] calldata covered,
+        uint8[9][3] calldata numbersMatrix,
+        bool[9][3] calldata isDrawnMatrix,
+        uint8 score,
         uint256 donationAmount,
         string memory donationName,
         address donationAddress,
@@ -73,7 +74,7 @@ contract RegenBingoSVG is IRegenBingoSVG {
                     ),
                     STYLES,
                     _generatePillPattern(tokenId),
-                    _generateCard(numbers, covered),
+                    _generateCard(numbersMatrix, isDrawnMatrix),
                     '</svg>'
                 )
             )
@@ -228,14 +229,14 @@ contract RegenBingoSVG is IRegenBingoSVG {
     }
 
     function _generateCard(
-        uint256[9][3] calldata numbers,
-        bool[9][3] calldata covered
+        uint8[9][3] calldata numbersMatrix,
+        bool[9][3] calldata isDrawnMatrix
     ) internal view returns (string memory) {
         return (
             string(
                 abi.encodePacked(
                     '<pattern id="bg" width="0.111111111111" height="0.333333333333"><polygon class="a" points="0,0 0,200 200,200"/><polygon class="c" points="0,0 200,0 200,200"/><rect class="d" x="20" y="20" width="160" height="160"/></pattern><g><polygon style="stroke-width: 20" points="200,600 200,1600 2000,1600 2000,600"/><rect fill="url(#bg)" x="200" y="900" width="1800" height="600"/>',
-                    _generateNumbers(numbers, covered),
+                    _generateNumbers(numbersMatrix, isDrawnMatrix),
                     '<polygon class="b" points="200,600 200,900 2000,900 2000,600"/><polygon class="c" points="200,600 200,900 350,750"/><polygon class="c" points="2000,600 2000,900 1850,750"/><rect class="d" x="220" y="620" width="1760" height="260"/><text x="1100" y="750" dominant-baseline="middle" text-anchor="middle" style="font-size:150">Regen Bingo</text><polygon class="b" points="200,1500 200,1600 2000,1600 2000,1500"/><polygon class="a" points="200,1500 200,1600 250,1550"/><polygon class="a" points="2000,1500 2000,1600 1950,1550"/><rect class="d" x="220" y="1520" width="1760" height="60"/><clipPath id="clip"><rect x="230" y="1520" width="1740" height="60"/></clipPath><g clip-path="url(#clip)"><use x="-1900" y="1560" href="#t"/><use x="500" y="1560" href="#t"/></g></g>'
                 )
             )
@@ -243,20 +244,20 @@ contract RegenBingoSVG is IRegenBingoSVG {
     }
 
     function _generateNumbers(
-        uint256[9][3] calldata numbers,
-        bool[9][3] calldata covered
+        uint8[9][3] calldata numbersMatrix,
+        bool[9][3] calldata isDrawnMatrix
     ) internal pure returns (string memory output) {
-        for (uint256 i = 0; i < 3; i++) {
-            for (uint256 j = 0; j < 9; j++) {
-                if (numbers[i][j] > 0) {
+        for (uint256 row = 0; row < 3; row++) {
+            for (uint256 column = 0; column < 9; column++) {
+                if (0 < numbersMatrix[row][column]) {
                     output = string(
                         abi.encodePacked(
                             output,
                             _generateNumberSVG(
-                                i,
-                                j,
-                                numbers[i][j],
-                                covered[i][j]
+                                row,
+                                column,
+                                numbersMatrix[row][column],
+                                isDrawnMatrix[row][column]
                             )
                         )
                     );
@@ -269,7 +270,7 @@ contract RegenBingoSVG is IRegenBingoSVG {
         uint256 y,
         uint256 x,
         uint256 number,
-        bool covered
+        bool isDrawn
     ) internal pure returns (string memory) {
         uint256 centerX = x * 200 + X_OFFSET;
         uint256 centerY = y * 200 + Y_OFFSET;
@@ -286,7 +287,7 @@ contract RegenBingoSVG is IRegenBingoSVG {
             )
         );
 
-        if (covered) {
+        if (isDrawn) {
             return string(
                 abi.encodePacked(
                     '<circle fill="#c24f64" style="stroke-width: 0" cx="',

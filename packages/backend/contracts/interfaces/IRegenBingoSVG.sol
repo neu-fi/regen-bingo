@@ -1,8 +1,9 @@
 interface IRegenBingoSVG {
     function generateTokenSVG(
         uint256 tokenId,
-        uint256[9][3] calldata numbers,
-        bool[9][3] calldata covered,
+        uint8[9][3] calldata numbersMatrix,
+        bool[9][3] calldata isDrawnMatrix,
+        uint8 score,
         uint256 donationAmount,
         string memory donationName,
         address donationAddress,

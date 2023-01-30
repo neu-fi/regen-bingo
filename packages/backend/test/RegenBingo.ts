@@ -325,7 +325,9 @@ describe("RegenBingo", function () {
             await tx.wait();
 
             const tokenURI = await regenBingo.tokenURI(1);
+            console.log(tokenURI)
             const decodedTokenURI = JSON.parse(Buffer.from(tokenURI.split(',')[1], 'base64').toString());
+            console.log(decodedTokenURI)
             const decodedImage = Buffer.from(decodedTokenURI['image'].split(',')[1], 'base64').toString();
 
             console.log(tokenURI)
