@@ -35,19 +35,19 @@ export default function MyCards(props: PropsWithChildren<MyCardsProps>) {
       <Head>
         <title>My Cards</title>
       </Head>
-      <div className="relative flex px-6 lg:px-8 justify-center">
-        <div className="max-w-full mt-10 pb-0 flex justify-center">
-          <div>
-            <div className="row-span-full">
+      <div className="container mx-auto">
+      <div className="relative max-w-full px-6 lg:px-8">
+        <div className="w-full mt-10 pb-0">
+            <div className="w-full">
               <MyCardsHeader></MyCardsHeader>
             </div>
-            <div className="row-span-full mt-4">
+            <div className="w-full mt-4">
               <div className="flex flex-col justify-center items-stretch flex-nowrap">
                 <CardList trigger={trigger}></CardList>
               </div>
-            </div>
           </div>
         </div>
+      </div>
       </div>
     </>
   );
