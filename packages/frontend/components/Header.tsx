@@ -123,7 +123,7 @@ export default function Header(props: HeaderProps) {
       <div className="px-3 pt-12 pb-[4.5rem] bg-green-1">
         <nav className="flex flex-grow h-9 items-center justify-center">
           <div className="flex flex-col flex-grow">
-            <div className="flex flex-grow flex-row justify-between align-middle items-center">
+            <div className="flex flex-grow flex-row justify-between  landscape:justify-around align-middle items-center">
               <Link href="/#" className="p-1 ">
                 <span className="sr-only">Regen Bingo</span>
                 <img className="h-[6rem]" src="/no-icon-logo.png" alt="" />
