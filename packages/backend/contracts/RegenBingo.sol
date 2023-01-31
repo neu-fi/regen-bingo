@@ -24,7 +24,7 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
     //////////////////////////////////////////////////////////////*/
 
     uint8 constant NUMBERS_COUNT = 90;
-    uint256 constant LAYOUTS_COUNT = 3;
+    uint256 constant LAYOUTS_COUNT = 10;
     uint256 constant ROWS_COUNT = 3;
     uint256 constant COLUMNS_COUNT = 9;
     uint32 constant VRF_CALLBACK_GAS_LIMIT = 100000;
@@ -50,22 +50,18 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
     // lowest_available_number + (seed % possible_options)
     // Following these rules: https://en.wikipedia.org/wiki/Bingo_card#90-ball_bingo_cards
     // Using these as templates: https://www.scribd.com/document/325121782/1-90-British-Bingo-Cards
-    uint8[2][COLUMNS_COUNT][ROWS_COUNT][LAYOUTS_COUNT] layouts = [
-        [
-            [[ 1, 9], [ 0, 0], [ 0, 0], [ 0, 0], [40, 5], [56, 4], [60,10], [77, 3], [ 0, 0]],
-            [[ 0, 0], [ 0, 0], [ 0, 0], [30,10], [45, 5], [53, 3], [ 0, 0], [74, 3], [80, 6]],
-            [[ 0, 0], [10,10], [20,10], [ 0, 0], [ 0, 0], [50, 3], [ 0, 0], [70, 4], [86, 5]]
-        ],
-        [
-            [[ 6, 4], [10, 5], [ 0, 0], [ 0, 0], [ 0, 0], [ 0, 0], [66, 4], [75, 5], [80,11]],
-            [[ 0, 0], [ 0, 0], [25, 5], [30,10], [40,10], [50,10], [63, 3], [ 0, 0], [ 0, 0]],
-            [[ 1, 5], [15, 5], [20, 5], [ 0, 0], [ 0, 0], [ 0, 0], [60, 3], [70, 5], [ 0, 0]]
-        ],
-        [
-            [[ 1, 5], [ 0, 0], [25, 5], [ 0, 0], [ 0, 0], [50,10], [ 0, 0], [70, 5], [88, 3]],
-            [[ 0, 0], [10,10], [20, 5], [30,10], [ 0, 0], [ 0, 0], [65, 5], [ 0, 0], [84, 4]],
-            [[ 6, 4], [ 0, 0], [ 0, 0], [ 0, 0], [40,10], [ 0, 0], [60, 5], [75, 5], [80, 4]]
-        ]
+    
+    uint256[LAYOUTS_COUNT] public layouts = [
+        74531863127069656875678005463629317377624456585407760715211671503378212480908,
+        84733770693983134393286414926143418191632064005497261285059935046721726341764,
+        88892850850319190340242688960817664513518456655726863909825725454469825060928,
+        85615516063282425514350087369392836674708439228389954229085207788303887704128,
+        82025225875150254732266191914090518340421847287971611702527960659275601731648,
+        81428084179800062446453646573230984879745244988152209000518516361294873969284,
+        70657384472911031446975028864715540995046624405935865290481737135510018089024,
+        96073477329873783590368928870704280664394527774970734350082854071566790058628,
+        71254418773555781409572465841860736354607880829542776466442355105762863825540,
+        81712411770574619635979783041230964642099925492660987369159605175257838198848
     ];
 
     /*//////////////////////////////////////////////////////////////
@@ -289,14 +285,18 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
     {
         require(ownerOf(tokenId) != address(0), "Invalid card");
         uint256 tokenSeed = _tokenSeed(tokenId);
-        for (uint256 row = 0; row < ROWS_COUNT; row++) {
-            for (uint256 column = 0; column < COLUMNS_COUNT; column++) {
-                numberMatrix[row][column] = getNumberByCoordinates(
-                    tokenSeed,
-                    row,
-                    column
-                );
-            }
+        uint256 layout = layouts[tokenSeed % LAYOUTS_COUNT];
+
+        for(uint256 i = 0; i < 15; i++) {
+            uint256 row = layout % 4; // 2 bit
+            layout /= 4;
+            uint256 column = layout % 16; // 4 bit
+            layout /= 16;
+            uint256 floorNumber = layout % 128; // 7 bit
+            layout /= 128;
+            uint256 range = layout % 16; // 4 bit
+            layout /= 16;
+            numberMatrix[row][column] = uint8(floorNumber + tokenSeed % range);
         }
     }
 
@@ -306,12 +306,13 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
         returns (bool[COLUMNS_COUNT][ROWS_COUNT] memory isDrawnMatrix)
     {
         require(ownerOf(tokenId) != address(0), "Invalid card");
-        uint256 tokenSeed = _tokenSeed(tokenId);
+        uint8[COLUMNS_COUNT][ROWS_COUNT] memory matrix = numberMatrix(tokenId);
+
         for (uint256 row = 0; row < ROWS_COUNT; row++) {
             for (uint256 column = 0; column < COLUMNS_COUNT; column++) {
                 if (
                     isDrawn(
-                        getNumberByCoordinates(tokenSeed, row, column)
+                        matrix[row][column]
                     )
                 ) {
                     isDrawnMatrix[row][column] = true;
@@ -333,19 +334,6 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
                     count++;
                 }
             }
-        }
-    }
-
-    function getNumberByCoordinates(
-        uint256 tokenSeed,
-        uint256 row,
-        uint256 column
-    ) public view returns (uint8) {
-        uint8[2][COLUMNS_COUNT][ROWS_COUNT] memory layout = layouts[tokenSeed % LAYOUTS_COUNT];
-        if (layout[row][column][0] == 0) {
-            return 0;
-        } else {
-            return layout[row][column][0] + uint8(tokenSeed % layout[row][column][1]);
         }
     }
 
