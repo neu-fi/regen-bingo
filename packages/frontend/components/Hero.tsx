@@ -19,7 +19,7 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
   return isMobile ? (
     // Mobile View
     <>
-      <div className="pb-4 bg-green-1 h-[calc(100vh)] flex flex-col justify-between">
+      <div className="pb-4 bg-green-1 h-[calc(80vh)] flex flex-col justify-between">
         <div className="flex flex-row justify-center">
           <div className="h-50vw"> 
             <div className="bg-img-left object-top bg-no-repeat bg-cover min-h-[25vw] max-h-[45vw] w-2/12 max-w-md"></div>
