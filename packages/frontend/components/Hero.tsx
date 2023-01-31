@@ -39,16 +39,7 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
               </div>
               <div className="flex flex-row justify-center mt-2 py-2">
                 {account.isConnected ? (
-                  <>
-                    <Link
-                      href="/mint"
-                      className="disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center w-auto rounded-full border-connect-green border-[0.0675rem] bg-green-2 px-24 py-3 text-base text-white font-semibold leading-7 shadow-sm hover:bg-green-1"
-                    >
-                      <span className="text-xl font-hero font-normal">
-                        Mint Now!
-                      </span>
-                    </Link>
-                  </>
+                  <HeroButton content="Mint Now" link="/mint" />
                 ) : (
                   <>
                     <ConnectOrSwitchNetworkButton></ConnectOrSwitchNetworkButton>
@@ -70,6 +61,20 @@ export default function Mint(props: PropsWithChildren<MintProps>) {
         </div>
         <div className="bg-img-right bg-no-repeat bg-contain w-2/12 max-w-md"></div>
       </div>
+    </>
+  );
+}
+
+function HeroButton(props: { content: string; link: string }) {
+  const { content, link } = props;
+  return (
+    <>
+      <Link
+        href={link}
+        className="disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center w-auto rounded-full border-connect-green border-[0.0675rem] bg-green-2 px-24 py-3 text-base text-white font-semibold leading-7 shadow-sm hover:bg-green-1"
+      >
+        <span className="text-xl font-hero font-normal">{content}</span>
+      </Link>
     </>
   );
 }
