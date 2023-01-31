@@ -3,7 +3,7 @@ import { BingoCardMint } from "./contract/BingoCardMint";
 import { DrawnCountDown } from "./contract/DrawnCountDown";
 import Image from "next/image";
 import {
-  ContractStateContext,
+  BingoStateContext,
   WinnerCardContext,
   NetworkContext,
 } from "@/components/Layout";
@@ -17,7 +17,7 @@ import Link from "next/link";
 type MintProps = {};
 
 export default function Mint(props: PropsWithChildren<MintProps>) {
-  const bingoState = useContext(ContractStateContext);
+  const bingoState = useContext(BingoStateContext);
   const winnerCardId = useContext(WinnerCardContext);
   const networkState = useContext(NetworkContext);
   const [winnerCardURI, setWinnerCardURI] = useState<ICard>();
