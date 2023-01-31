@@ -2,6 +2,7 @@ import { expect } from "chai";
 import { ethers, deployments } from "hardhat";
 import { loadFixture, time } from "@nomicfoundation/hardhat-network-helpers";
 import { BigNumber } from "ethers";
+import exp from "constants";
 
 const name = "RegenBingo";
 const symbol = "BINGO";
@@ -121,7 +122,7 @@ describe("RegenBingo", function () {
             expect(await regenBingo.mintPrice()).to.equal(mintPrice);
             expect(await regenBingo.firstDrawTimestamp()).to.equal(firstDrawTimestamp);
             expect(await regenBingo.drawNumberCooldownMultiplier()).to.equal(drawNumberCooldownMultiplier);
-            expect(await regenBingo.donationAddress()).to.equal(donationAddress);
+            expect(await regenBingo.$donationAddress()).to.equal(donationAddress);
         });
     });
 
@@ -164,7 +165,7 @@ describe("RegenBingo", function () {
 
             await startDrawPeriod();
 
-            const requestId = await regenBingo.$lastRequestId();
+            const requestId = await regenBingo.$vrfLastRequestId();
             await provideRandomness(requestId);
 
             expect(await regenBingo.bingoState()).to.equal(BigNumber.from("1"));
@@ -175,18 +176,18 @@ describe("RegenBingo", function () {
 
             await startDrawPeriod();
 
-            const requestId = await regenBingo.$lastRequestId();
+            const requestId = await regenBingo.$vrfLastRequestId();
             let randomness = await provideRandomness(requestId);
 
-            expect(await regenBingo.$drawSeed()).not.to.equal(BigNumber.from("0"));
-            expect(await regenBingo.$drawSeed()).to.equal(BigNumber.from(randomness));
+            expect(await regenBingo.$vrfRandomWord()).not.to.equal(BigNumber.from("0"));
+            expect(await regenBingo.$vrfRandomWord()).to.equal(BigNumber.from(randomness));
         });
         it("Draws one number correctly", async function () {
             const { regenBingo, startDrawPeriod, provideRandomness } = await loadFixture(deployBingoFixture);
 
             await startDrawPeriod();
 
-            const requestId = await regenBingo.$lastRequestId();
+            const requestId = await regenBingo.$vrfLastRequestId();
             await provideRandomness(requestId);
 
             let tx = await regenBingo.drawNumber();
@@ -202,7 +203,7 @@ describe("RegenBingo", function () {
 
             await startDrawPeriod();
 
-            const requestId = await regenBingo.$lastRequestId();
+            const requestId = await regenBingo.$vrfLastRequestId();
             await provideRandomness(requestId);
 
             let tx1 = await regenBingo.drawNumber();
@@ -232,6 +233,9 @@ describe("RegenBingo", function () {
 
             await startDrawPeriod();
 
+            const requestId = await regenBingo.$vrfLastRequestId();
+            await provideRandomness(requestId);
+
             await regenBingo.drawNumber();
             await expect(regenBingo.drawNumber()).to.be.revertedWith("Waiting the cooldown");
         });
@@ -245,7 +249,7 @@ describe("RegenBingo", function () {
 
             await startDrawPeriod();
 
-            const requestId = await regenBingo.$lastRequestId();
+            const requestId = await regenBingo.$vrfLastRequestId();
             await provideRandomness(requestId);
 
             for (let i = 0; i < 90; i++) {
@@ -354,6 +358,71 @@ describe("RegenBingo", function () {
             const foundRollingText = decodedImage.match(/Donat.*UTC/)?.toString();
 
             expect(expectedRollingText).to.equal(foundRollingText);
+        })
+    })
+    describe("Layouts", async function () {
+        it("Should all layouts be working", async function () {
+            const { signer1, regenBingo } = await loadFixture(deployBingoFixture);
+            const quantity = BigNumber.from('1000')
+
+            regenBingo.connect(signer1);
+            await( await regenBingo.mint(signer1.address, quantity, {value: quantity.mul(mintPrice)}));
+
+            let isShownLayout = [false, false, false, false, false, false, false, false, false, false]
+            const allMatrixes = []
+
+            let tokenId = 1;
+            while(isShownLayout.includes(false) && tokenId <= 1000){
+                const layoutNumber = Number((await regenBingo.$_tokenSeed(tokenId)).mod(10));
+                if(isShownLayout[layoutNumber] == false){
+                    isShownLayout[layoutNumber] = true;
+                    const matrix = await regenBingo.numberMatrix(tokenId);
+                    allMatrixes.push(matrix);
+                }
+                tokenId += 1
+            }
+            
+            expect(isShownLayout).not.contain(false)
+
+            for(var k = 0; k < 10; k++) {
+                let allNumbersCount = 0;
+
+                for(var i = 0; i < 3; i++) {
+                    let rowCount = 0
+
+                    for(var j = 0; j < 9; j++) {
+                        if(allMatrixes[k][i][j] != 0) {
+                            rowCount += 1;
+                            allNumbersCount += 1;
+                            if(j == 0){ 
+                                expect(allMatrixes[k][i][j]).to.be.above(0)
+                                expect(allMatrixes[k][i][j]).to.be.below(10)
+                            }
+                            else if(j == 8){
+                                expect(allMatrixes[k][i][j]).to.be.above(79)
+                                expect(allMatrixes[k][i][j]).to.be.below(91)
+                            }
+                            else {
+                                expect(allMatrixes[k][i][j]).to.be.above(j * 10 - 1)
+                                expect(allMatrixes[k][i][j]).to.be.below(j * 10 + 11)
+                            }
+                        }
+                    }
+                    expect(rowCount).to.equal(5);
+                }
+                expect(allNumbersCount).to.equal(15);
+
+                for(var i = 0; i < 9; i++){
+                    let columnCount = 0;
+
+                    for(var j = 0; j < 3; j++){
+                        if(allMatrixes[k][j][i] != 0) {
+                            columnCount += 1;
+                        }
+                    }
+                    expect(columnCount).not.to.equal(0);
+                }
+            }
         })
     })
 });
