@@ -82,7 +82,7 @@ export const DrawNumber = () => {
       onClick={() => {
         handleClick();
       }}
-      className="disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center w-32 h-auto rounded-lg bg-green-2 px-4 py-1.5 text-base text-white font-semibold leading-7 shadow-sm hover:bg-green-1 justify-center md:w-1/3 mb-6"
+      className="disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center w-32 h-auto rounded-lg bg-green-2 px-4 py-1.5 text-base text-white font-semibold leading-7 shadow-sm hover:bg-green-1 hover:text-green-2 justify-center md:w-1/3 mb-6"
     >
       <span>
         {loading && !error && <span>{loading}</span>}

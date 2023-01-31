@@ -4,7 +4,7 @@ import Card, { ICard } from "@/components/Card";
 import { useBingoContract } from "@/hooks/useBingoContract";
 import { useProvider } from "wagmi";
 import { Contract } from "ethers";
-import { svg, getToken } from "@/utils/utils";
+import { getToken } from "@/utils/utils";
 import { useEffect } from "react";
 
 type CardProps = {};
@@ -15,15 +15,7 @@ function Cards(props: CardProps) {
   const { id } = router.query as unknown as { id: number };
   // States
   const [loading, setLoading] = React.useState<string | null>(null);
-  const [card, setCard] = React.useState<ICard>({
-    id: 1,
-    coveredNumbersCount: 0,
-    tokenURI: {
-      image: svg,
-      name: "Regen Bingo NFT",
-      description: "Regen Bingo NFT",
-    },
-  });
+  const [card, setCard] = React.useState<ICard>();
 
   // Contract
   const provider = useProvider();

@@ -45,19 +45,14 @@ export const BingoCardMint = () => {
     if (account.isConnected) {
       try {
         setLoading("Waiting for approval...");
-        const tx = await contract?.mint(
-          account.address,
-          1, {
-            value: mintPrice,
-          }
-        );
+        const tx = await contract?.mint(account.address, 1, {
+          value: mintPrice,
+        });
         setLoading("");
         toast.promise(tx.wait, {
           pending: "Waiting for transaction",
           success: {
             render() {
-              // TODO: Trigger a refresh on the bingo card list
-
               return "Minted a new Regen Bingo Card!";
             },
           },
