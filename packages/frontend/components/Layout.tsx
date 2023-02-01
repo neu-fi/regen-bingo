@@ -1,12 +1,13 @@
 import { Footer, Header } from "@/components";
+import Banner from "@/components/Banner";
 import { CHAIN_ID, CONTRACT_ABI, CONTRACT_ADDRESS } from "@/config";
+import { useWatchContractEvent, useWatchNetwork } from "@/hooks";
 import { BingoState } from "@/hooks/useBingoContract";
 import { getNetwork, GetNetworkResult, watchNetwork } from "@wagmi/core";
+import { useRouter } from "next/router";
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useContractRead } from "wagmi";
-import { useWatchContractEvent } from "../hooks/useWatchContractEvent";
-import { useWatchNetwork } from "../hooks/useWatchNetwork";
 
 type LayoutProps = {};
 
@@ -19,13 +20,22 @@ export const NetworkContext = createContext<boolean>(false);
 
 function Layout(props: PropsWithChildren<LayoutProps>) {
   // States
+  const [showBanner, setShowBanner] = useState(true);
   const [bingoState, setBingoState] = useState<BingoState>();
   const [winnerCardId, setWinnerCardId] = useState<number>();
   const [isOnCorrectNetwork, setIsOnCorrectNetwork] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<string>("/");
+  const router = useRouter();
 
   // Web3 Hooks
   const [network, setNetwork] = useState<GetNetworkResult>(() => getNetwork());
   useWatchNetwork(network, setNetwork);
+
+  useEffect(() => {
+    if(router.pathname !== activeTab){
+      setShowBanner(true);
+    }
+  }, [router.pathname])
 
   // Throttle lock
   let throttleLock: boolean = false;
@@ -93,7 +103,8 @@ function Layout(props: PropsWithChildren<LayoutProps>) {
       <NetworkContext.Provider value={isOnCorrectNetwork}>
         <BingoStateContext.Provider value={bingoState}>
           <WinnerCardContext.Provider value={winnerCardId!}>
-            <Header></Header>
+            {showBanner && <Banner setShowBanner={setShowBanner} activeTab={activeTab}></Banner>}
+            <Header setActiveTab={setActiveTab}></Header>
             <main className="flex-grow bg-green-5">{props.children}</main>
           </WinnerCardContext.Provider>
         </BingoStateContext.Provider>
