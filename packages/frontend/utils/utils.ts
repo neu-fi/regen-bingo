@@ -77,15 +77,11 @@ export async function getToken(
       "base64"
     ).toString();
 
-    const coveredNumbersCount = Number(
-      (await contract.coveredNumbers(tokenId)).toString()
-    );
-
     const card: ICard = {
       id: tokenId,
-      coveredNumbersCount,
       tokenURI: tokenURI,
     };
+
     return card;
   } catch (err) {
     throw err;
