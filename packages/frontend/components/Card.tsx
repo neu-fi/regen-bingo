@@ -4,7 +4,7 @@ import { isSVG } from "@/utils/utils";
 import { CONTRACT_ADDRESS, CHAIN_NAME } from "@/config";
 import { ClaimThePrizeButton } from "./contract/ClaimThePrizeButton";
 import { useContext } from "react";
-import { ContractStateContext } from "@/components/Layout";
+import { BingoStateContext } from "@/components/Layout";
 import { BingoState } from "@/hooks/useBingoContract";
 
 type CardProps = {
@@ -37,7 +37,7 @@ function openseaURL(tokenId: bigint) {
 
 export default function Card(props: CardProps) {
   const { card, displayPublicDetails = false } = props;
-  const bingoState = useContext(ContractStateContext);
+  const bingoState = useContext(BingoStateContext);
 
   function didWinPrize(): boolean {
     return card.coveredNumbersCount === 15;
@@ -87,8 +87,7 @@ export default function Card(props: CardProps) {
                   height={24}
                 />
               </Link>
-              </h3>
-
+            </h3>
           </div>
 
           <ul role="list" className="flex space-x-5">

@@ -6032,14 +6032,19 @@
                   "type": "uint256"
                 },
                 {
-                  "internalType": "uint256[9][3]",
-                  "name": "numbers",
-                  "type": "uint256[9][3]"
+                  "internalType": "uint8[9][3]",
+                  "name": "numbersMatrix",
+                  "type": "uint8[9][3]"
                 },
                 {
                   "internalType": "bool[9][3]",
-                  "name": "covered",
+                  "name": "isDrawnMatrix",
                   "type": "bool[9][3]"
+                },
+                {
+                  "internalType": "uint8",
+                  "name": "score",
+                  "type": "uint8"
                 },
                 {
                   "internalType": "uint256",
@@ -6115,14 +6120,19 @@
                   "type": "uint256"
                 },
                 {
-                  "internalType": "uint256[9][3]",
-                  "name": "numbers",
-                  "type": "uint256[9][3]"
+                  "internalType": "uint8[9][3]",
+                  "name": "numbersMatrix",
+                  "type": "uint8[9][3]"
                 },
                 {
                   "internalType": "bool[9][3]",
-                  "name": "covered",
+                  "name": "isDrawnMatrix",
                   "type": "bool[9][3]"
+                },
+                {
+                  "internalType": "uint8",
+                  "name": "score",
+                  "type": "uint8"
                 },
                 {
                   "internalType": "uint256",
@@ -6508,25 +6518,6 @@
               "type": "function"
             },
             {
-              "inputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "tokenId",
-                  "type": "uint256"
-                }
-              ],
-              "name": "coveredNumbers",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "count",
-                  "type": "uint256"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
               "inputs": [],
               "name": "donationAddress",
               "outputs": [
@@ -6789,9 +6780,9 @@
               "name": "numberMatrix",
               "outputs": [
                 {
-                  "internalType": "uint256[9][3]",
+                  "internalType": "uint8[9][3]",
                   "name": "numberMatrix",
-                  "type": "uint256[9][3]"
+                  "type": "uint8[9][3]"
                 }
               ],
               "stateMutability": "view",
@@ -6890,6 +6881,25 @@
               "name": "safeTransferFrom",
               "outputs": [],
               "stateMutability": "payable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                }
+              ],
+              "name": "score",
+              "outputs": [
+                {
+                  "internalType": "uint8",
+                  "name": "count",
+                  "type": "uint8"
+                }
+              ],
+              "stateMutability": "view",
               "type": "function"
             },
             {

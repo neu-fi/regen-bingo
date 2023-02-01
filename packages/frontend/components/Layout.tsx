@@ -11,7 +11,7 @@ import { CHAIN_ID } from "@/config";
 type LayoutProps = {};
 
 // Contexts
-export const ContractStateContext = createContext<BingoState | undefined>(
+export const BingoStateContext = createContext<BingoState | undefined>(
   undefined
 );
 export const WinnerCardContext = createContext<number | undefined>(undefined);
@@ -40,7 +40,7 @@ function Layout(props: PropsWithChildren<LayoutProps>) {
       setIsOnCorrectNetwork(true);
     }
 
-    const contractState = async () => {
+    const getBingoState = async () => {
       try {
         const state = await contract!.bingoState();
         return state;
@@ -53,7 +53,7 @@ function Layout(props: PropsWithChildren<LayoutProps>) {
     }
 
     if (!initialFetchCompleted || trigger) {
-      contractState().then((state) => {
+      getBingoState().then((state) => {
         if (state !== undefined) {
           setBingoState((prevState) => {
             if (prevState === undefined && state !== undefined) {
@@ -115,11 +115,11 @@ function Layout(props: PropsWithChildren<LayoutProps>) {
       <Header></Header>
       <main className="flex-grow bg-green-5">
         <NetworkContext.Provider value={isOnCorrectNetwork}>
-          <ContractStateContext.Provider value={bingoState}>
+          <BingoStateContext.Provider value={bingoState}>
             <WinnerCardContext.Provider value={winnerCardId!}>
               {props.children}
             </WinnerCardContext.Provider>
-          </ContractStateContext.Provider>
+          </BingoStateContext.Provider>
         </NetworkContext.Provider>
       </main>
       <Footer></Footer>
