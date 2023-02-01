@@ -15,10 +15,10 @@ interface ITab {
 }
 
 export const tabs: ITab[] = [
-  { name: "Mint", href: "/mint", active: true },
-  { name: "The Draw", href: "/lucky-numbers", active: false },
-  { name: "The Winner", href: "/winner", active: false },
-  { name: "My Cards", href: "/my-cards", active: true },
+  { name: "🎲 Mint", href: "/mint", active: true },
+  { name: "🎰 The Draw", href: "/lucky-numbers", active: false },
+  { name: "🫶 The Impact", href: "/winner", active: false },
+  { name: "🃏 My Cards", href: "/my-cards", active: true },
 ];
 
 function classNames(...classes: any[]) {
@@ -34,7 +34,6 @@ export default function Header(props: HeaderProps) {
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
   const bingoState = useContext(BingoStateContext);
-  console.log("Bingo:", bingoState);
   switch (bingoState) {
     case BingoState.MINT:
       tabs[0].active = true;
