@@ -9,12 +9,14 @@ import {
   getDefaultWallets,
   RainbowKitProvider,
   lightTheme,
+  darkTheme,
 } from "@rainbow-me/rainbowkit";
 import { useIsMounted } from "../hooks";
 import Layout from "@/components/Layout";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, Slide } from "react-toastify";
 import { green } from "tailwindcss/colors";
+import { ThemeOptions } from "@rainbow-me/rainbowkit/dist/themes/baseTheme";
 
 const { connectors } = getDefaultWallets({
   appName: "regen-bingo",
@@ -29,16 +31,21 @@ const wagmiClient = createClient({
 
 const App = ({ Component, pageProps }: AppProps) => {
   const isMounted = useIsMounted();
+  const RainbowKitConfig: Partial<ThemeOptions> = {
+    accentColor: "#00bb8b",
+    accentColorForeground: "#fff",
+    borderRadius: "large",
+    fontStack: "system",
+  };
 
   if (!isMounted) return null;
   return (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider
-        theme={lightTheme({
-          accentColor: green[500],
-          accentColorForeground: "#fff",
-          borderRadius: "large",
-        })}
+        theme={{
+          lightMode: lightTheme(RainbowKitConfig),
+          darkMode: darkTheme(RainbowKitConfig),
+        }}
         chains={CHAINS}
       >
         <ToastContainer

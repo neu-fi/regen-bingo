@@ -8,7 +8,9 @@ import Footer from "./Footer";
 import Guide from "./Guide";
 import Header from "./Header";
 import Layout from "./Layout";
+import Hero from "./Hero";
 import Mint from "./Mint";
+
 
 export {
   BGBlur,
@@ -20,5 +22,6 @@ export {
   Guide,
   Header,
   Layout,
+  Hero,
   Mint,
 };

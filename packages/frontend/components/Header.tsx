@@ -146,7 +146,7 @@ export default function Header(props: HeaderProps) {
                         className={classNames(
                           isCurrent(tab, router)
                             ? "bg-green-3 text-black"
-                            : "hover:bg-green-3",
+                            : "bg-yellow-100 hover:bg-green-3",
                           "px-4 py-3 rounded-xl text-center"
                         )}
                         aria-current={
