@@ -78,7 +78,7 @@ button {
 }
 @layer utilities {
   .bg-green-1 {
-    background-color: #DBFFE3;
+    background-color: #dbffe3;
   }
   .bg-green-2 {
     background-color: #12bc92;
@@ -90,7 +90,7 @@ button {
     background-color: #11bc92;
   }
   .bg-green-5 {
-    background-color: #F4FCF5;
+    background-color: #f4fcf5;
   }
   .bg-yellow-1 {
     background-color: #f2b705;
@@ -104,12 +104,24 @@ button {
 }
 
 .connect-button > button {
-  background-color: #FFCC07;
+  background-color: #ffcc07;
 }
 
-.bg-left {
-  background-image: url('/left-coin@3x.png');
+.bg-img-left {
+  background-image: url("/left-coin@3x.png");
 }
-.bg-right {
-  background-image: url('/right-coin@3x.png');
+.bg-img-right {
+  background-image: url("/right-coin@3x.png");
+}
+
+.bg-mobile-middle {
+  background-image: url("/3-coin@3x.png");
+}
+
+.bg-connect-green {
+  background-color: #00bb8b;
+}
+
+.border-connect-green {
+  border-color: #567368;
 }
