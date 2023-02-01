@@ -27,7 +27,6 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
     abi: CONTRACT_ABI,
     functionName: "getDrawnNumbers",
     onSuccess(data: any) {
-      console.log(data);
       setDrawnNumbers(data);
       setMessage("");
     },
