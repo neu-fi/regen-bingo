@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { MegaphoneIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  MegaphoneIcon,
+  XMarkIcon,
+  TicketIcon,
+  RocketLaunchIcon,
+  HandRaisedIcon,
+} from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useContext } from "react";
 import { BingoStateContext } from "@/components/Layout";
@@ -18,7 +24,7 @@ export function Banner(props: BannerProps) {
   const { setShowBanner, activeTab } = props;
   const [bannerContent, setBannerContent] = useState<string>("");
   const bingoState = useContext(BingoStateContext);
-  const [drawTimestamp, setDrawTimestamp] = useState<number>(0);
+  const [drawTimestamp, setDrawTimestamp] = useState<number>();
   const [humanizedCountdown, setHumanizedCountdown] = useState<string>("");
   const [icon, setIcon] = useState<JSX.Element>(
     <MegaphoneIcon className="h-6 w-6 text-white" aria-hidden="true" />
@@ -31,7 +37,6 @@ export function Banner(props: BannerProps) {
     functionName: "firstDrawTimestamp",
     onSuccess(data: any) {
       setDrawTimestamp(Number(data));
-
     },
     onError() {
       console.log("Error");
@@ -48,7 +53,6 @@ export function Banner(props: BannerProps) {
     functionName: "drawnNumbersCount",
     onSuccess(data: any) {
       setDrawCount(Number(data));
-
     },
     onError() {
       console.log("Error");
@@ -60,28 +64,49 @@ export function Banner(props: BannerProps) {
   });
 
   useEffect(() => {
-    setHumanizedCountdown(
-      moment.duration(moment.unix(drawTimestamp).diff(moment.now())).humanize()
-    );
+    if (drawTimestamp) {
+      setHumanizedCountdown(
+        moment
+          .duration(moment.unix(drawTimestamp).diff(moment.now()))
+          .humanize()
+      );
+    }
   }, [drawTimestamp]);
 
   useEffect(() => {
     switch (bingoState) {
       case BingoState.MINT:
-         // TODO: Change this to a better icon
+        // TODO: Change this to a better icon
         setIcon(
-          <MegaphoneIcon className="h-6 w-6 text-white" aria-hidden="true" />
+          <TicketIcon className="h-6 w-6 text-black" aria-hidden="true" />
         );
-        if (Date.now() / 1000 < drawTimestamp) {
+        if (drawTimestamp && Date.now() / 1000 < drawTimestamp) {
+          setIcon(
+            <RocketLaunchIcon
+              className="h-6 w-6 text-black"
+              aria-hidden="true"
+            ></RocketLaunchIcon>
+          );
           setBannerContent(`${humanizedCountdown} is left for minting cards`);
         } else {
+          setIcon(
+            <HandRaisedIcon
+              className="h-6 w-6 text-black"
+              aria-hidden="true"
+            ></HandRaisedIcon>
+          );
           setBannerContent(`Draw can start anytime now!`);
         }
         break;
       case BingoState.DRAW:
-        setBannerContent(`${drawCount} numbers are drawn. You need to claim the prize if you're eligible!`);
+        setBannerContent(
+          `${drawCount} numbers are drawn. You need to claim the prize if you're eligible!`
+        );
         break;
       case BingoState.END:
+        setBannerContent(
+          "The game has ended. See the donation we've made collectively!"
+        );
         break;
     }
   }, [bingoState]);
@@ -93,7 +118,7 @@ export function Banner(props: BannerProps) {
           <div className="flex flex-wrap items-center justify-between">
             <div className="flex w-0 flex-1 items-center">
               <span className="flex rounded-lg bg-yellow-3 p-2">{icon}</span>
-              <p className="ml-3 truncate font-medium text-white">
+              <p className="ml-3 truncate font-medium text-black">
                 {/* <span className="md:hidden">We announced a new product!</span> */}
                 {bannerContent}
               </p>

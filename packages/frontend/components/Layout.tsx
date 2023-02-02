@@ -34,6 +34,8 @@ function Layout(props: PropsWithChildren<LayoutProps>) {
   useEffect(() => {
     if(router.pathname !== activeTab){
       setShowBanner(true);
+    } else {
+      setShowBanner(false);
     }
   }, [router.pathname])
 

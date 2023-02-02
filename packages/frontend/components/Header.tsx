@@ -2,7 +2,12 @@ import Link from "next/link";
 import router, { NextRouter, useRouter } from "next/router";
 import { ConnectOrSwitchNetworkButton } from "./web3/ConnectOrSwitchNetworkButton";
 import { useMediaQuery } from "react-responsive";
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+} from "react";
 import { BingoStateContext } from "@/components/Layout";
 import { BingoState } from "@/hooks/useBingoContract";
 
@@ -32,34 +37,39 @@ function isCurrent(tab: ITab, router: NextRouter): boolean {
 }
 
 export default function Header(props: HeaderProps) {
-  const {setActiveTab} = props;
+  const { setActiveTab } = props;
   const router = useRouter();
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
   const bingoState = useContext(BingoStateContext);
-  switch (bingoState) {
-    case BingoState.MINT:
-      tabs[0].active = true;
-      tabs[1].active = false;
-      tabs[2].active = false;
-      tabs[3].active = true;
-      setActiveTab("/mint");
-      break;
-    case BingoState.DRAW:
-      tabs[0].active = false;
-      tabs[1].active = true;
-      tabs[2].active = false;
-      tabs[3].active = true;
-      setActiveTab("/lucky-numbers");
-      break;
-    case BingoState.END:
-      tabs[0].active = false;
-      tabs[1].active = false;
-      tabs[2].active = true;
-      tabs[3].active = true;
-      setActiveTab("/impact");
-      break;
-  }
+
+  useEffect(() => {
+    if (bingoState !== undefined) {
+      switch (bingoState) {
+        case BingoState.MINT:
+          tabs[0].active = true;
+          tabs[1].active = false;
+          tabs[2].active = false;
+          tabs[3].active = true;
+          setActiveTab("/mint");
+          break;
+        case BingoState.DRAW:
+          tabs[0].active = false;
+          tabs[1].active = true;
+          tabs[2].active = false;
+          tabs[3].active = true;
+          setActiveTab("/lucky-numbers");
+          break;
+        case BingoState.END:
+          tabs[0].active = false;
+          tabs[1].active = false;
+          tabs[2].active = true;
+          tabs[3].active = true;
+          setActiveTab("/impact");
+          break;
+      }
+    }
+  }, [bingoState]);
 
   return !isMobile ? (
     // Default View
