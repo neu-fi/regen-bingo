@@ -58,7 +58,7 @@ export const GetDrawnNumbers = (props: GetDrawnNumbersProps) => {
       if (!drawnNumbers) {
         fetchDrawnNumbers.refetch();
       } else {
-        useWatchContractEvent("DrawNumber", fetchDrawnNumbers, throttleLock);
+        useWatchContractEvent("DrawNumber", fetchDrawnNumbers.refetch, throttleLock);
       }
     }
   });

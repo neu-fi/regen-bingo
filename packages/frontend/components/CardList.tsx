@@ -14,10 +14,20 @@ import {
   getNetwork,
   GetNetworkResult,
 } from "@wagmi/core";
-import { Contract } from "ethers";
+import { Contract, BigNumber } from "ethers";
 import { useEffect, useState } from "react";
 import { useContractRead, useSigner } from "wagmi";
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from "../config";
+
+interface ITransferEvent {
+  from: string;
+  to: string;
+  tokenId: BigNumber;
+}
+
+interface IDrawNumberEvent {
+  number: BigNumber;
+}
 
 export default function CardList() {
   // States
@@ -33,6 +43,7 @@ export default function CardList() {
   // Throttle lock
   let throttleLock = false;
 
+  // Functions
   const idToCard = async (id: number) => {
     return await getToken(contract!, Number(id));
   };
@@ -42,8 +53,21 @@ export default function CardList() {
     Promise.all(promises)
       .then((values) => {
         setCardsCount(values.length);
-        setCards(values);
-        return values;
+        // Merge Cards (handle both init and update)
+        setCards((cards) => {
+          let cardsTBU = cards;
+          values.forEach((newCard) => {
+            let cardIdx = cardsTBU.findIndex((card) => card.id == newCard.id);
+            if (cardIdx > -1) {
+              cardsTBU[cardIdx] = newCard;
+            } else {
+              cardsTBU.push(newCard);
+            }
+          });
+          setCardsCount(cardsTBU.length);
+          return cardsTBU;
+        });
+        return cards;
       })
       .then((values) => {
         setCardsCount(values.length);
@@ -61,6 +85,32 @@ export default function CardList() {
       });
   }
 
+  function updateTokensOfOwner(args: Array<unknown>) {
+    const drawnNumber = Number((Object(args) as IDrawNumberEvent).number);
+    if (!drawnNumber) {
+      return;
+    }
+    const cardsWithFlattenedNumbers: { tokenId: number; numbers: number[] }[] =
+      cards.map((card: ICard) => {
+        const tokenId = card.id;
+        let numbers: number[] = card.tokenURI.numbers
+          .flat()
+          .filter((n) => n !== 0);
+        return { tokenId, numbers };
+      });
+
+    let tokenIdsTBU: number[] = [];
+    cardsWithFlattenedNumbers.forEach((card) => {
+      if (card.numbers.includes(drawnNumber)) {
+        tokenIdsTBU.push(card.tokenId);
+      }
+    });
+
+    if (tokenIdsTBU.length > 0) {
+      computeCards(tokenIdsTBU);
+    }
+  }
+
   const readTokensOfOwner = useContractRead({
     address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI,
@@ -68,7 +118,14 @@ export default function CardList() {
     args: [account.address],
     onSuccess(data: any) {
       setCardsCount(data.length);
-      computeCards(data);
+      // compute only if there are new cards
+      if (data.length > cards.length) {
+        data.filter((id: number) => !cards.some((card) => card.id !== Number(id)));
+        console.log("fetching only:", data)
+        computeCards(data);
+      } else {
+        computeCards(data);
+      }
     },
     onError() {
       setCardsCount(0);
@@ -85,9 +142,13 @@ export default function CardList() {
   useEffect(() => {
     if (network.chain && network.chain.id === network.chains[0].id) {
       throttle(readTokensOfOwner.refetch, throttleLock);
-      useWatchContractEvent("Transfer", readTokensOfOwner, throttleLock);
-      useWatchContractEvent("DrawNumber", readTokensOfOwner, throttleLock);
-      useWatchContractEvent("ClaimPrize", readTokensOfOwner, throttleLock);
+      useWatchContractEvent("Transfer", updateTokensOfOwner, throttleLock);
+      useWatchContractEvent("DrawNumber", updateTokensOfOwner, throttleLock);
+      useWatchContractEvent(
+        "ClaimPrize",
+        readTokensOfOwner.refetch,
+        throttleLock
+      );
     }
   }, [network, account]);
 
@@ -130,7 +191,7 @@ export default function CardList() {
             <div className="bg-white w-full">
               <div className="mx-auto max-w-8xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 justify-center">
                 <div className="mt-6 grid grid-cols-3 gap-y-10 gap-x-6">
-                  {cards.map((card) => (
+                  {...cards.map((card) => (
                     <div key={card.id} className="group relative">
                       <div className="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md group-hover:opacity-75 lg:aspect-none lg:h-90">
                         <Card card={card}></Card>

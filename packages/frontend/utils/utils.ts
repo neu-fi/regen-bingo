@@ -95,13 +95,12 @@ export function isSVG(image: string): boolean {
 export function throttle(
   callback: Function,
   throttleLock: boolean,
-  cooldown: number = 1000
+  callbackArgs: unknown[] = [] as unknown[],
+  cooldown: number = 1000,
 ) {
   if (!throttleLock) {
     throttleLock = true;
-
-    callback();
-
+    callback(...callbackArgs!);
     setTimeout(() => {
       throttleLock = false;
     }, cooldown);
