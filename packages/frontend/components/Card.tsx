@@ -14,14 +14,16 @@ type CardProps = {
 
 export interface ICard {
   id: number;
-  coveredNumbersCount: number;
   tokenURI: ITokenURI;
 }
 
 export interface ITokenURI {
-  name: string;
   description: string;
+  external_url: string;
   image: string;
+  name: string;
+  numbers: Array<number[]>;
+  score: number;
 }
 
 function openseaURL(tokenId: bigint) {
@@ -40,7 +42,7 @@ export default function Card(props: CardProps) {
   const bingoState = useContext(BingoStateContext);
 
   function didWinPrize(): boolean {
-    return card.coveredNumbersCount === 15;
+    return card.tokenURI.score === 15;
   }
 
   function isClaimed(): boolean {
@@ -105,11 +107,11 @@ export default function Card(props: CardProps) {
               ) : !didWinPrize() ? (
                 <p className="text-gray-500">
                   Has{" "}
-                  {card.coveredNumbersCount === 0
+                  {card.tokenURI.score === 0
                     ? "no matches."
-                    : card.coveredNumbersCount === 1
+                    : card.tokenURI.score === 1
                     ? "1 match!"
-                    : `${card.coveredNumbersCount} matches!`}
+                    : `${card.tokenURI.score} matches!`}
                 </p>
               ) : (
                 <span>Winner of the GitCoin Alpha Round!</span>
