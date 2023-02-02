@@ -2,12 +2,7 @@ import Link from "next/link";
 import router, { NextRouter, useRouter } from "next/router";
 import { ConnectOrSwitchNetworkButton } from "./web3/ConnectOrSwitchNetworkButton";
 import { useMediaQuery } from "react-responsive";
-import {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-} from "react";
+import { Dispatch, SetStateAction, useContext, useEffect } from "react";
 import { BingoStateContext } from "@/components/Layout";
 import { BingoState } from "@/hooks/useBingoContract";
 

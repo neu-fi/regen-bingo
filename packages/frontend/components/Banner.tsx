@@ -26,10 +26,10 @@ export function Banner(props: BannerProps) {
   const bingoState = useContext(BingoStateContext);
   const [drawTimestamp, setDrawTimestamp] = useState<number>();
   const [humanizedCountdown, setHumanizedCountdown] = useState<string>("");
+  const [drawCount, setDrawCount] = useState<number>();
   const [icon, setIcon] = useState<JSX.Element>(
-    <MegaphoneIcon className="h-6 w-6 text-white" aria-hidden="true" />
+    <MegaphoneIcon className="h-6 w-6 text-black" aria-hidden="true" />
   );
-  const [drawCount, setDrawCount] = useState<number>(0);
 
   const getDrawTimestamp = useContractRead({
     abi: CONTRACT_ABI,
@@ -76,34 +76,39 @@ export function Banner(props: BannerProps) {
   useEffect(() => {
     switch (bingoState) {
       case BingoState.MINT:
-        // TODO: Change this to a better icon
         setIcon(
           <TicketIcon className="h-6 w-6 text-black" aria-hidden="true" />
         );
         if (drawTimestamp && Date.now() / 1000 < drawTimestamp) {
-          setIcon(
-            <RocketLaunchIcon
-              className="h-6 w-6 text-black"
-              aria-hidden="true"
-            ></RocketLaunchIcon>
-          );
           setBannerContent(`${humanizedCountdown} is left for minting cards`);
         } else {
-          setIcon(
-            <HandRaisedIcon
-              className="h-6 w-6 text-black"
-              aria-hidden="true"
-            ></HandRaisedIcon>
-          );
           setBannerContent(`Draw can start anytime now!`);
         }
         break;
       case BingoState.DRAW:
-        setBannerContent(
-          `${drawCount} numbers are drawn. You need to claim the prize if you're eligible!`
+        setIcon(
+          <RocketLaunchIcon
+            className="h-6 w-6 text-black"
+            aria-hidden="true"
+          ></RocketLaunchIcon>
         );
+        setBannerContent(() => {
+          if (drawCount !== undefined) {
+            return `${drawCount === 0 ? "No" : drawCount} number${
+              drawCount === 1 ? " is" : "s are"
+            } drawn. You need to claim the prize if you're eligible!`;
+          } else {
+            return `Draw has been started. Check out now!`;
+          }
+        });
         break;
       case BingoState.END:
+        setIcon(
+          <HandRaisedIcon
+            className="h-6 w-6 text-black"
+            aria-hidden="true"
+          ></HandRaisedIcon>
+        );
         setBannerContent(
           "The game has ended. See the donation we've made collectively!"
         );
@@ -118,7 +123,7 @@ export function Banner(props: BannerProps) {
           <div className="flex flex-wrap items-center justify-between">
             <div className="flex w-0 flex-1 items-center">
               <span className="flex rounded-lg bg-yellow-3 p-2">{icon}</span>
-              <p className="ml-3 truncate font-medium text-black">
+              <p className="ml-3 font-medium text-black">
                 {/* <span className="md:hidden">We announced a new product!</span> */}
                 {bannerContent}
               </p>

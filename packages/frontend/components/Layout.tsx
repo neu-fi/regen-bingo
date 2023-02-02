@@ -37,7 +37,7 @@ function Layout(props: PropsWithChildren<LayoutProps>) {
     } else {
       setShowBanner(false);
     }
-  }, [router.pathname])
+  }, [router.pathname, activeTab])
 
   // Throttle lock
   let throttleLock: boolean = false;
