@@ -2,11 +2,13 @@ import Link from "next/link";
 import router, { NextRouter, useRouter } from "next/router";
 import { ConnectOrSwitchNetworkButton } from "./web3/ConnectOrSwitchNetworkButton";
 import { useMediaQuery } from "react-responsive";
-import { useContext, useState } from "react";
-import { BingoStateContext } from "./Layout";
+import { Dispatch, SetStateAction, useContext, useEffect } from "react";
+import { BingoStateContext } from "@/components/Layout";
 import { BingoState } from "@/hooks/useBingoContract";
 
-type HeaderProps = {};
+type HeaderProps = {
+  setActiveTab: Dispatch<SetStateAction<string>>;
+};
 
 interface ITab {
   name: string;
@@ -15,10 +17,10 @@ interface ITab {
 }
 
 export const tabs: ITab[] = [
-  { name: "Mint", href: "/mint", active: true },
-  { name: "The Draw", href: "/lucky-numbers", active: false },
-  { name: "The Winner", href: "/winner", active: false },
-  { name: "My Cards", href: "/my-cards", active: true },
+  { name: "🎲 Mint", href: "/mint", active: true },
+  { name: "🎰 The Draw", href: "/lucky-numbers", active: false },
+  { name: "🫶 The Impact", href: "/impact", active: false },
+  { name: "🃏 My Cards", href: "/my-cards", active: true },
 ];
 
 function classNames(...classes: any[]) {
@@ -30,31 +32,39 @@ function isCurrent(tab: ITab, router: NextRouter): boolean {
 }
 
 export default function Header(props: HeaderProps) {
+  const { setActiveTab } = props;
   const router = useRouter();
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
   const bingoState = useContext(BingoStateContext);
-  console.log("Bingo:", bingoState);
-  switch (bingoState) {
-    case BingoState.MINT:
-      tabs[0].active = true;
-      tabs[1].active = false;
-      tabs[2].active = false;
-      tabs[3].active = true;
-      break;
-    case BingoState.DRAW:
-      tabs[0].active = false;
-      tabs[1].active = true;
-      tabs[2].active = false;
-      tabs[3].active = true;
-      break;
-    case BingoState.END:
-      tabs[0].active = false;
-      tabs[1].active = false;
-      tabs[2].active = true;
-      tabs[3].active = true;
-      break;
-  }
+
+  useEffect(() => {
+    if (bingoState !== undefined) {
+      switch (bingoState) {
+        case BingoState.MINT:
+          tabs[0].active = true;
+          tabs[1].active = false;
+          tabs[2].active = false;
+          tabs[3].active = true;
+          setActiveTab("/mint");
+          break;
+        case BingoState.DRAW:
+          tabs[0].active = false;
+          tabs[1].active = true;
+          tabs[2].active = false;
+          tabs[3].active = true;
+          setActiveTab("/lucky-numbers");
+          break;
+        case BingoState.END:
+          tabs[0].active = false;
+          tabs[1].active = false;
+          tabs[2].active = true;
+          tabs[3].active = true;
+          setActiveTab("/impact");
+          break;
+      }
+    }
+  }, [bingoState]);
 
   return !isMobile ? (
     // Default View
