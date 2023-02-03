@@ -2,6 +2,7 @@ import { expect } from "chai";
 import { ethers, deployments } from "hardhat";
 import { loadFixture, time } from "@nomicfoundation/hardhat-network-helpers";
 import { BigNumber } from "ethers";
+import exp from "constants";
 
 const name = "RegenBingo";
 const symbol = "BINGO";
@@ -109,7 +110,28 @@ describe("RegenBingo", function () {
             return randomness.toString();
         }
 
-        return { regenBingo, signer1, signer2, donationName, donationAddress, firstDrawTimestamp, vrfCoordinatorV2Mock, provideRandomness, startDrawPeriod};
+        const generateCardFromLayout = (layout: BigNumber, tokenSeed: BigNumber): number[][] => {
+            let card = []
+            for(let rowIndex = 0; rowIndex < 3; rowIndex++) {
+                card.push([0,0,0,0,0,0,0,0,0])
+            }
+        
+            for(let numberIndex = 0; numberIndex < 15; numberIndex++) {
+                const row = Number(layout.mod(4)) // getting last 2 bit by modulo 4
+                layout = layout.div(4) // getting rid of last 2 bit by dividing the number with 4
+                const column = Number(layout.mod(16))
+                layout = layout.div(16)
+                const floorNumber = Number(layout.mod(128))
+                layout = layout.div(128)
+                const range = Number(layout.mod(16))
+                layout = layout.div(16)
+                card[row][column] = (floorNumber + Number(tokenSeed.mod(range)))
+            }
+        
+            return card
+        }
+
+        return { regenBingo, signer1, signer2, donationName, donationAddress, firstDrawTimestamp, vrfCoordinatorV2Mock, provideRandomness, startDrawPeriod, generateCardFromLayout};
     }
 
     describe("Deployment", function () {
@@ -121,7 +143,7 @@ describe("RegenBingo", function () {
             expect(await regenBingo.mintPrice()).to.equal(mintPrice);
             expect(await regenBingo.firstDrawTimestamp()).to.equal(firstDrawTimestamp);
             expect(await regenBingo.drawNumberCooldownMultiplier()).to.equal(drawNumberCooldownMultiplier);
-            expect(await regenBingo.donationAddress()).to.equal(donationAddress);
+            expect(await regenBingo.$donationAddress()).to.equal(donationAddress);
         });
     });
 
@@ -164,7 +186,7 @@ describe("RegenBingo", function () {
 
             await startDrawPeriod();
 
-            const requestId = await regenBingo.$lastRequestId();
+            const requestId = await regenBingo.$vrfLastRequestId();
             await provideRandomness(requestId);
 
             expect(await regenBingo.bingoState()).to.equal(BigNumber.from("1"));
@@ -175,18 +197,18 @@ describe("RegenBingo", function () {
 
             await startDrawPeriod();
 
-            const requestId = await regenBingo.$lastRequestId();
+            const requestId = await regenBingo.$vrfLastRequestId();
             let randomness = await provideRandomness(requestId);
 
-            expect(await regenBingo.$drawSeed()).not.to.equal(BigNumber.from("0"));
-            expect(await regenBingo.$drawSeed()).to.equal(BigNumber.from(randomness));
+            expect(await regenBingo.$vrfRandomWord()).not.to.equal(BigNumber.from("0"));
+            expect(await regenBingo.$vrfRandomWord()).to.equal(BigNumber.from(randomness));
         });
         it("Draws one number correctly", async function () {
             const { regenBingo, startDrawPeriod, provideRandomness } = await loadFixture(deployBingoFixture);
 
             await startDrawPeriod();
 
-            const requestId = await regenBingo.$lastRequestId();
+            const requestId = await regenBingo.$vrfLastRequestId();
             await provideRandomness(requestId);
 
             let tx = await regenBingo.drawNumber();
@@ -202,7 +224,7 @@ describe("RegenBingo", function () {
 
             await startDrawPeriod();
 
-            const requestId = await regenBingo.$lastRequestId();
+            const requestId = await regenBingo.$vrfLastRequestId();
             await provideRandomness(requestId);
 
             let tx1 = await regenBingo.drawNumber();
@@ -232,6 +254,9 @@ describe("RegenBingo", function () {
 
             await startDrawPeriod();
 
+            const requestId = await regenBingo.$vrfLastRequestId();
+            await provideRandomness(requestId);
+
             await regenBingo.drawNumber();
             await expect(regenBingo.drawNumber()).to.be.revertedWith("Waiting the cooldown");
         });
@@ -245,7 +270,7 @@ describe("RegenBingo", function () {
 
             await startDrawPeriod();
 
-            const requestId = await regenBingo.$lastRequestId();
+            const requestId = await regenBingo.$vrfLastRequestId();
             await provideRandomness(requestId);
 
             for (let i = 0; i < 90; i++) {
@@ -354,6 +379,87 @@ describe("RegenBingo", function () {
             const foundRollingText = decodedImage.match(/Donat.*UTC/)?.toString();
 
             expect(expectedRollingText).to.equal(foundRollingText);
+        })
+    })
+    describe("Layouts", async function () {
+        it("Should all layouts be working", async function () {
+            const { signer1, regenBingo, generateCardFromLayout } = await loadFixture(deployBingoFixture);
+            const layoutsCount = Number(await regenBingo.$LAYOUTS_COUNT());
+            const layouts = await regenBingo.$layouts();
+            regenBingo.connect(signer1);
+
+            let hasLayoutSeenBefore = new Array(layoutsCount).fill(false);
+            const allMatrixes = [];
+            const expectedMatrixes = [];
+
+            let tokenId = 1;
+            while(hasLayoutSeenBefore.includes(false)){
+                await( await regenBingo.mint(signer1.address, "1", {value: mintPrice}))
+                const layoutNumber = Number((await regenBingo.$_tokenSeed(tokenId)).mod(layoutsCount));
+                if(hasLayoutSeenBefore[layoutNumber] == false){
+                    hasLayoutSeenBefore[layoutNumber] = true;
+                    const matrix = await regenBingo.numberMatrix(tokenId);
+                    allMatrixes.push(matrix);
+
+                    const tokenSeed = await regenBingo.$_tokenSeed(tokenId);
+                    const expectedMatrix = generateCardFromLayout(layouts[layoutNumber], tokenSeed);
+                    expectedMatrixes.push(expectedMatrix);
+                }
+                tokenId += 1
+            }
+            
+            expect(hasLayoutSeenBefore).not.contain(false) // all layouts must be used for number matrix generation
+
+            for(let layoutIndex = 0; layoutIndex < 10; layoutIndex++) {
+                let allOptionsCount = 0;
+
+                for(let rowIndex = 0; rowIndex < 3; rowIndex++) {
+                    let rowOptionsCount = 0
+
+                    for(let columnIndex = 0; columnIndex < 9; columnIndex++) {
+                        if(allMatrixes[layoutIndex][rowIndex][columnIndex] != 0) {
+                            rowOptionsCount += 1;
+                            allOptionsCount += 1;
+                            const number = allMatrixes[layoutIndex][rowIndex][columnIndex];
+                            const expectedNumber = expectedMatrixes[layoutIndex][rowIndex][columnIndex];
+
+                            expect(number).to.equal(expectedNumber);
+
+                            // check all the numbers are in the expected column
+                            if(columnIndex == 0){ 
+                                expect(number).to.be.above(0)
+                                expect(number).to.be.below(10)
+                            }
+                            else if(columnIndex == 8){
+                                expect(number).to.be.above(79)
+                                expect(number).to.be.below(91)
+                            }
+                            else {
+                                expect(number).to.be.above(columnIndex * 10 - 1)
+                                expect(number).to.be.below(columnIndex * 10 + 11)
+                            }
+                        }
+                    }
+                    expect(rowOptionsCount).to.equal(5); // check for every row has 5 numbers
+                }
+                expect(allOptionsCount).to.equal(15); // check for layout has exactly 15 numbers
+
+                const occurances = new Array(91).fill(0)
+                for(let columnIndex = 0; columnIndex < 9; columnIndex++){
+                    let columnOptionsCount = 0;
+
+                    for(let rowIndex = 0; rowIndex < 3; rowIndex++){
+                        const number = allMatrixes[layoutIndex][rowIndex][columnIndex]
+                        if(number != 0) {
+                            columnOptionsCount += 1;
+                            occurances[number] += 1;
+                            expect(occurances[number]).to.equal(1); // check the layout doesn't have duplicates
+                        }
+                    }
+                    expect(columnOptionsCount).not.to.equal(0); // check for every column has at least one number
+                }
+                
+            }
         })
     })
 });

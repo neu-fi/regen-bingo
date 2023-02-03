@@ -134,7 +134,7 @@ describe("Chainlink contract integrations", function () {
             await time.increase(drawCooldownSeconds);
 
             await expect(regenBingo.startDrawPeriod()).to.emit(vrfCoordinatorV2Mock, "RandomWordsRequested");
-            expect(await regenBingo.$lastRequestId()).to.equal(BigNumber.from("1"));
+            expect(await regenBingo.$vrfLastRequestId()).to.equal(BigNumber.from("1"));
         })
         it("Cannot rerequest random seed before drawTimestamp", async function () {
             const { regenBingo, fundWithLINK } = await loadFixture(deployBingoFixture);
@@ -142,7 +142,7 @@ describe("Chainlink contract integrations", function () {
             const linkAmount = "3029517575885162280";
             await fundWithLINK(linkAmount);
 
-            await expect(regenBingo.rerequestDrawSeed()).to.be.revertedWith("Not drawing");
+            await expect(regenBingo.rerequestVrfRandomWord()).to.be.revertedWith("Not drawing");
         });
         it("Cannot rerequest before vrf_cooldown", async function () {
             const { regenBingo, fundWithLINK } = await loadFixture(deployBingoFixture);
@@ -153,14 +153,14 @@ describe("Chainlink contract integrations", function () {
             await time.increase(drawCooldownSeconds);
             await regenBingo.startDrawPeriod();
 
-            const lastRequestId = await regenBingo.$lastRequestId();
+            const lastRequestId = await regenBingo.$vrfLastRequestId();
             
             expect(lastRequestId).to.equal(BigNumber.from("1"));
-            expect(await regenBingo.$drawSeed()).to.equal(BigNumber.from("0"));
+            expect(await regenBingo.$vrfRandomWord()).to.equal(BigNumber.from("0"));
 
-            await regenBingo.rerequestDrawSeed();
+            await regenBingo.rerequestVrfRandomWord();
 
-            expect(await regenBingo.$lastRequestId()).to.equal(lastRequestId);
+            expect(await regenBingo.$vrfLastRequestId()).to.equal(lastRequestId);
             
         });
         it("Cannot rerequest if drawSeed is not 0", async function () {
@@ -172,17 +172,17 @@ describe("Chainlink contract integrations", function () {
             await time.increase(drawCooldownSeconds);
             await regenBingo.startDrawPeriod();
 
-            const lastRequestId = await regenBingo.$lastRequestId();
+            const lastRequestId = await regenBingo.$vrfLastRequestId();
             
             expect(lastRequestId).to.equal(BigNumber.from("1"));
-            expect(await regenBingo.$drawSeed()).to.equal(BigNumber.from("0"));
+            expect(await regenBingo.$vrfRandomWord()).to.equal(BigNumber.from("0"));
             
             await provideRandomness(lastRequestId);
 
             await mine(1000);
             
-            await expect(regenBingo.rerequestDrawSeed()).to.not.emit(vrfCoordinatorV2Mock, "RandomWordsRequested");
-            expect(await regenBingo.$lastRequestId()).to.equal(lastRequestId);
+            await expect(regenBingo.rerequestVrfRandomWord()).to.not.emit(vrfCoordinatorV2Mock, "RandomWordsRequested");
+            expect(await regenBingo.$vrfLastRequestId()).to.equal(lastRequestId);
         })
         it("Can rerequest random seed succesfully", async function () {
             const { regenBingo, fundWithLINK, vrfCoordinatorV2Mock } = await loadFixture(deployBingoFixture);
@@ -193,16 +193,16 @@ describe("Chainlink contract integrations", function () {
             await time.increase(drawCooldownSeconds);
             await regenBingo.startDrawPeriod();
 
-            const lastRequestId = await regenBingo.$lastRequestId();
+            const lastRequestId = await regenBingo.$vrfLastRequestId();
             
             expect(lastRequestId).to.equal(BigNumber.from("1"));
-            expect(await regenBingo.$drawSeed()).to.equal(BigNumber.from("0"));
+            expect(await regenBingo.$vrfRandomWord()).to.equal(BigNumber.from("0"));
 
             await mine(1000);
             
-            await expect(regenBingo.rerequestDrawSeed()).to.emit(vrfCoordinatorV2Mock, "RandomWordsRequested");
-            expect(await regenBingo.$lastRequestId()).to.not.equal(lastRequestId);
-            expect(await regenBingo.$lastRequestId()).to.equal(BigNumber.from("2"));
+            await expect(regenBingo.rerequestVrfRandomWord()).to.emit(vrfCoordinatorV2Mock, "RandomWordsRequested");
+            expect(await regenBingo.$vrfLastRequestId()).to.not.equal(lastRequestId);
+            expect(await regenBingo.$vrfLastRequestId()).to.equal(BigNumber.from("2"));
         });
     });
 });
