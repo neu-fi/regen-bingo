@@ -170,10 +170,10 @@ const generateBitsFromLayout = (layout: Layout): String => {
         for(var j = 0; j < 9; j++) {
             if(layout && layout[j] && layout[j][i] && layout[j][i][0] && layout[j][i][0] != 0) {
                 
-                bits += fixBitLength(i.toString(2), 2) // first two bit is row number
-                bits += fixBitLength(j.toString(2), 4) // four bit for column number
-                bits += fixBitLength(layout[j][i][0].toString(2), 7) // seven bit for range start
-                bits += fixBitLength(layout[j][i][1].toString(2), 4) // four bit for range
+                bits += fixBitLength(i.toString(2), 2) // 2 bits for the rows
+                bits += fixBitLength(j.toString(2), 4) // 4 bits for the columns
+                bits += fixBitLength(layout[j][i][0].toString(2), 7) // 7 bits for the range index
+                bits += fixBitLength(layout[j][i][1].toString(2), 4) // 4 bits for the number range length
                 
             }
         }

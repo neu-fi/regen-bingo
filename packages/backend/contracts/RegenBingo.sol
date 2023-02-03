@@ -44,14 +44,9 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
     address payable donationAddress;
     string public donationName;
 
-    // Bingo card layouts.
-    // Cells have the following format: [lowest_available_number, possible_options]
-    // Given a seed, a number in the cell could be calculated as:
-    // lowest_available_number + (seed % possible_options)
-    // Following these rules: https://en.wikipedia.org/wiki/Bingo_card#90-ball_bingo_cards
-    // Using these as templates: https://www.scribd.com/document/325121782/1-90-British-Bingo-Cards
+    // Bingo card layouts
     
-    uint256[LAYOUTS_COUNT] public layouts = [
+    uint256[LAYOUTS_COUNT] private layouts = [
         74531863127069656875678005463629317377624456585407760715211671503378212480908,
         84733770693983134393286414926143418191632064005497261285059935046721726341764,
         88892850850319190340242688960817664513518456655726863909825725454469825060928,
@@ -286,15 +281,16 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
         require(ownerOf(tokenId) != address(0), "Invalid card");
         uint256 tokenSeed = _tokenSeed(tokenId);
         uint256 layout = layouts[tokenSeed % LAYOUTS_COUNT];
+                
 
         for(uint256 i = 0; i < 15; i++) {
-            uint256 row = layout % 4; // 2 bit
+            uint256 row = layout % 4; // 2 bits for number of rows
             layout /= 4;
-            uint256 column = layout % 16; // 4 bit
+            uint256 column = layout % 16; // // 4 bits for the number of columns
             layout /= 16;
-            uint256 floorNumber = layout % 128; // 7 bit
+            uint256 floorNumber = layout % 128; // 7 bits for the range start number
             layout /= 128;
-            uint256 range = layout % 16; // 4 bit
+            uint256 range = layout % 16; // 4 bits for the number range length
             layout /= 16;
             numberMatrix[row][column] = uint8(floorNumber + tokenSeed % range);
         }
@@ -310,13 +306,7 @@ contract RegenBingo is ERC721A, VRFV2WrapperConsumerBase {
 
         for (uint256 row = 0; row < ROWS_COUNT; row++) {
             for (uint256 column = 0; column < COLUMNS_COUNT; column++) {
-                if (
-                    isDrawn(
-                        matrix[row][column]
-                    )
-                ) {
-                    isDrawnMatrix[row][column] = true;
-                }
+                isDrawn(matrix[row][column]) ? true : false;
             }
         }
     }
