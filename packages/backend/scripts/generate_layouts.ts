@@ -1,45 +1,116 @@
 import { BigNumber } from "ethers"
-import { keccak256, toUtf8Bytes } from "ethers/lib/utils"
 
 type Layout = number[][][] // 9 * 3 * 2
 let nonce = 0
+const layoutCount = 10
 
+
+// Used this algorithm to generate pseudorandom numbers: https://en.wikipedia.org/wiki/Pseudorandom_number_generator#Implementation
 const generateNextRandom = (): number => {
     nonce += 1
     let a = nonce * 15485863
     return (a * a * a % 2038074743) / 2038074743
 }
 
+const isValidColumn = (column: number[][], columnIndex: number) : Boolean => {
+    let columnOptionsCount = 0
+    let sumOfOptionsInColumn = 0
+    const optionsInColumn: number[] = [] 
+
+    for(let rowIndex = 0; rowIndex < 3; rowIndex++) {
+        if(column![rowIndex]![0] && column[rowIndex][0] != 0) {
+            columnOptionsCount += 1
+            sumOfOptionsInColumn += column[rowIndex][1]
+            for (let range = 0; range < column[rowIndex][1]; range++) {
+                if(optionsInColumn.includes(column[rowIndex][0] + range)) {
+                    return false // checking for overlapping numbers
+                }
+                optionsInColumn.push(column[rowIndex][0] + range)
+            }
+        }
+    }
+    // checking for a column has at least one number
+    if(columnOptionsCount == 0) return false
+
+    // checking for validity of column
+    if(columnIndex == 0 )
+        return (sumOfOptionsInColumn == 9 && optionsInColumn.length == 9)
+
+    else if(columnIndex == 8)
+        return (sumOfOptionsInColumn == 11 && optionsInColumn.length == 11)
+    
+    else return sumOfOptionsInColumn == 10 && optionsInColumn.length == 10
+}
+
+
+const hasValidRows = (layout: Layout) : Boolean => {
+    for(let rowIndex = 0; rowIndex < 3; rowIndex++) {
+        let rowOptionsCount = 0
+
+        for(let columnIndex = 0; columnIndex < 9; columnIndex++) {
+            if(layout![columnIndex]![rowIndex]![0] && layout[columnIndex][rowIndex][0] != 0) {
+                rowOptionsCount += 1
+            }
+        }
+        if(rowOptionsCount != 5) {
+            return false
+        }
+    }
+
+    return true
+}
+
+
+const hasAnyOverlappingNumberInAllLayout = (layout: Layout): Boolean => {
+    const allNumbers: number[] = []
+
+    for(let rowIndex = 0; rowIndex < 3; rowIndex++) {
+        for(let columnIndex = 0; columnIndex < 9; columnIndex++) {
+            if(layout![columnIndex]![rowIndex]![0] && layout[columnIndex][rowIndex][0] != 0) {
+                for(let range = 0; range < layout[columnIndex][rowIndex][1]; range++) {
+                    if(allNumbers.includes(layout[columnIndex][rowIndex][0] + range)) {
+                        return false
+                    }
+                    allNumbers.push(layout[columnIndex][rowIndex][0] + range)
+                }
+            }
+        }
+    }
+
+    return true
+}
+
+const hasAllNumbersBetweenOneAndNinety = (layout: Layout): Boolean => {
+    const allNumbers: number[] = []
+
+    for(let rowIndex = 0; rowIndex < 3; rowIndex++) {
+        for(let columnIndex = 0; columnIndex < 9; columnIndex++) {
+            if(layout![columnIndex]![rowIndex]![0] && layout[columnIndex][rowIndex][0] != 0) {
+                for(let range = 0; range < layout[columnIndex][rowIndex][1]; range++) {
+                    allNumbers.push(layout[columnIndex][rowIndex][0] + range)
+                }
+            }
+        }
+    }
+
+    for(let number = 1; number <= 90; number++) {
+        if(!allNumbers.includes(number)) {
+            return false
+        }
+    }
+
+    return true
+}
+
+
 const isValidLayout = (layout : Layout) : Boolean => {
-
-    let isValidRow = true
-    let isValidColumn = true
-
-    for(var i = 0; i < 9; i++) {
-        let columnCount = 0
-        for(var j = 0; j < 3; j++) {
-            if(layout && layout[i] && layout[i][j] && layout[i][j][0] && layout[i][j][0] != 0) {
-                columnCount += 1
-            }
-        }
-        if(columnCount == 0) {
-            isValidColumn = false
+    for(let columnIndex = 0; columnIndex < 9; columnIndex++) {
+        if(!isValidColumn(layout![columnIndex], columnIndex)) {
+            return false
         }
     }
 
-    for(var i = 0; i < 3; i++) {
-        let rowCount = 0
-        for(var j = 0; j < 9; j++) {
-            if(layout && layout[j] && layout[j][i] && layout[j][i][0] && layout[j][i][0] != 0) {
-                rowCount += 1
-            }
-        }
-        if(rowCount != 5) {
-            isValidRow = false
-        }
-    }
-
-    return isValidColumn && isValidRow
+    return hasValidRows(layout) && hasAnyOverlappingNumberInAllLayout(layout) && hasAllNumbersBetweenOneAndNinety(layout)
 }
 
 
@@ -55,18 +126,18 @@ const writeNumber = (number: Number): String => {
 
 function layoutWriter(layout: Layout){
     console.log('[')
-    for(var i = 0; i < 3; i++){
+    for(let rowIndex = 0; rowIndex < 3; rowIndex++){
         process.stdout.write('   [')
-        for(var j = 0; j < 9; j++){
-            if(j < 8) {
-                process.stdout.write('[' + writeNumber(layout[j][i][0]) + ',' + writeNumber(layout[j][i][1]) + '], ')
+        for(let columnIndex = 0; columnIndex < 9; columnIndex++){
+            if(columnIndex < 8) {
+                process.stdout.write('[' + writeNumber(layout[columnIndex][rowIndex][0]) + ',' + writeNumber(layout[columnIndex][rowIndex][1]) + '], ')
             }
             else {
-                if(i < 2) {
-                    process.stdout.write('[' + writeNumber(layout[j][i][0]) + ',' + writeNumber(layout[j][i][1]) + ']],\n')
+                if(rowIndex < 2) {
+                    process.stdout.write('[' + writeNumber(layout[columnIndex][rowIndex][0]) + ',' + writeNumber(layout[columnIndex][rowIndex][1]) + ']],\n')
                 }
                 else {
-                    process.stdout.write('[' + writeNumber(layout[j][i][0]) + ',' + writeNumber(layout[j][i][1]) + ']]\n')
+                    process.stdout.write('[' + writeNumber(layout[columnIndex][rowIndex][0]) + ',' + writeNumber(layout[columnIndex][rowIndex][1]) + ']]\n')
                 }
             }
         }
@@ -78,7 +149,7 @@ function layoutWriter(layout: Layout){
 const generateLayout = (): Layout => {
     const layout = [];
 
-    for(var i = 0; i < 9; i++) {
+    for(let columnIndex = 0; columnIndex < 9; columnIndex++) {
         const r = Math.floor(generateNextRandom() * 8)
         const rr = Math.floor(generateNextRandom() * 8) + 2;
 
@@ -87,68 +158,68 @@ const generateLayout = (): Layout => {
         }
 
         if (r == 1) {
-            if (i == 0) {
+            if (columnIndex == 0) {
                 layout.push([[1, 9], [0, 0], [0, 0]])
             }
             else {
-                layout.push([[i * 10, 10 + Number(i == 8)], [0, 0], [0, 0]])
+                layout.push([[columnIndex * 10, 10 + Number(columnIndex == 8)], [0, 0], [0, 0]])
             }
         }
 
         if (r == 2) {
-            if (i == 0) {
+            if (columnIndex == 0) {
                 layout.push([[0, 0], [1, 9], [0, 0]])
             }
             else {
-                layout.push([[0, 0], [i * 10, 10 + Number(i == 8)], [0, 0]])
+                layout.push([[0, 0], [columnIndex * 10, 10 + Number(columnIndex == 8)], [0, 0]])
             }
         }
 
         if (r == 3) {
-            if (i == 0) {
+            if (columnIndex == 0) {
                 layout.push([[0, 0], [0, 0], [1, 9]])
             }
             else {
-                layout.push([[0, 0], [0, 0], [i * 10, 10 + Number(i == 8)]])
+                layout.push([[0, 0], [0, 0], [columnIndex * 10, 10 + Number(columnIndex == 8)]])
             }
         }
 
         if (r == 4) {
-            if (i == 0) {
+            if (columnIndex == 0) {
                 layout.push([[1, rr - 1], [rr, 10 - rr], [0, 0]])
             }
             else {
-                layout.push([[i * 10, rr], [i * 10 + rr, 10 - rr + Number(i == 8)], [0, 0]])
+                layout.push([[columnIndex * 10, rr], [columnIndex * 10 + rr, 10 - rr + Number(columnIndex == 8)], [0, 0]])
             }
         }
 
         if (r == 5) {
-            if (i == 0) {
+            if (columnIndex == 0) {
                 layout.push([[0, 0], [1, rr - 1], [rr, 10 - rr]])
             }
             else {
-                layout.push([[0, 0], [i * 10, rr ], [i * 10 + rr, 10 - rr + Number(i == 8)]])
+                layout.push([[0, 0], [columnIndex * 10, rr ], [columnIndex * 10 + rr, 10 - rr + Number(columnIndex == 8)]])
             }
         }
 
         if (r == 6) {
-            if (i == 0) {
+            if (columnIndex == 0) {
                 layout.push([[1, rr - 1], [0, 0], [rr, 10 - rr]])
             }
             else {
-                layout.push([[i * 10, rr], [0, 0], [i * 10 + rr, 10 - rr + Number(i == 8)]])
+                layout.push([[columnIndex * 10, rr], [0, 0], [columnIndex * 10 + rr, 10 - rr + Number(columnIndex == 8)]])
             }
         }
 
         if (r == 7) {
-            if(i == 0) {
+            if(columnIndex == 0) {
                 layout.push([[1, 3], [4, 3], [7, 3]])
             }
-            else if(i == 8) {
+            else if(columnIndex == 8) {
                 layout.push([[80, 4], [84, 4], [88, 3]])
             }
             else {
-                layout.push([[i * 10, 3], [i * 10 + 3, 3], [i * 10 + 6, 4]])
+                layout.push([[columnIndex * 10, 3], [columnIndex * 10 + 3, 3], [columnIndex * 10 + 6, 4]])
             }
         }
     }
@@ -156,7 +227,6 @@ const generateLayout = (): Layout => {
 }
 
 const fixBitLength = (bits: String, len: number): String => {
-
     let fixedBits = bits.split('').reverse().join('')
     const numberOfZeroes = len - bits.length > 0 ? len - bits.length : 0
     fixedBits += '0'.repeat(numberOfZeroes)
@@ -166,14 +236,14 @@ const fixBitLength = (bits: String, len: number): String => {
 const generateBitsFromLayout = (layout: Layout): String => {
     let bits = ''
 
-    for(var i = 0; i < 3; i++) {
-        for(var j = 0; j < 9; j++) {
-            if(layout && layout[j] && layout[j][i] && layout[j][i][0] && layout[j][i][0] != 0) {
+    for(let rowIndex = 0; rowIndex < 3; rowIndex++) {
+        for(let columnIndex = 0; columnIndex < 9; columnIndex++) {
+            if(layout![columnIndex]![rowIndex]![0] && layout[columnIndex][rowIndex][0] != 0) {
                 
-                bits += fixBitLength(i.toString(2), 2) // 2 bits for the rows
-                bits += fixBitLength(j.toString(2), 4) // 4 bits for the columns
-                bits += fixBitLength(layout[j][i][0].toString(2), 7) // 7 bits for the range index
-                bits += fixBitLength(layout[j][i][1].toString(2), 4) // 4 bits for the number range length
+                bits += fixBitLength(rowIndex.toString(2), 2) // 2 bits for the rows
+                bits += fixBitLength(columnIndex.toString(2), 4) // 4 bits for the columns
+                bits += fixBitLength(layout[columnIndex][rowIndex][0].toString(2), 7) // 7 bits for the range index
+                bits += fixBitLength(layout[columnIndex][rowIndex][1].toString(2), 4) // 4 bits for the number range length
                 
             }
         }
@@ -185,12 +255,11 @@ const generateBitsFromLayout = (layout: Layout): String => {
 const generateBigNumberFromBits = (bits: String): BigNumber => {
     let number = BigNumber.from('1') // for leading zeroes
 
-    for(var i = 0; i < bits.length; i++) {
+    for(let bitIndex = 0; bitIndex < bits.length; bitIndex++) {
         number = number.mul(2)
-        if(bits[i] == '1') {
+        if(bits[bitIndex] == '1') {
             number = number.add(1)
         }
-        //console.log(bits[i] == '1')
     }
 
     return number
@@ -198,18 +267,18 @@ const generateBigNumberFromBits = (bits: String): BigNumber => {
 
 const generateCardFromLayout = (layout: BigNumber, tokenSeed: number): number[][] => {
     let card = []
-    for(var i = 0; i < 3; i++) {
+    for(let rowIndex = 0; rowIndex < 3; rowIndex++) {
         card.push([0,0,0,0,0,0,0,0,0])
     }
 
-    for(var i = 0; i < 15; i++) {
-        const row = Number(layout.mod(4)) // 2 bit
-        layout = layout.div(4)
-        const column = Number(layout.mod(16)) // 4 bit
+    for(let numberIndex = 0; numberIndex < 15; numberIndex++) {
+        const row = Number(layout.mod(4)) // getting last 2 bit by modulo 4
+        layout = layout.div(4) // getting rid of last 2 bit by dividing the number with 4
+        const column = Number(layout.mod(16))
         layout = layout.div(16)
-        const floorNumber = Number(layout.mod(128)) // 7 bit
+        const floorNumber = Number(layout.mod(128))
         layout = layout.div(128)
-        const range = Number(layout.mod(16)) // 4 bit
+        const range = Number(layout.mod(16))
         layout = layout.div(16)
         card[row][column] = (floorNumber + tokenSeed % range)
     }
@@ -221,37 +290,43 @@ const generateCardFromLayout = (layout: BigNumber, tokenSeed: number): number[][
 function main() {
     let counter = 0;
     const layouts: Array<Layout> = [];
-    const bits: Array<String> = [];
-    const numbers: Array<BigNumber> = [];
-    console.log("Layouts: \n")
+    const bitsArray: Array<String> = [];
+    const numbersArray: Array<BigNumber> = [];
 
-    while(counter < 10) {
+    console.log("Layouts: \n")
+    while(counter < layoutCount) {
         const layout: Layout = generateLayout()
         if(isValidLayout(layout) && !layouts?.includes(layout)) {
             layouts.push(layout)
             counter += 1
             layoutWriter(layout)
 
-            const bit: String = generateBitsFromLayout(layout)
-            bits.push(bit) // first 17 character for last number (4 for range, 7 for range start, 4 for column, 2 for row) !reversed
+            const bits: String = generateBitsFromLayout(layout)
+            bitsArray.push(bits) // first 17 character for last number (4 for range, 7 for range start, 4 for column, 2 for row) !reversed
 
-            const layoutNumber: BigNumber = generateBigNumberFromBits(bit)
-            numbers.push(layoutNumber)
+            const layoutNumber: BigNumber = generateBigNumberFromBits(bits)
+            numbersArray.push(layoutNumber)
         }
     }
-    console.log("\nBinary forms of layouts: \n")
 
-    bits.map((b) => {
+    console.log("\nBinary forms of layouts: \n")
+    bitsArray.map((b) => {
         console.log(b, '\n')
     })
 
     console.log("\nNumber forms of layouts: \n");
-    numbers.map((number) => {
+    numbersArray.map((number) => {
         console.log(number.toString())
     })
     
-    console.log('\nTest Card: \n', generateCardFromLayout(numbers[0], 128739456)) // layout, tokenSeed
-    // console.log(Number(generateBigNumberFromBits("001"))) // expected 9
+    console.log("\nExpected cards for each layout with random token seeds: \n")
+    numbersArray.map((number) => {
+        const tokenSeed = Math.floor(generateNextRandom() * 1e10)
+
+        console.log("Layout number: ", number.toString())
+        console.log("Token seed: ", tokenSeed.toString())
+        console.log(generateCardFromLayout(numbersArray[0], tokenSeed), "\n") // layout, tokenSeed
+    })
 }
 
 main()

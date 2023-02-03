@@ -363,65 +363,72 @@ describe("RegenBingo", function () {
     describe("Layouts", async function () {
         it("Should all layouts be working", async function () {
             const { signer1, regenBingo } = await loadFixture(deployBingoFixture);
-            const quantity = BigNumber.from('1000')
-
+            const layoutsCount = Number(await regenBingo.$LAYOUTS_COUNT());
             regenBingo.connect(signer1);
-            await( await regenBingo.mint(signer1.address, quantity, {value: quantity.mul(mintPrice)}));
 
-            let isShownLayout = [false, false, false, false, false, false, false, false, false, false]
-            const allMatrixes = []
+            let hasLayoutSeenBefore = new Array(layoutsCount).fill(false);
+            const allMatrixes = [];
 
             let tokenId = 1;
-            while(isShownLayout.includes(false) && tokenId <= 1000){
+            while(hasLayoutSeenBefore.includes(false)){
+                await( await regenBingo.mint(signer1.address, "1", {value: mintPrice}))
                 const layoutNumber = Number((await regenBingo.$_tokenSeed(tokenId)).mod(10));
-                if(isShownLayout[layoutNumber] == false){
-                    isShownLayout[layoutNumber] = true;
+                if(hasLayoutSeenBefore[layoutNumber] == false){
+                    hasLayoutSeenBefore[layoutNumber] = true;
                     const matrix = await regenBingo.numberMatrix(tokenId);
                     allMatrixes.push(matrix);
                 }
                 tokenId += 1
             }
             
-            expect(isShownLayout).not.contain(false)
+            expect(hasLayoutSeenBefore).not.contain(false) // all layouts must be used for number matrix generation
 
-            for(var k = 0; k < 10; k++) {
-                let allNumbersCount = 0;
+            for(let layoutIndex = 0; layoutIndex < 10; layoutIndex++) {
+                let allOptionsCount = 0;
 
-                for(var i = 0; i < 3; i++) {
-                    let rowCount = 0
+                for(let rowIndex = 0; rowIndex < 3; rowIndex++) {
+                    let rowOptionsCount = 0
 
-                    for(var j = 0; j < 9; j++) {
-                        if(allMatrixes[k][i][j] != 0) {
-                            rowCount += 1;
-                            allNumbersCount += 1;
-                            if(j == 0){ 
-                                expect(allMatrixes[k][i][j]).to.be.above(0)
-                                expect(allMatrixes[k][i][j]).to.be.below(10)
+                    for(let columnIndex = 0; columnIndex < 9; columnIndex++) {
+                        if(allMatrixes[layoutIndex][rowIndex][columnIndex] != 0) {
+                            rowOptionsCount += 1;
+                            allOptionsCount += 1;
+                            const number = allMatrixes[layoutIndex][rowIndex][columnIndex];
+
+                            // check all the numbers are in the expected column
+                            if(columnIndex == 0){ 
+                                expect(number).to.be.above(0)
+                                expect(number).to.be.below(10)
                             }
-                            else if(j == 8){
-                                expect(allMatrixes[k][i][j]).to.be.above(79)
-                                expect(allMatrixes[k][i][j]).to.be.below(91)
+                            else if(columnIndex == 8){
+                                expect(number).to.be.above(79)
+                                expect(number).to.be.below(91)
                             }
                             else {
-                                expect(allMatrixes[k][i][j]).to.be.above(j * 10 - 1)
-                                expect(allMatrixes[k][i][j]).to.be.below(j * 10 + 11)
+                                expect(number).to.be.above(columnIndex * 10 - 1)
+                                expect(number).to.be.below(columnIndex * 10 + 11)
                             }
                         }
                     }
-                    expect(rowCount).to.equal(5);
+                    expect(rowOptionsCount).to.equal(5); // check for every row has 5 numbers
                 }
-                expect(allNumbersCount).to.equal(15);
+                expect(allOptionsCount).to.equal(15); // check for layout has exactly 15 numbers
 
-                for(var i = 0; i < 9; i++){
-                    let columnCount = 0;
+                const occurances = new Array(91).fill(0)
+                for(let columnIndex = 0; columnIndex < 9; columnIndex++){
+                    let columnOptionsCount = 0;
 
-                    for(var j = 0; j < 3; j++){
-                        if(allMatrixes[k][j][i] != 0) {
-                            columnCount += 1;
+                    for(let rowIndex = 0; rowIndex < 3; rowIndex++){
+                        const number = allMatrixes[layoutIndex][rowIndex][columnIndex]
+                        if(number != 0) {
+                            columnOptionsCount += 1;
+                            occurances[number] += 1;
+                            expect(occurances[number]).to.equal(1); // check the layout doesn't have duplicates
                         }
                     }
-                    expect(columnCount).not.to.equal(0);
+                    expect(columnOptionsCount).not.to.equal(0); // check for every column has at least one number
                 }
+                
             }
         })
     })

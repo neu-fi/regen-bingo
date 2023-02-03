@@ -15,7 +15,7 @@
     "clean": "yarn workspace @regen-bingo/backend clean",
     "deploy": "yarn workspace @regen-bingo/backend deploy",
     "random": "yarn workspace @regen-bingo/backend hardhat run scripts/provide_randomness.ts",
-    "layout": "yarn workspace @regen-bingo/backend hardhat run scripts/generate_layouts.ts"
+    "generate_layouts": "yarn workspace @regen-bingo/backend hardhat run scripts/generate_layouts.ts"
   },
   "workspaces": {
     "packages": [
