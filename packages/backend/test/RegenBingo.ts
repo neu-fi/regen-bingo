@@ -110,7 +110,28 @@ describe("RegenBingo", function () {
             return randomness.toString();
         }
 
-        return { regenBingo, signer1, signer2, donationName, donationAddress, firstDrawTimestamp, vrfCoordinatorV2Mock, provideRandomness, startDrawPeriod};
+        const generateCardFromLayout = (layout: BigNumber, tokenSeed: BigNumber): number[][] => {
+            let card = []
+            for(let rowIndex = 0; rowIndex < 3; rowIndex++) {
+                card.push([0,0,0,0,0,0,0,0,0])
+            }
+        
+            for(let numberIndex = 0; numberIndex < 15; numberIndex++) {
+                const row = Number(layout.mod(4)) // getting last 2 bit by modulo 4
+                layout = layout.div(4) // getting rid of last 2 bit by dividing the number with 4
+                const column = Number(layout.mod(16))
+                layout = layout.div(16)
+                const floorNumber = Number(layout.mod(128))
+                layout = layout.div(128)
+                const range = Number(layout.mod(16))
+                layout = layout.div(16)
+                card[row][column] = (floorNumber + Number(tokenSeed.mod(range)))
+            }
+        
+            return card
+        }
+
+        return { regenBingo, signer1, signer2, donationName, donationAddress, firstDrawTimestamp, vrfCoordinatorV2Mock, provideRandomness, startDrawPeriod, generateCardFromLayout};
     }
 
     describe("Deployment", function () {
@@ -362,21 +383,27 @@ describe("RegenBingo", function () {
     })
     describe("Layouts", async function () {
         it("Should all layouts be working", async function () {
-            const { signer1, regenBingo } = await loadFixture(deployBingoFixture);
+            const { signer1, regenBingo, generateCardFromLayout } = await loadFixture(deployBingoFixture);
             const layoutsCount = Number(await regenBingo.$LAYOUTS_COUNT());
+            const layouts = await regenBingo.$layouts();
             regenBingo.connect(signer1);
 
             let hasLayoutSeenBefore = new Array(layoutsCount).fill(false);
             const allMatrixes = [];
+            const expectedMatrixes = [];
 
             let tokenId = 1;
             while(hasLayoutSeenBefore.includes(false)){
                 await( await regenBingo.mint(signer1.address, "1", {value: mintPrice}))
-                const layoutNumber = Number((await regenBingo.$_tokenSeed(tokenId)).mod(10));
+                const layoutNumber = Number((await regenBingo.$_tokenSeed(tokenId)).mod(layoutsCount));
                 if(hasLayoutSeenBefore[layoutNumber] == false){
                     hasLayoutSeenBefore[layoutNumber] = true;
                     const matrix = await regenBingo.numberMatrix(tokenId);
                     allMatrixes.push(matrix);
+
+                    const tokenSeed = await regenBingo.$_tokenSeed(tokenId);
+                    const expectedMatrix = generateCardFromLayout(layouts[layoutNumber], tokenSeed);
+                    expectedMatrixes.push(expectedMatrix);
                 }
                 tokenId += 1
             }
@@ -394,6 +421,9 @@ describe("RegenBingo", function () {
                             rowOptionsCount += 1;
                             allOptionsCount += 1;
                             const number = allMatrixes[layoutIndex][rowIndex][columnIndex];
+                            const expectedNumber = expectedMatrixes[layoutIndex][rowIndex][columnIndex];
+
+                            expect(number).to.equal(expectedNumber);
 
                             // check all the numbers are in the expected column
                             if(columnIndex == 0){ 
