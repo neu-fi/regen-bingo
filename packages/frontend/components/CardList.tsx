@@ -50,8 +50,7 @@ export default function CardList() {
         setCards(
           values.sort(function (a, b) {
             return (
-              a.coveredNumbersCount - b.coveredNumbersCount ||
-              Number(a.id) - Number(b.id)
+              a.tokenURI.score - b.tokenURI.score || Number(a.id) - Number(b.id)
             );
           })
         );
